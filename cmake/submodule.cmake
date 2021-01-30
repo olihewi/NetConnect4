@@ -30,7 +30,9 @@ if (GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 
     find_program(
         CFE NAMES clang-format clang-format-12 clang-format-11 clang-format-10
-        HINTS ${CMAKE_SOURCE_DIR}/tools/*/${PLATFORM}/)
+        HINTS
+        "${CMAKE_SOURCE_DIR}/tools/*/${PLATFORM}/"
+        "$ENV{ProgramFiles}\\LLVM\\bin")
 
     OPTION(ENABLE_CLANG_FORMAT "Adds clang-format as a hook" OFF)
     if(ENABLE_CLANG_FORMAT AND CFE)
