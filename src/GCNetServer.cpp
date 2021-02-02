@@ -7,6 +7,7 @@
 #include <kissnet.hpp>
 #include <thread>
 
+// TCP section
 namespace
 {
   kissnet::tcp_socket bind(const std::string& ip_address, kissnet::port_t port)
