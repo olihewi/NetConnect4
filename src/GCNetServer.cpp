@@ -25,7 +25,7 @@ namespace
 } // namespace
 
 GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER) {}
-//test test test git kraken test
+// test test test git kraken test
 GCNetServer::~GCNetServer()
 {
   accept_connections = false;
