@@ -14,7 +14,7 @@ namespace
     // create endpoint and assigning to a socket
     kissnet::tcp_socket server(kissnet::endpoint(ip_address, port));
 
-    // bind and listen on
+    // bind and listen on it
     server.bind();
     server.listen();
 
@@ -39,9 +39,9 @@ void GCNetServer::start()
   std::thread thread([&]() {
     while (accept_connections)
     {
-      auto& socket = connections.emplace_back(server.accept());
-      std::cout << "connection received from: " << socket.get_recv_endpoint().address << ":"
-                << socket.get_recv_endpoint().port << std::endl;
+      auto& client = connections.emplace_back(server.accept());
+      std::cout << "connection received from: " << client.get_recv_endpoint().address << ":"
+                << client.get_recv_endpoint().port << std::endl;
     }
   });
 

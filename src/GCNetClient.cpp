@@ -12,6 +12,8 @@ void GCNetClient::connect(const std::string& server_ip, unsigned short server_po
 {
   socket = (kissnet::endpoint{ server_ip, server_port });
   socket.connect();
+  std::string hello_message = "Hello from Client!";
+  socket.send(reinterpret_cast<const std::byte*>(hello_message.c_str()), hello_message.size());
 }
 
 GCNetClient::~GCNetClient()
