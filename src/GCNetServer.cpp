@@ -24,6 +24,7 @@ namespace
 } // namespace
 
 GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER) {}
+
 GCNetServer::~GCNetServer()
 {
   accept_connections = false;
