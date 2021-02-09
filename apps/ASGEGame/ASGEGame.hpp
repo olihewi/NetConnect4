@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ASGENetLib/GCNetClient.hpp>
 #include <ASGENetLib/GComponent.hpp>
 #include <Engine/OGLGame.h>
 #include <vector>
@@ -24,5 +25,7 @@ class ASGENetGame : public ASGE::OGLGame
 
  private:
   std::vector<std::unique_ptr<GameComponent>> game_components;
+  GCNetClient client;
   int key_callback_id = -1; /**< Key Input Callback ID. */
+  std::string input_string;
 };

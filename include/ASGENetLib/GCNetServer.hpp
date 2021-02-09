@@ -9,6 +9,7 @@
 #include <atomic>
 #include <kissnet.hpp>
 #include <list>
+#include <thread>
 
 class GCNetServer final : public GameComponent
 {
@@ -22,8 +23,10 @@ class GCNetServer final : public GameComponent
   GCNetServer& operator=(const GCNetServer&) = delete;
 
  private:
+  void listen(kissnet::tcp_socket& socket);
   kissnet::tcp_socket server;
   std::list<kissnet::tcp_socket> connections;
+  std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;
 };
 
