@@ -10,6 +10,7 @@
 #include <kissnet.hpp>
 #include <list>
 #include <thread>
+#include <vector>
 
 class GCNetServer final : public GameComponent
 {

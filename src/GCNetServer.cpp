@@ -47,12 +47,12 @@ void GCNetServer::start()
         listen(client);
         std::cout << "detected disconnect from " << client.get_recv_endpoint().address << ":"
                   << client.get_recv_endpoint().port << std::endl;
-        if (const auto socket_iter =
+        if (const auto SOCKET_ITER =
               std::find(connections.begin(), connections.end(), std::ref(client));
-            socket_iter != connections.end())
+            SOCKET_ITER != connections.end())
         {
           std::cout << "closing socket...\n";
-          connections.erase(socket_iter);
+          connections.erase(SOCKET_ITER);
         }
       });
       workers.back().detach();
