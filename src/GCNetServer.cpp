@@ -21,6 +21,8 @@ namespace
     // return it
     return server;
   }
+  using socket_cref = std::reference_wrapper<const kissnet::tcp_socket>;
+  using socket_list = std::list<socket_cref>;
 } // namespace
 
 GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER) {}
