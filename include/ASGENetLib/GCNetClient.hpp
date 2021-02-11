@@ -16,6 +16,8 @@ class GCNetClient : public GameComponent
   void connect(const std::string& server_ip, unsigned short server_port);
   void update(double dt) override;
   void send(const std::string& message);
+  std::atomic<bool> connected = false;
+  std::atomic<bool> running   = false;
 
   GCNetClient(const GCNetClient&) = delete;
   GCNetClient& operator=(const GCNetClient&) = delete;
