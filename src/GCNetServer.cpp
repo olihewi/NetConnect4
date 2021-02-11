@@ -21,8 +21,6 @@ namespace
     // return it
     return server;
   }
-  using socket_cref = std::reference_wrapper<const kissnet::tcp_socket>;
-  using socket_list = std::list<socket_cref>;
 } // namespace
 
 GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER) {}
@@ -83,11 +81,24 @@ void GCNetServer::listen(kissnet::tcp_socket& socket)
         static_buffer[size] = std::byte{ 0 };
       }
       std::cout << reinterpret_cast<const char*>(static_buffer.data()) << '\n';
+      send(static_buffer, static_buffer.size(), { socket });
     }
     else
     {
       continue_receiving = false;
       socket.close();
+    }
+  }
+}
+
+void GCNetServer::send(
+  const kissnet::buffer<4096>& buffer, size_t length, const socket_list& exclude)
+{
+  for (auto& socket : connections)
+  {
+    if (auto it = std::find(exclude.cbegin(), exclude.cend(), socket); it == exclude.cend())
+    {
+      socket.send(buffer, length);
     }
   }
 }
