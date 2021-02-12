@@ -18,6 +18,7 @@ namespace
     server.bind();
     server.listen();
 
+    std::cout << "Starting server at " << ip_address << ":" << port << std::endl;
     // return it
     return server;
   }
@@ -40,18 +41,19 @@ void GCNetServer::start()
     while (accept_connections)
     {
       auto& client = connections.emplace_back(server.accept());
-      std::cout << "connection received from: " << client.get_recv_endpoint().address << ":"
+      std::cout << "Connection received from " << client.get_recv_endpoint().address << ":"
                 << client.get_recv_endpoint().port << std::endl;
+
       /// Client worker thread
       workers.emplace_back([&] {
         listen(client);
-        std::cout << "detected disconnect from " << client.get_recv_endpoint().address << ":"
+        std::cout << "Detected disconnect from " << client.get_recv_endpoint().address << ":"
                   << client.get_recv_endpoint().port << std::endl;
         if (const auto SOCKET_ITER =
               std::find(connections.begin(), connections.end(), std::ref(client));
             SOCKET_ITER != connections.end())
         {
-          std::cout << "closing socket...\n";
+          std::cout << "Closing socket...\n";
           connections.erase(SOCKET_ITER);
         }
       });

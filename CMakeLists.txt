@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.12...3.17)
 #------------------------------------------------------------------------------
 # 3rd party library support
 #------------------------------------------------------------------------------
-set(ENABLE_ASGE          ON  CACHE BOOL "Adds ASGE to the Project" FORCE)
-set(ENABLE_CLANG_FORMAT  ON  CACHE BOOL "Adds Clang-Format Hooks" FORCE)
-set(ENABLE_JSON          OFF CACHE BOOL "Adds YAML to the Project" FORCE)
-set(ENABLE_KISSNET       ON  CACHE BOOL "Adds Kissnet Sockets to Project" FORCE)
+set(ENABLE_ASGE ON CACHE BOOL "Adds ASGE to the Project" FORCE)
+set(ENABLE_CLANG_FORMAT ON CACHE BOOL "Adds Clang-Format Hooks" FORCE)
+set(ENABLE_JSON OFF CACHE BOOL "Adds YAML to the Project" FORCE)
+set(ENABLE_KISSNET ON CACHE BOOL "Adds Kissnet Sockets to Project" FORCE)
 set(ENABLE_LIVE_ANALYSIS OFF CACHE BOOL "Adds live static analysis. SLOW!!!" FORCE)
-set(ENABLE_MAGIC_ENUM    ON  CACHE BOOL "Adds reflection support for ENUMS" FORCE)
-set(ENABLE_SOUND         OFF CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_MAGIC_ENUM ON CACHE BOOL "Adds reflection support for ENUMS" FORCE)
+set(ENABLE_SOUND OFF CACHE BOOL "Adds SoLoud Audio" FORCE)
 
 
 #------------------------------------------------------------------------------
@@ -43,15 +43,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build/${PROJECT_NAME}/bi
 option(STATIC_APP "Build a static application" ON)
 message(STATUS " ")
 
-if( STATIC_APP )
+if (STATIC_APP)
     message(STATUS "APPLICATION STATIC BUILD: \t YES")
     message(STATUS "APPLICATION SHARED BUILD: \t NO")
     set(BUILD_SHARED_LIBS false)
-else()
+else ()
     message(STATUS "APPLICATION STATIC BUILD: \t NO")
     message(STATUS "APPLICATION SHARED BUILD: \t YES")
     set(BUILD_SHARED_LIBS true)
-endif()
+endif ()
 
 
 #------------------------------------------------------------------------------

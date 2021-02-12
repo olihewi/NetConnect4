@@ -13,6 +13,7 @@ class GameComponent
     INVALID_COMPONENT_ID = -1,
     NETWORK_CLIENT,
     NETWORK_SERVER,
+    SPRITE,
     NUM_OF_SUPPORTED_COMPONENTS
   };
 

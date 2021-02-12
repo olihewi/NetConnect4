@@ -37,5 +37,5 @@ SpacesBeforeTrailingComments: 1
 SpacesInAngles: false
 SpacesInContainerLiterals: false
 Standard: c++20
-CommentPragmas:  '^\\.+'
+CommentPragmas: '^\\.+'
 TabWidth: 2

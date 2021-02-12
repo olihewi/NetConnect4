@@ -9,35 +9,17 @@
 #include <thread>
 
 GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
-namespace
-{
-  std::atomic<bool> connected = false;
-  std::atomic<bool> running   = false;
-}
-kissnet::tcp_socket connect(const std::string& server_address, kissnet::port_t server_port)
-{
-  kissnet::tcp_socket client_socket(kissnet::endpoint{ server_address, server_port });
-  client_socket.connect(0);
-  connected = true;
-  return client_socket;
-}
-/// TODO: FIX FUNCTION CONNECT ERROR.
-
-void run(kissnet::tcp_socket&);
-
-int main(int /*argc*/, char* /*argv*/[])
-{
-  auto socket = connect("127.0.0.1", 12321);
-  return EXIT_SUCCESS;
-}
 
 void GCNetClient::update(double /*dt*/) {}
 
-void GCNetClient::connect(const std::string& server_ip, unsigned short server_port)
+kissnet::tcp_socket& GCNetClient::connect(const std::string& server_ip, kissnet::port_t server_port)
 {
   socket = (kissnet::endpoint{ server_ip, server_port });
   socket.connect();
-  send("Hello from client!");
+  connected = true;
+  std::thread listener_thread([&] { run(); });
+  listener_thread.detach();
+  return socket;
 }
 
 void GCNetClient::send(const std::string& message)
@@ -48,4 +30,32 @@ void GCNetClient::send(const std::string& message)
 GCNetClient::~GCNetClient()
 {
   socket.close();
+}
+void GCNetClient::run()
+{
+  running = true;
+  while (running && connected)
+  {
+    kissnet::buffer<4096> static_buffer;
+    if (auto [size, valid] = socket.recv(static_buffer); valid)
+    {
+      if (valid.value == kissnet::socket_status::cleanly_disconnected)
+      {
+        connected = false;
+        std::cout << "clean disconnection" << std::endl;
+        socket.close();
+      }
+      if (size < static_buffer.size())
+      {
+        static_buffer[size] = std::byte{ 0 };
+      }
+      std::cout << reinterpret_cast<const char*>(static_buffer.data()) << '\n';
+    }
+    else
+    {
+      connected = false;
+      std::cout << "disconnected" << std::endl;
+      socket.close();
+    }
+  }
 }

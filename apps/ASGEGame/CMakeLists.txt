@@ -3,15 +3,15 @@ set(GAME ${PROJECT_NAME})
 
 ## glob is useful but not reliant in compilation so just use it for headers ##
 file(GLOB_RECURSE HEADER_LIST
-    LIST_DIRECTORIES FALSE
-    CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+        LIST_DIRECTORIES FALSE
+        CONFIGURE_DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 ## source files get listed here ##
 set(GAME_SOURCES
-    main.cpp
-    ASGEGame.cpp SpriteComponent.cpp SpriteComponent.hpp)
+        main.cpp
+        ASGEGame.cpp SpriteComponent.cpp SpriteComponent.hpp)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})
@@ -27,9 +27,9 @@ if (WIN32)
 elseif (APPLE)
     set(ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/game.icns)
     set_source_files_properties(
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/game.icns PROPERTIES
-        MAXOSX_PACKAGE_LOCATION "resources")
-endif()
+            ${CMAKE_CURRENT_SOURCE_DIR}/resources/game.icns PROPERTIES
+            MAXOSX_PACKAGE_LOCATION "resources")
+endif ()
 
 ## game data ##
 add_gamedata(${GAME} ${CMAKE_CURRENT_SOURCE_DIR}/data)

@@ -5,10 +5,17 @@
 #include "SpriteComponent.hpp"
 #include <Engine/Renderer.h>
 
+SpriteComponent::SpriteComponent(
+  ASGE::Renderer* renderer, const std::string& file_path, ASGE::Point2D position) :
+  GameComponent(GameComponent::ID::SPRITE)
+{
+  loadSprite(renderer, file_path);
+  setPosition(position);
+}
+
 bool SpriteComponent::loadSprite(ASGE::Renderer* renderer, const std::string& file_path)
 {
-  sprite   = renderer->createUniqueSprite();
-  occupied = false;
+  sprite = renderer->createUniqueSprite();
   return sprite->loadTexture(file_path);
 }
 
@@ -19,41 +26,32 @@ std::unique_ptr<ASGE::Sprite>& SpriteComponent::getSprite()
 
 void SpriteComponent::render(ASGE::Renderer* renderer)
 {
-  renderer->renderSprite(*sprite);
+  if (visible)
+  {
+    renderer->renderSprite(*sprite);
+  }
 }
 
-SpriteComponent::SpriteComponent(ASGE::Renderer* renderer, const std::string& file_path)
+bool SpriteComponent::getVisibility() const
 {
-  loadSprite(renderer, file_path);
+  return visible;
+}
+void SpriteComponent::setVisibility(bool _visibility)
+{
+  visible = _visibility;
 }
 
-bool SpriteComponent::vis() const
+ASGE::Point2D SpriteComponent::getPosition()
 {
-  return onTop;
+  return ASGE::Point2D(sprite->xPos(), sprite->yPos());
 }
-
-bool SpriteComponent::setVisibility(bool invis)
+void SpriteComponent::setPosition(ASGE::Point2D _position)
 {
-  onTop = invis;
-  return onTop;
+  sprite->xPos(_position.x);
+  sprite->yPos(_position.y);
 }
-
-void SpriteComponent::setGrid(int gridPos)
+void SpriteComponent::translate(ASGE::Point2D _translation)
 {
-  gridPos_ = gridPos;
-}
-
-int SpriteComponent::getGrid() const
-{
-  return gridPos_;
-}
-
-void SpriteComponent::setxPos(float xPos)
-{
-  sprite->xPos(xPos);
-}
-
-void SpriteComponent::setyPos(float yPos)
-{
-  sprite->yPos(yPos);
+  sprite->xPos(sprite->xPos() + _translation.x);
+  sprite->yPos(sprite->yPos() + _translation.y);
 }

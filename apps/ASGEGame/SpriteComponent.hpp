@@ -5,43 +5,33 @@
 #ifndef ASGENETGAME_SPRITECOMPONENT_HPP
 #define ASGENETGAME_SPRITECOMPONENT_HPP
 #pragma once
+#include <ASGENetLib/GComponent.hpp>
 #include <Engine/Renderer.h>
 #include <Engine/Sprite.h>
 #include <memory>
 #include <vector>
 
-class SpriteComponent
+class SpriteComponent : public GameComponent
 {
  public:
-  SpriteComponent(ASGE::Renderer* renderer, const std::string& file_path);
-  // ~SpriteComponent() = default;
+  SpriteComponent(ASGE::Renderer* renderer, const std::string& file_path, ASGE::Point2D position);
 
-  [[maybe_unused]] bool loadSprite(ASGE::Renderer* renderer, const std::string& file_path);
-
+  bool loadSprite(ASGE::Renderer* renderer, const std::string& file_path);
   std::unique_ptr<ASGE::Sprite>& getSprite();
 
+  void update(double /* dt */) override {}
   void render(ASGE::Renderer* renderer);
 
-  void update(double /* dt */) {}
+  [[nodiscard]] bool getVisibility() const;
+  void setVisibility(bool _visibility);
 
-  bool setVisibility(bool invis);
-
-  [[nodiscard]] bool vis() const;
-
-  bool onTop    = false;
-  bool occupied = false;
-
-  void setGrid(int gridPosition);
-
-  [[nodiscard]] int getGrid() const;
-
-  void setxPos(float xPos);
-
-  void setyPos(float yPos);
+  ASGE::Point2D getPosition();
+  void setPosition(ASGE::Point2D _position);
+  void translate(ASGE::Point2D _translation);
 
  private:
   std::unique_ptr<ASGE::Sprite> sprite = nullptr;
-  int gridPos_{};
+  bool visible                         = true;
 };
 
 #endif // ASGENETGAME_SPRITECOMPONENT_HPP

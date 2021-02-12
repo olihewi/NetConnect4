@@ -13,7 +13,8 @@ class GCNetClient : public GameComponent
  public:
   GCNetClient();
   ~GCNetClient() override;
-  void connect(const std::string& server_ip, unsigned short server_port);
+  kissnet::tcp_socket& connect(const std::string& server_ip, unsigned short server_port);
+  void run();
   void update(double dt) override;
   void send(const std::string& message);
   std::atomic<bool> connected = false;
