@@ -16,9 +16,9 @@ class GCNetClient : public GameComponent
   kissnet::tcp_socket& connect(const std::string& server_ip, unsigned short server_port);
   void run();
   void update(double dt) override;
+  void render(ASGE::Renderer* /*renderer*/) override {}
   void send(const std::string& message);
   std::atomic<bool> connected = false;
-  std::atomic<bool> running   = false;
 
   GCNetClient(const GCNetClient&) = delete;
   GCNetClient& operator=(const GCNetClient&) = delete;

@@ -20,6 +20,7 @@ class GCNetServer final : public GameComponent
   ~GCNetServer() override;
 
   void update(double dt) override;
+  void render(ASGE::Renderer* /*renderer*/) override {}
 
   void start();
 

@@ -5,6 +5,7 @@
 #ifndef GAMELIB_GAMECOMPONENT_HPP
 #define GAMELIB_GAMECOMPONENT_HPP
 
+#include <Engine/Renderer.h>
 class GameComponent
 {
  public:
@@ -14,6 +15,7 @@ class GameComponent
     NETWORK_CLIENT,
     NETWORK_SERVER,
     SPRITE,
+    TEXT,
     NUM_OF_SUPPORTED_COMPONENTS
   };
 
@@ -26,7 +28,8 @@ class GameComponent
   GameComponent& operator=(const GameComponent&) = default;
   GameComponent& operator=(GameComponent&&) = default;
 
-  virtual void update(double dt) = 0;
+  virtual void update(double dt)                = 0;
+  virtual void render(ASGE::Renderer* renderer) = 0;
   [[nodiscard("did you not want the ID?")]] ID typeID() const;
 
  private:

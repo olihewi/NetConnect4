@@ -33,8 +33,7 @@ GCNetClient::~GCNetClient()
 }
 void GCNetClient::run()
 {
-  running = true;
-  while (running && connected)
+  while (connected)
   {
     kissnet::buffer<4096> static_buffer;
     if (auto [size, valid] = socket.recv(static_buffer); valid)

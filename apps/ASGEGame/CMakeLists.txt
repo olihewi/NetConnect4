@@ -11,7 +11,7 @@ file(GLOB_RECURSE HEADER_LIST
 ## source files get listed here ##
 set(GAME_SOURCES
         main.cpp
-        ASGEGame.cpp SpriteComponent.cpp SpriteComponent.hpp)
+        ASGEGame.cpp ../../include/GameComponents/SpriteComponent.cpp ../../include/GameComponents/SpriteComponent.hpp)
 
 ## the ASGE Game, which spawns the Game window ##
 add_executable(${GAME} ${HEADER_LIST} ${GAME_SOURCES})

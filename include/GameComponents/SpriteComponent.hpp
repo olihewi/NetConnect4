@@ -8,7 +8,6 @@
 #include <ASGENetLib/GComponent.hpp>
 #include <Engine/Renderer.h>
 #include <Engine/Sprite.h>
-#include <memory>
 #include <vector>
 
 class SpriteComponent : public GameComponent
@@ -20,7 +19,7 @@ class SpriteComponent : public GameComponent
   std::unique_ptr<ASGE::Sprite>& getSprite();
 
   void update(double /* dt */) override {}
-  void render(ASGE::Renderer* renderer);
+  void render(ASGE::Renderer* renderer) override;
 
   [[nodiscard]] bool getVisibility() const;
   void setVisibility(bool _visibility);

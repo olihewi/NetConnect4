@@ -2,8 +2,7 @@
 // Created by Andrei on 11/02/2021.
 //
 
-#include "SpriteComponent.hpp"
-#include <Engine/Renderer.h>
+#include "GameComponents/SpriteComponent.hpp"
 
 SpriteComponent::SpriteComponent(
   ASGE::Renderer* renderer, const std::string& file_path, ASGE::Point2D position) :
