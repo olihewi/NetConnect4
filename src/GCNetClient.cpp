@@ -17,16 +17,18 @@ kissnet::tcp_socket& GCNetClient::connect(
 {
   socket = (kissnet::endpoint{ server_ip, server_port });
   socket.connect();
-  send("U:" + username);
+  send(NetUtil::CHANGE_USERNAME, username);
   connected = true;
   std::thread listener_thread([&] { run(); });
   listener_thread.detach();
   return socket;
 }
 
-void GCNetClient::send(const std::string& message)
+void GCNetClient::send(NetUtil::CommandID command_id, const std::string& message)
 {
-  socket.send(reinterpret_cast<const std::byte*>(message.c_str()), message.size());
+  std::string message_string = std::string(1, static_cast<char>(command_id)) + ":" + message;
+  const auto* as_byte        = reinterpret_cast<const std::byte*>(message_string.c_str());
+  socket.send(as_byte, message_string.size());
 }
 
 GCNetClient::~GCNetClient()

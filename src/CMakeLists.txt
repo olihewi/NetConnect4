@@ -13,7 +13,7 @@ file(GLOB_RECURSE HEADER_LIST
 set(GAMELIB_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/GComponent.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/GCNetClient.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/GCNetServer.cpp ../include/GameComponents/TextComponent.cpp ../include/GameComponents/TextComponent.hpp ../include/Utilities/UserClient.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/GCNetServer.cpp ../include/GameComponents/TextComponent.cpp ../include/GameComponents/TextComponent.hpp ../include/Utilities/UserClient.h ../include/Utilities/NetUtil.h)
 
 ## create the game library
 add_library(${GAMELIB} STATIC ${GAMELIB_SOURCES} "${HEADER_LIST}")

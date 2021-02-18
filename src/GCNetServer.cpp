@@ -3,6 +3,7 @@
 //
 
 #include "GCNetServer.hpp"
+#include "../Utilities/NetUtil.h"
 #include <iostream>
 #include <kissnet.hpp>
 
@@ -103,24 +104,25 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
   std::string message_string(message);
   if (message_string.find(':') != std::string::npos)
   {
+    auto command_id = static_cast<NetUtil::CommandID>(message[0]);
+    std::cout << command_id;
     message_string = message_string.substr(message_string.find_last_of(':') + 1);
-    switch (message[0])
+    switch (command_id)
     {
-      case 'U': /// Username change
+      case NetUtil::CHANGE_USERNAME: /// Username change
         std::cout << client.username << " changed their username to " << message_string
                   << std::endl;
         client.username = message_string;
         break;
-      default:
-        std::cout << "[" << client.username << "] " << message << '\n';
+      case NetUtil::CHAT_MESSAGE:
+        std::cout << "[" << client.username << "] " << message_string << '\n';
         relay(buffer, { client.socket });
         break;
     }
   }
   else
   {
-    std::cout << "[" << client.username << "] " << message << '\n';
-    relay(buffer, { client.socket });
+    std::cout << client.username << " sent an invalid message: " << message << std::endl;
   }
 }
 

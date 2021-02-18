@@ -5,6 +5,7 @@
 #ifndef NETGAME_GCNETCLIENT_HPP
 #define NETGAME_GCNETCLIENT_HPP
 #include "GComponent.hpp"
+#include <Utilities/NetUtil.h>
 #include <kissnet.hpp>
 #include <string>
 
@@ -18,7 +19,7 @@ class GCNetClient : public GameComponent
   void run();
   void update(double dt) override;
   void render(ASGE::Renderer* /*renderer*/) override {}
-  void send(const std::string& message);
+  void send(NetUtil::CommandID command_id, const std::string& message);
   std::atomic<bool> connected = false;
 
   GCNetClient(const GCNetClient&) = delete;

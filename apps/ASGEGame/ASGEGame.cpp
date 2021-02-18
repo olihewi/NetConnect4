@@ -1,4 +1,5 @@
 #include "ASGEGame.hpp"
+#include <Utilities/NetUtil.h>
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -39,7 +40,7 @@ void ASGENetGame::keyHandler(ASGE::SharedEventData data)
       }
       if (key->key == ASGE::KEYS::KEY_ENTER)
       {
-        client.send(input_string);
+        client.send(NetUtil::CHAT_MESSAGE, input_string);
         input_string = "";
       }
     }
