@@ -40,15 +40,19 @@ void GCNetServer::start()
   std::thread thread([&]() {
     while (accept_connections)
     {
-      auto& client = connections.emplace_back(server.accept());
-      std::cout << "Connection received from " << client.get_recv_endpoint().address << ":"
-                << client.get_recv_endpoint().port << std::endl;
+      UserClient& this_user = clients.emplace_back(UserClient());
+      this_user.socket      = server.accept();
+      this_user.username    = this_user.socket.get_recv_endpoint().address + ":" +
+                           std::to_string(this_user.socket.get_recv_endpoint().port);
+      auto& client = this_user.socket;
+      std::cout << "Connection received from " << this_user.socket.get_recv_endpoint().address
+                << ":" << client.get_recv_endpoint().port << std::endl;
 
       /// Client worker thread
       workers.emplace_back([&] {
-        listen(client);
-        std::cout << "Detected disconnect from " << client.get_recv_endpoint().address << ":"
-                  << client.get_recv_endpoint().port << std::endl;
+        listen(this_user);
+        std::cout << this_user.username << " (" << client.get_recv_endpoint().address << ":"
+                  << client.get_recv_endpoint().port << ") has disconnected." << std::endl;
         if (const auto SOCKET_ITER =
               std::find(connections.begin(), connections.end(), std::ref(client));
             SOCKET_ITER != connections.end())
@@ -66,8 +70,9 @@ void GCNetServer::start()
 
 void GCNetServer::update(double /*dt*/) {}
 
-void GCNetServer::listen(kissnet::tcp_socket& socket)
+void GCNetServer::listen(UserClient& client)
 {
+  auto& socket            = client.socket;
   bool continue_receiving = true;
   kissnet::buffer<4096> static_buffer;
   while (continue_receiving)
@@ -82,8 +87,7 @@ void GCNetServer::listen(kissnet::tcp_socket& socket)
       {
         static_buffer[size] = std::byte{ 0 };
       }
-      std::cout << reinterpret_cast<const char*>(static_buffer.data()) << '\n';
-      send(static_buffer, static_buffer.size(), { socket });
+      processMessage(client, static_buffer);
     }
     else
     {
@@ -93,14 +97,40 @@ void GCNetServer::listen(kissnet::tcp_socket& socket)
   }
 }
 
-void GCNetServer::send(
-  const kissnet::buffer<4096>& buffer, size_t length, const socket_list& exclude)
+void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buffer)
+{
+  const auto* message = reinterpret_cast<const char*>(buffer.data());
+  std::string message_string(message);
+  if (message_string.find(':') != std::string::npos)
+  {
+    message_string = message_string.substr(message_string.find_last_of(':') + 1);
+    switch (message[0])
+    {
+      case 'U': /// Username change
+        std::cout << client.username << " changed their username to " << message_string
+                  << std::endl;
+        client.username = message_string;
+        break;
+      default:
+        std::cout << "[" << client.username << "] " << message << '\n';
+        relay(buffer, { client.socket });
+        break;
+    }
+  }
+  else
+  {
+    std::cout << "[" << client.username << "] " << message << '\n';
+    relay(buffer, { client.socket });
+  }
+}
+
+void GCNetServer::relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude)
 {
   for (auto& socket : connections)
   {
     if (auto it = std::find(exclude.cbegin(), exclude.cend(), socket); it == exclude.cend())
     {
-      socket.send(buffer, length);
+      socket.send(buffer, buffer.size());
     }
   }
 }

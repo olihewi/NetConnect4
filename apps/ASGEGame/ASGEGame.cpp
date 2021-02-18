@@ -7,7 +7,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   inputs->use_threads = true;
   toggleFPS();
 
-  client.connect("127.0.0.1", 31276);
+  client.connect("127.0.0.1", 31276, "Client");
 }
 
 /// Destroys the game.

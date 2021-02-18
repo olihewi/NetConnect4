@@ -13,7 +13,8 @@ class GCNetClient : public GameComponent
  public:
   GCNetClient();
   ~GCNetClient() override;
-  kissnet::tcp_socket& connect(const std::string& server_ip, unsigned short server_port);
+  kissnet::tcp_socket&
+  connect(const std::string& server_ip, unsigned short server_port, const std::string& username);
   void run();
   void update(double dt) override;
   void render(ASGE::Renderer* /*renderer*/) override {}

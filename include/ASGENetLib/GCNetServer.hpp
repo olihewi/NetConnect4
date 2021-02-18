@@ -6,6 +6,7 @@
 #define GAMELIB_GCNETSERVER_HPP
 
 #include "GComponent.hpp"
+#include <Utilities/UserClient.h>
 #include <atomic>
 #include <kissnet.hpp>
 #include <list>
@@ -31,13 +32,15 @@ class GCNetServer final : public GameComponent
   using socket_list                          = std::list<socket_cref>;
 
  private:
-  void listen(kissnet::tcp_socket& socket);
+  void listen(UserClient& client);
+  void processMessage(UserClient& client, kissnet::buffer<4096>& buffer);
 
   kissnet::tcp_socket server;
   std::list<kissnet::tcp_socket> connections;
+  std::list<UserClient> clients;
   std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;
-  void send(const kissnet::buffer<4096>& buffer, size_t length, const socket_list& exclude);
+  void relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude);
 };
 
 #endif // GAMELIB_GCNETSERVER_HPP

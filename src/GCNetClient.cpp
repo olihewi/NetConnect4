@@ -12,10 +12,12 @@ GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
 
 void GCNetClient::update(double /*dt*/) {}
 
-kissnet::tcp_socket& GCNetClient::connect(const std::string& server_ip, kissnet::port_t server_port)
+kissnet::tcp_socket& GCNetClient::connect(
+  const std::string& server_ip, kissnet::port_t server_port, const std::string& username)
 {
   socket = (kissnet::endpoint{ server_ip, server_port });
   socket.connect();
+  send("U:" + username);
   connected = true;
   std::thread listener_thread([&] { run(); });
   listener_thread.detach();
