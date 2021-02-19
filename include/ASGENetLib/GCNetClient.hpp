@@ -20,6 +20,7 @@ class GCNetClient : public GameComponent
   void update(double dt) override;
   void render(ASGE::Renderer* /*renderer*/) override {}
   void send(NetUtil::CommandID command_id, const std::string& message);
+  void processMessage(kissnet::buffer<4096> buffer);
   std::atomic<bool> connected = false;
 
   GCNetClient(const GCNetClient&) = delete;

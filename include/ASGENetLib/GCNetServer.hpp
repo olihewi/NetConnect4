@@ -36,7 +36,6 @@ class GCNetServer final : public GameComponent
   void processMessage(UserClient& client, kissnet::buffer<4096>& buffer);
 
   kissnet::tcp_socket server;
-  std::list<kissnet::tcp_socket> connections;
   std::list<UserClient> clients;
   std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;

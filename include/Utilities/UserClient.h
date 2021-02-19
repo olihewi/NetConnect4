@@ -9,6 +9,7 @@
 class UserClient
 {
  public:
+  bool operator==(const UserClient& rhs) const { return rhs.socket == socket; }
   kissnet::tcp_socket socket;
   std::string username = "UNNAMED";
 };

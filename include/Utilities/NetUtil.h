@@ -10,8 +10,9 @@ class NetUtil
  public:
   enum CommandID
   {
-    CHAT_MESSAGE,
-    CHANGE_USERNAME
+    CHAT_MESSAGE = 65,
+    CHANGE_USERNAME,
+    MAX_COMMAND_ID
   };
 };
 

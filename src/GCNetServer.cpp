@@ -54,13 +54,7 @@ void GCNetServer::start()
         listen(this_user);
         std::cout << this_user.username << " (" << client.get_recv_endpoint().address << ":"
                   << client.get_recv_endpoint().port << ") has disconnected." << std::endl;
-        if (const auto SOCKET_ITER =
-              std::find(connections.begin(), connections.end(), std::ref(client));
-            SOCKET_ITER != connections.end())
-        {
-          std::cout << "Closing socket...\n";
-          connections.erase(SOCKET_ITER);
-        }
+        clients.erase(std::find(clients.begin(), clients.end(), this_user));
       });
       workers.back().detach();
     }
@@ -105,8 +99,7 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
   if (message_string.find(':') != std::string::npos)
   {
     auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-    std::cout << command_id;
-    message_string = message_string.substr(message_string.find_last_of(':') + 1);
+    message_string  = message_string.substr(message_string.find_last_of(':') + 1);
     switch (command_id)
     {
       case NetUtil::CHANGE_USERNAME: /// Username change
@@ -118,6 +111,10 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         std::cout << "[" << client.username << "] " << message_string << '\n';
         relay(buffer, { client.socket });
         break;
+      case NetUtil::MAX_COMMAND_ID:
+        // default:
+        std::cout << client.username << " sent an invalid message: " << message << std::endl;
+        break;
     }
   }
   else
@@ -128,11 +125,11 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
 
 void GCNetServer::relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude)
 {
-  for (auto& socket : connections)
+  for (auto& client : clients)
   {
-    if (auto it = std::find(exclude.cbegin(), exclude.cend(), socket); it == exclude.cend())
+    if (auto it = std::find(exclude.cbegin(), exclude.cend(), client.socket); it == exclude.cend())
     {
-      socket.send(buffer, buffer.size());
+      client.socket.send(buffer, buffer.size());
     }
   }
 }

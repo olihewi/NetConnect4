@@ -52,7 +52,7 @@ void GCNetClient::run()
       {
         static_buffer[size] = std::byte{ 0 };
       }
-      std::cout << reinterpret_cast<const char*>(static_buffer.data()) << '\n';
+      processMessage(static_buffer);
     }
     else
     {
@@ -60,5 +60,25 @@ void GCNetClient::run()
       std::cout << "disconnected" << std::endl;
       socket.close();
     }
+  }
+}
+void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
+{
+  const auto* message = reinterpret_cast<const char*>(buffer.data());
+  std::string message_string(message);
+  auto command_id = static_cast<NetUtil::CommandID>(message[0]);
+  message_string  = message_string.substr(message_string.find_last_of(':') + 1);
+  switch (command_id)
+  {
+    case NetUtil::CHAT_MESSAGE:
+      std::cout << message_string << std::endl;
+      break;
+    case NetUtil::CHANGE_USERNAME:
+      std::cout << " changed their username to " << message << std::endl;
+      break;
+    case NetUtil::MAX_COMMAND_ID:
+      // default:
+      std::cout << "Recieved an invalid message: " << message << std::endl;
+      break;
   }
 }
