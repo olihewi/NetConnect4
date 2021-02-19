@@ -1,5 +1,5 @@
 #include "ASGEGame.hpp"
-#include <Utilities/NetUtil.h>
+//#include <Utilities/NetUtil.h>
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -10,6 +10,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   client.connect("127.0.0.1", 31276, "Andrei");
 }
 
+/// Destroys the game.
 ASGENetGame::~ASGENetGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
@@ -19,12 +20,13 @@ ASGENetGame::~ASGENetGame()
 bool ASGENetGame::init()
 {
   key_callback_id = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
-  background      = std::make_unique<SpriteComponent>(
-    renderer.get(), "data/background.png", ASGE::Point2D(1920, 1080));
+  background =
+    std::make_unique<SpriteComponent>(renderer.get(), "data/background.png", ASGE::Point2D(0, 0));
+  background->getSprite()->width(window_width);
+  background->getSprite()->height(window_height);
+  gameBoard();
   return false;
 }
-
-/// Destroys the game.
 
 /// Processes key inputs.
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
@@ -35,23 +37,54 @@ void ASGENetGame::keyHandler(ASGE::SharedEventData data)
   {
     signalExit();
   }
-  if (key->action == ASGE::KEYS::KEY_PRESSED)
+  if (gameState == MenuItem::MENU_GAME && key->key == ASGE::KEYS::KEY_ENTER)
   {
-    if (key->key >= ASGE::KEYS::KEY_SPACE && key->key <= ASGE::KEYS::KEY_GRAVE_ACCENT)
+    gameState = MenuItem::GAME;
+  }
+  if (gameState == MenuItem::GAME)
+  {
+    if (key->action == ASGE::KEYS::KEY_PRESSED)
     {
-      input_string += static_cast<char>(key->key);
+      if (key->key >= ASGE::KEYS::KEY_SPACE && key->key <= ASGE::KEYS::KEY_GRAVE_ACCENT)
+      {
+        input_string += static_cast<char>(key->key);
+      }
+      if (input_string.length() > 0)
+      {
+        if (key->key == ASGE::KEYS::KEY_BACKSPACE)
+        {
+          input_string.pop_back();
+        }
+        if (key->key == ASGE::KEYS::KEY_ENTER)
+        {
+          client.send(NetUtil::CHAT_MESSAGE, input_string);
+          input_string = "";
+        }
+      }
     }
-    if (input_string.length() > 0)
+  }
+}
+
+void ASGENetGame::gameBoard()
+{
+  auto x_pos            = 0.0F;
+  auto y_pos            = 0.0F;
+  const int BOARD_Y_POS = 75;
+
+  for (auto& board : game_board)
+  {
+    board = std::make_unique<SpriteComponent>(
+      renderer.get(), "data/connectblock.png", ASGE::Point2D(0, 0));
+    board->getSprite()->width(BOARD_WIDTH);
+    board->getSprite()->height(BOARD_HEIGHT);
+    board->getSprite()->xPos(x_pos);
+    board->getSprite()->yPos(y_pos + BOARD_Y_POS);
+    x_pos += board->getSprite()->width();
+
+    if (x_pos >= board->getSprite()->width() * 8)
     {
-      if (key->key == ASGE::KEYS::KEY_BACKSPACE)
-      {
-        input_string.pop_back();
-      }
-      if (key->key == ASGE::KEYS::KEY_ENTER)
-      {
-        client.send(NetUtil::CHAT_MESSAGE, input_string);
-        input_string = "";
-      }
+      x_pos = 0;
+      y_pos += board->getSprite()->height();
     }
   }
 }
@@ -64,6 +97,7 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     gc->update(us.deltaInSecs());
   }
 }
+
 /// "Use fixed steps for physics"
 void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 {
@@ -81,5 +115,14 @@ void ASGENetGame::render()
   if (gameState == MenuItem::GAME)
   {
     renderer->renderText(input_string, 128, 128);
+    gameRender();
+  }
+}
+
+void ASGENetGame::gameRender()
+{
+  for (auto& board : game_board)
+  {
+    board->render(renderer.get());
   }
 }

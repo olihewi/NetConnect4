@@ -15,10 +15,10 @@ class ASGENetGame : public ASGE::OGLGame
  public:
   enum class MenuItem
   {
-    MENU_GAME  = 1,
-    GAME       = 2,
-    LOBBY_GAME = 3,
-    EXIT_GAME  = 4
+    MENU_GAME = 0,
+    GAME      = 1,
+    //  LOBBY_GAME = 2,
+    //  EXIT_GAME  = 3
   };
 
   MenuItem gameState = MenuItem::MENU_GAME;
@@ -27,23 +27,34 @@ class ASGENetGame : public ASGE::OGLGame
   explicit ASGENetGame(const ASGE::GameSettings& settings);
 
   ~ASGENetGame() override;
+
   ASGENetGame(const ASGENetGame&) = delete;
+
   ASGENetGame& operator=(const ASGENetGame&) = delete;
 
-  void keyHandler(ASGE::SharedEventData data);
-  void update(const ASGE::GameTime& us) override;
-  void render() override;
-  void fixedUpdate(const ASGE::GameTime& us) override;
   // void disable(ASGE::Input* input);
   // void enable(ASGE::Input* input);
+  void fixedUpdate(const ASGE::GameTime& us) override;
+  void gameBoard();
+  void gameRender();
+  void keyHandler(ASGE::SharedEventData data);
+  void render() override;
+  void update(const ASGE::GameTime& us) override;
 
   bool init();
 
  private:
   std::vector<std::unique_ptr<GameComponent>> game_components;
   GCNetClient client;
-  int key_callback_id = -1; /**< Key Input Callback ID. */
-  std::string input_string;
 
+  int key_callback_id = -1; /**< Key Input Callback ID. */
+
+  float window_height = static_cast<float>(ASGE::SETTINGS.window_height);
+  float window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
+  float BOARD_HEIGHT  = 124.0F;
+  float BOARD_WIDTH   = window_width / 8;
+
+  std::string input_string;
   std::unique_ptr<SpriteComponent> background;
+  std::array<std::unique_ptr<SpriteComponent>, 32 * 2> game_board;
 };
