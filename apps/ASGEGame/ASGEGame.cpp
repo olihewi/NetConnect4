@@ -4,18 +4,27 @@
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
 {
-  key_callback_id     = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   inputs->use_threads = true;
   toggleFPS();
-
-  client.connect("127.0.0.1", 31276, "Client");
+  init();
+  client.connect("127.0.0.1", 31276, "Andrei");
 }
 
-/// Destroys the game.
 ASGENetGame::~ASGENetGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
 }
+
+/// Initialise Components.
+bool ASGENetGame::init()
+{
+  key_callback_id = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
+  background      = std::make_unique<SpriteComponent>(
+    renderer.get(), "data/background.png", ASGE::Point2D(1920, 1080));
+  return false;
+}
+
+/// Destroys the game.
 
 /// Processes key inputs.
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
@@ -55,15 +64,22 @@ void ASGENetGame::update(const ASGE::GameTime& us)
     gc->update(us.deltaInSecs());
   }
 }
-
-/// Render your game and its scenes here.
-void ASGENetGame::render()
-{
-  renderer->renderText(input_string, 128, 128);
-}
-
 /// "Use fixed steps for physics"
 void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 {
   Game::fixedUpdate(us);
+}
+
+/// Render your game and its scenes here.
+void ASGENetGame::render()
+{
+  renderer->setFont(0);
+  if (gameState == MenuItem::MENU_GAME)
+  {
+    background->render(renderer.get());
+  }
+  if (gameState == MenuItem::GAME)
+  {
+    renderer->renderText(input_string, 128, 128);
+  }
 }
