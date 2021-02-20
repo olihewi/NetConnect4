@@ -13,6 +13,7 @@
 class SpriteComponent : public GameComponent
 {
  public:
+  SpriteComponent();
   SpriteComponent(ASGE::Renderer* renderer, const std::string& file_path, ASGE::Point2D position);
 
   bool loadSprite(ASGE::Renderer* renderer, const std::string& file_path);
@@ -27,6 +28,8 @@ class SpriteComponent : public GameComponent
   ASGE::Point2D getPosition();
   void setPosition(ASGE::Point2D _position);
   void translate(ASGE::Point2D _translation);
+
+  bool isInside(ASGE::Point2D position);
 
  private:
   std::unique_ptr<ASGE::Sprite> sprite = nullptr;

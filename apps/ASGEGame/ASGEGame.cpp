@@ -1,11 +1,16 @@
 #include "ASGEGame.hpp"
+#include <GameObjects/UI/UITextBox.h>
+#include <Utilities/FontManager.h>
 //#include <Utilities/NetUtil.h>
+#include "GameObjects/UI/UIButton.h"
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
 {
   inputs->use_threads = true;
   toggleFPS();
+  FontManager font_manager;
+  font_manager.loadFonts(renderer.get());
   init();
   client.connect("127.0.0.1", 31276, "Andrei");
 }
@@ -14,16 +19,25 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
 ASGENetGame::~ASGENetGame()
 {
   this->inputs->unregisterCallback(static_cast<unsigned int>(key_callback_id));
+  this->inputs->unregisterCallback(static_cast<unsigned int>(click_callback_id));
+  this->inputs->unregisterCallback(static_cast<unsigned int>(mouse_callback_id));
+  this->inputs->unregisterCallback(static_cast<unsigned int>(scroll_callback_id));
 }
 
 /// Initialise Components.
 bool ASGENetGame::init()
 {
-  key_callback_id = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
-  background =
-    std::make_unique<SpriteComponent>(renderer.get(), "data/background.png", ASGE::Point2D(0, 0));
-  background->getSprite()->width(window_width);
-  background->getSprite()->height(window_height);
+  game_objects.emplace_back(std::make_unique<UITextBox>(
+    renderer.get(), UITextBox::TextBoxColour::RED, ASGE::Point2D(200, 200), 300, 50, "127.0.0.1"));
+  game_objects.emplace_back(std::make_unique<UITextBox>(
+    renderer.get(), UITextBox::TextBoxColour::YELLOW, ASGE::Point2D(512, 200), 128, 50, "31276"));
+  key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
+  click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
+  mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
+  scroll_callback_id =
+    inputs->addCallbackFnc(ASGE::E_MOUSE_SCROLL, &ASGENetGame::scrollHandler, this);
+  game_components.emplace_back(
+    std::make_unique<SpriteComponent>(renderer.get(), "data/background.png", ASGE::Point2D(0, 0)));
   gameBoard();
   return false;
 }
@@ -32,6 +46,10 @@ bool ASGENetGame::init()
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 {
   const auto* key = dynamic_cast<const ASGE::KeyEvent*>(data.get());
+  for (auto& game_object : game_objects)
+  {
+    game_object->keyInput(key);
+  }
 
   if (key->key == ASGE::KEYS::KEY_ESCAPE)
   {
@@ -64,17 +82,41 @@ void ASGENetGame::keyHandler(ASGE::SharedEventData data)
     }
   }
 }
+void ASGENetGame::clickHandler(ASGE::SharedEventData data)
+{
+  const auto* click = dynamic_cast<const ASGE::ClickEvent*>(data.get());
+  for (auto& game_object : game_objects)
+  {
+    game_object->clickInput(click);
+  }
+}
+void ASGENetGame::mouseHandler(ASGE::SharedEventData data)
+{
+  const auto* mouse = dynamic_cast<const ASGE::MoveEvent*>(data.get());
+  for (auto& game_object : game_objects)
+  {
+    game_object->mouseInput(mouse);
+  }
+}
+void ASGENetGame::scrollHandler(ASGE::SharedEventData data)
+{
+  const auto* scroll = dynamic_cast<const ASGE::ScrollEvent*>(data.get());
+  for (auto& game_object : game_objects)
+  {
+    game_object->mouseScrollInput(scroll);
+  }
+}
 
 void ASGENetGame::gameBoard()
 {
-  auto x_pos            = 0.0F;
+  /*auto x_pos            = 0.0F;
   auto y_pos            = 0.0F;
   const int BOARD_Y_POS = 75;
 
   for (auto& board : game_board)
   {
-    board = std::make_unique<SpriteComponent>(
-      renderer.get(), "data/connectblock.png", ASGE::Point2D(0, 0));
+    board = game_objects.emplace_back(std::make_unique<SpriteComponent>(
+      renderer.get(),"data/connectblock.png", ASGE::Point2D(0, 0)));
     board->getSprite()->width(BOARD_WIDTH);
     board->getSprite()->height(BOARD_HEIGHT);
     board->getSprite()->xPos(x_pos);
@@ -86,7 +128,7 @@ void ASGENetGame::gameBoard()
       x_pos = 0;
       y_pos += board->getSprite()->height();
     }
-  }
+  }*/
 }
 
 /// Updates the game and all it's components.
@@ -108,10 +150,14 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 void ASGENetGame::render()
 {
   renderer->setFont(0);
-  if (gameState == MenuItem::MENU_GAME)
+  for (auto& game_object : game_objects)
+  {
+    game_object->render(renderer.get());
+  }
+  /*if (gameState == MenuItem::MENU_GAME)
   {
     background->render(renderer.get());
-  }
+  }*/
   if (gameState == MenuItem::GAME)
   {
     renderer->renderText(input_string, 128, 128);
@@ -121,8 +167,8 @@ void ASGENetGame::render()
 
 void ASGENetGame::gameRender()
 {
-  for (auto& board : game_board)
+  /*for (auto& board : game_board)
   {
     board->render(renderer.get());
-  }
+  }*/
 }

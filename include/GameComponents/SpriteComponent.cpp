@@ -54,3 +54,9 @@ void SpriteComponent::translate(ASGE::Point2D _translation)
   sprite->xPos(sprite->xPos() + _translation.x);
   sprite->yPos(sprite->yPos() + _translation.y);
 }
+bool SpriteComponent::isInside(ASGE::Point2D position)
+{
+  return position.x >= sprite->xPos() && position.x <= sprite->xPos() + sprite->width() &&
+         position.y >= sprite->yPos() && position.y <= sprite->yPos() + sprite->height();
+}
+SpriteComponent::SpriteComponent() : GameComponent(GameComponent::ID::SPRITE) {}

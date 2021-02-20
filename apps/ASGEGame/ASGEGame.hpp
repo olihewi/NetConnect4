@@ -8,6 +8,7 @@
 #include <ASGENetLib/GComponent.hpp>
 #include <Engine/OGLGame.h>
 #include <GameComponents/SpriteComponent.hpp>
+#include <GameObjects/GameObject.h>
 #include <vector>
 
 class ASGENetGame : public ASGE::OGLGame
@@ -38,6 +39,9 @@ class ASGENetGame : public ASGE::OGLGame
   void gameBoard();
   void gameRender();
   void keyHandler(ASGE::SharedEventData data);
+  void clickHandler(ASGE::SharedEventData data);
+  void mouseHandler(ASGE::SharedEventData data);
+  void scrollHandler(ASGE::SharedEventData data);
   void render() override;
   void update(const ASGE::GameTime& us) override;
 
@@ -45,16 +49,20 @@ class ASGENetGame : public ASGE::OGLGame
 
  private:
   std::vector<std::unique_ptr<GameComponent>> game_components;
+  std::vector<std::unique_ptr<GameObject>> game_objects;
   GCNetClient client;
 
-  int key_callback_id = -1; /**< Key Input Callback ID. */
+  int key_callback_id    = -1; /**< Key Input Callback ID. */
+  int click_callback_id  = -1; /**< Click Input Callback ID. */
+  int mouse_callback_id  = -1; /**< Mouse Input Callback ID. */
+  int scroll_callback_id = -1; /**< Scroll Input Callback ID. */
 
-  float window_height = static_cast<float>(ASGE::SETTINGS.window_height);
-  float window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
-  float BOARD_HEIGHT  = 124.0F;
-  float BOARD_WIDTH   = window_width / 8;
+  // float window_height = static_cast<float>(ASGE::SETTINGS.window_height);
+  // float window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
+  // float BOARD_HEIGHT  = 124.0F;
+  // float BOARD_WIDTH   = window_width / 8;
 
   std::string input_string;
-  std::unique_ptr<SpriteComponent> background;
-  std::array<std::unique_ptr<SpriteComponent>, 32 * 2> game_board;
+  // std::unique_ptr<SpriteComponent> background;
+  // std::array<std::unique_ptr<SpriteComponent>, 32 * 2> game_board;
 };

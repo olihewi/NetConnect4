@@ -15,6 +15,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   game_settings.fps_limit  = 120;
   game_settings.msaa_level = 1;
+  game_settings.mag_filter = ASGE::GameSettings::MagFilter::NEAREST;
 
   Logging::INFO("Launching Game!");
   ASGENetGame game(game_settings);

@@ -26,3 +26,4 @@ void TextComponent::render(ASGE::Renderer* renderer)
     renderer->renderText(thisText);
   }
 }
+TextComponent::TextComponent() : GameComponent(GameComponent::ID::TEXT) {}

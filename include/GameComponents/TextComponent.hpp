@@ -9,6 +9,7 @@
 class TextComponent : public GameComponent
 {
  public:
+  TextComponent();
   TextComponent(
     ASGE::Renderer* renderer, std::string text, ASGE::Point2D position, int font_index, float scale,
     ASGE::Colour colour);
