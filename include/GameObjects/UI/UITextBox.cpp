@@ -8,8 +8,9 @@
 #include <utility>
 UITextBox::UITextBox(
   ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width, float height,
-  std::string default_text) :
-  internal_string(std::move(default_text))
+  std::string default_text, size_t max_length) :
+  internal_string(std::move(default_text)),
+  max_string_length(max_length)
 {
   std::string file_path = "data/images/ui/textbox/";
   file_path += colour == BLUE ? "blue/" : colour == RED ? "red/" : "yellow/";
@@ -66,7 +67,7 @@ void UITextBox::keyInput(const ASGE::KeyEvent* keyEvent)
   {
     if (
       keyEvent->action == ASGE::KEYS::KEY_PRESSED && key >= ASGE::KEYS::KEY_SPACE &&
-      key <= ASGE::KEYS::KEY_GRAVE_ACCENT)
+      key <= ASGE::KEYS::KEY_GRAVE_ACCENT && internal_string.length() < max_string_length)
     {
       int shift_offset = 0;
       if (isShiftHeld)

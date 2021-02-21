@@ -20,7 +20,7 @@ class UITextBox : public GameObject
   UITextBox() = default;
   UITextBox(
     ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width,
-    float height, std::string default_text = "");
+    float height, std::string default_text = "", size_t max_length = 16);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
@@ -31,6 +31,7 @@ class UITextBox : public GameObject
   bool isShiftHeld = false;
   TextComponent text;
   std::string internal_string;
+  size_t max_string_length;
   std::array<SpriteComponent, 9> background;
 };
 

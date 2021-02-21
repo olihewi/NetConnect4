@@ -20,21 +20,24 @@ TitleScreen::TitleScreen(ASGE::Renderer* renderer, GCNetClient& _client) : clien
     ASGE::Point2D(window_width / 2 - 226, window_height / 2 - 62),
     300,
     50,
-    "127.0.0.1");
+    "127.0.0.1",
+    15);
   port = UITextBox(
     renderer,
     UITextBox::YELLOW,
     ASGE::Point2D(window_width / 2 + 86, window_height / 2 - 62),
     128,
     50,
-    "31276");
+    "31276",
+    5);
   username = UITextBox(
     renderer,
     UITextBox::BLUE,
     ASGE::Point2D(window_width / 2 - 226, window_height / 2),
     440,
     50,
-    "Username");
+    "Username",
+    24);
   connect = UIButton(
     renderer,
     UIButton::GREEN,

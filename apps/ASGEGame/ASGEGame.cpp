@@ -34,8 +34,6 @@ bool ASGENetGame::init()
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
   scroll_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_SCROLL, &ASGENetGame::scrollHandler, this);
-
-  gameBoard();
   return false;
 }
 
@@ -104,8 +102,6 @@ void ASGENetGame::scrollHandler(ASGE::SharedEventData data)
   }
 }
 
-void ASGENetGame::gameBoard() {}
-
 /// Updates the game and all it's components.
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
@@ -142,6 +138,5 @@ void ASGENetGame::render()
   if (gameState == MenuItem::GAME)
   {
     renderer->renderText(input_string, 128, 128);
-    gameRender();
   }
 }
