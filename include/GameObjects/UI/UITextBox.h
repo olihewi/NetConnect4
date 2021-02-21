@@ -17,12 +17,14 @@ class UITextBox : public GameObject
     RED,
     YELLOW
   };
+  UITextBox() = default;
   UITextBox(
     ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width,
-    float height, const std::string& default_text = "");
+    float height, std::string default_text = "");
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
+  std::string getString();
 
  private:
   bool isSelected  = false;

@@ -6,17 +6,29 @@
 #define ASGENETGAME_UIBUTTON_H
 
 #include <GameComponents/SpriteComponent.hpp>
+#include <GameComponents/TextComponent.hpp>
 #include <GameObjects/GameObject.h>
-#include <functional>
 class UIButton : public GameObject
 {
  public:
-  UIButton(ASGE::Renderer* renderer, std::function<void()> event);
-  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Point2D position) override;
-  void onClick();
+  enum ButtonColour
+  {
+    BLUE,
+    GREEN,
+    RED,
+    YELLOW
+  };
+  UIButton() = default;
+  UIButton(
+    ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width,
+    float height, const std::string& button_text);
+  void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
-  SpriteComponent background;
-  std::function<void()> callback;
+  bool clicked = false;
+
+ private:
+  std::array<SpriteComponent, 9> background;
+  TextComponent text;
 };
 
 #endif // ASGENETGAME_UIBUTTON_H

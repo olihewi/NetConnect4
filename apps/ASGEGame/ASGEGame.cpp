@@ -1,8 +1,7 @@
 #include "ASGEGame.hpp"
-#include <GameObjects/UI/UITextBox.h>
+#include <GameObjects/Scenes/TitleScreen.h>
 #include <Utilities/FontManager.h>
 //#include <Utilities/NetUtil.h>
-#include "GameObjects/UI/UIButton.h"
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -12,7 +11,7 @@ ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
   FontManager font_manager;
   font_manager.loadFonts(renderer.get());
   init();
-  client.connect("127.0.0.1", 31276, "Andrei");
+  // client.connect("127.0.0.1", 31276, "Andrei");
 }
 
 /// Destroys the game.
@@ -27,17 +26,14 @@ ASGENetGame::~ASGENetGame()
 /// Initialise Components.
 bool ASGENetGame::init()
 {
-  game_objects.emplace_back(std::make_unique<UITextBox>(
-    renderer.get(), UITextBox::TextBoxColour::RED, ASGE::Point2D(200, 200), 300, 50, "127.0.0.1"));
-  game_objects.emplace_back(std::make_unique<UITextBox>(
-    renderer.get(), UITextBox::TextBoxColour::YELLOW, ASGE::Point2D(512, 200), 128, 50, "31276"));
+  game_objects.emplace_back(std::make_unique<TitleScreen>(renderer.get(), client));
+
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
   scroll_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_SCROLL, &ASGENetGame::scrollHandler, this);
-  game_components.emplace_back(
-    std::make_unique<SpriteComponent>(renderer.get(), "data/background.png", ASGE::Point2D(0, 0)));
+
   gameBoard();
   return false;
 }
@@ -153,6 +149,10 @@ void ASGENetGame::render()
   for (auto& game_object : game_objects)
   {
     game_object->render(renderer.get());
+  }
+  for (auto& game_component : game_components)
+  {
+    game_component->render(renderer.get());
   }
   /*if (gameState == MenuItem::MENU_GAME)
   {

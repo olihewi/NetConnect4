@@ -5,11 +5,12 @@
 #include "UITextBox.h"
 #include "Utilities/FontManager.h"
 #include <iostream>
+#include <utility>
 UITextBox::UITextBox(
   ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width, float height,
-  const std::string& default_text)
+  std::string default_text) :
+  internal_string(std::move(default_text))
 {
-  internal_string       = default_text;
   std::string file_path = "data/images/ui/textbox/";
   file_path += colour == BLUE ? "blue/" : colour == RED ? "red/" : "yellow/";
   for (size_t i = 0; i < background.size(); i++)
@@ -137,4 +138,8 @@ void UITextBox::render(ASGE::Renderer* renderer)
   {
     bg.render(renderer);
   }
+}
+std::string UITextBox::getString()
+{
+  return internal_string;
 }
