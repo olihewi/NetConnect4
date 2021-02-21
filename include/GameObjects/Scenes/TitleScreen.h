@@ -17,7 +17,6 @@ class TitleScreen : public GameObject
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
-  void update(float dt) override;
 
  private:
   GCNetClient& client;

@@ -71,7 +71,3 @@ void TitleScreen::render(ASGE::Renderer* renderer)
   username.render(renderer);
   connect.render(renderer);
 }
-void TitleScreen::update(float dt)
-{
-  background.translate(ASGE::Point2D(dt * 100, 0));
-}
