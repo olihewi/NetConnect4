@@ -130,9 +130,14 @@ void ASGENetGame::gameBoard()
 /// Updates the game and all it's components.
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
+  auto dt = static_cast<float>(us.deltaInSecs());
   for (auto& gc : game_components)
   {
     gc->update(us.deltaInSecs());
+  }
+  for (auto& go : game_objects)
+  {
+    go->update(dt);
   }
 }
 
