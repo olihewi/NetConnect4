@@ -33,11 +33,7 @@ class ASGENetGame : public ASGE::OGLGame
 
   ASGENetGame& operator=(const ASGENetGame&) = delete;
 
-  // void disable(ASGE::Input* input);
-  // void enable(ASGE::Input* input);
   void fixedUpdate(const ASGE::GameTime& us) override;
-  void gameBoard();
-  void gameRender();
   void keyHandler(ASGE::SharedEventData data);
   void clickHandler(ASGE::SharedEventData data);
   void mouseHandler(ASGE::SharedEventData data);
@@ -57,12 +53,5 @@ class ASGENetGame : public ASGE::OGLGame
   int mouse_callback_id  = -1; /**< Mouse Input Callback ID. */
   int scroll_callback_id = -1; /**< Scroll Input Callback ID. */
 
-  // float window_height = static_cast<float>(ASGE::SETTINGS.window_height);
-  // float window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
-  // float BOARD_HEIGHT  = 124.0F;
-  // float BOARD_WIDTH   = window_width / 8;
-
   std::string input_string;
-  // std::unique_ptr<SpriteComponent> background;
-  // std::array<std::unique_ptr<SpriteComponent>, 32 * 2> game_board;
 };
