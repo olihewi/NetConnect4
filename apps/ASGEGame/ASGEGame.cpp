@@ -1,5 +1,6 @@
 #include "ASGEGame.hpp"
 #include <GameObjects/Scenes/GameScene.h>
+#include <GameObjects/Scenes/LobbyScene.h>
 #include <GameObjects/Scenes/TitleScreen.h>
 #include <Utilities/FontManager.h>
 //#include <Utilities/NetUtil.h>
@@ -7,12 +8,11 @@
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
 {
+  // toggleFPS();
   inputs->use_threads = true;
-  toggleFPS();
   FontManager font_manager;
   font_manager.loadFonts(renderer.get());
   init();
-  // client.connect("127.0.0.1", 31276, "Andrei");
 }
 
 /// Destroys the game.
@@ -27,8 +27,9 @@ ASGENetGame::~ASGENetGame()
 /// Initialise Components.
 bool ASGENetGame::init()
 {
-  game_objects.emplace_back(std::make_unique<TitleScreen>(renderer.get(), client));
-  // game_objects.emplace_back(std::make_unique<GameScene>(renderer.get()));
+  /// For some reason, ASGE only loads in sprites when it is first ran, so load all scenes...
+  setScene(SceneID::LOBBY);
+  setScene(SceneID::TITLE);
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
@@ -41,79 +42,29 @@ bool ASGENetGame::init()
 void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 {
   const auto* key = dynamic_cast<const ASGE::KeyEvent*>(data.get());
-  for (auto& game_object : game_objects)
-  {
-    game_object->keyInput(key);
-  }
-
-  if (key->key == ASGE::KEYS::KEY_ESCAPE)
-  {
-    signalExit();
-  }
-  if (gameState == MenuItem::MENU_GAME && key->key == ASGE::KEYS::KEY_ENTER)
-  {
-    gameState = MenuItem::GAME;
-  }
-  if (gameState == MenuItem::GAME)
-  {
-    if (key->action == ASGE::KEYS::KEY_PRESSED)
-    {
-      if (key->key >= ASGE::KEYS::KEY_SPACE && key->key <= ASGE::KEYS::KEY_GRAVE_ACCENT)
-      {
-        input_string += static_cast<char>(key->key);
-      }
-      if (input_string.length() > 0)
-      {
-        if (key->key == ASGE::KEYS::KEY_BACKSPACE)
-        {
-          input_string.pop_back();
-        }
-        if (key->key == ASGE::KEYS::KEY_ENTER)
-        {
-          client.send(NetUtil::CHAT_MESSAGE, input_string);
-          input_string = "";
-        }
-      }
-    }
-  }
+  current_scene->keyInput(key);
 }
 void ASGENetGame::clickHandler(ASGE::SharedEventData data)
 {
   const auto* click = dynamic_cast<const ASGE::ClickEvent*>(data.get());
-  for (auto& game_object : game_objects)
-  {
-    game_object->clickInput(click);
-  }
+  current_scene->clickInput(click);
 }
 void ASGENetGame::mouseHandler(ASGE::SharedEventData data)
 {
   const auto* mouse = dynamic_cast<const ASGE::MoveEvent*>(data.get());
-  for (auto& game_object : game_objects)
-  {
-    game_object->mouseInput(mouse);
-  }
+  current_scene->mouseInput(mouse);
 }
 void ASGENetGame::scrollHandler(ASGE::SharedEventData data)
 {
   const auto* scroll = dynamic_cast<const ASGE::ScrollEvent*>(data.get());
-  for (auto& game_object : game_objects)
-  {
-    game_object->mouseScrollInput(scroll);
-  }
+  current_scene->mouseScrollInput(scroll);
 }
 
 /// Updates the game and all it's components.
 void ASGENetGame::update(const ASGE::GameTime& us)
 {
   auto dt = static_cast<float>(us.deltaInSecs());
-  for (auto& gc : game_components)
-  {
-    gc->update(us.deltaInSecs());
-  }
-  for (auto& go : game_objects)
-  {
-    go->update(dt);
-  }
+  current_scene->update(dt);
 }
 
 /// "Use fixed steps for physics"
@@ -126,17 +77,30 @@ void ASGENetGame::fixedUpdate(const ASGE::GameTime& us)
 void ASGENetGame::render()
 {
   renderer->setFont(0);
-  for (auto& game_object : game_objects)
+  current_scene->render(renderer.get());
+}
+void ASGENetGame::setScene(SceneID scene)
+{
+  switch (scene)
   {
-    game_object->render(renderer.get());
+    case SceneID::TITLE:
+      current_scene = std::make_unique<TitleScreen>(renderer.get(), *this);
+      break;
+    case SceneID::LOBBY:
+      current_scene = std::make_unique<LobbyScene>(renderer.get(), *this);
+      break;
+    case SceneID::GAME:
+      current_scene = std::make_unique<GameScene>(renderer.get());
+      break;
   }
-  for (auto& game_component : game_components)
-  {
-    game_component->render(renderer.get());
-  }
+}
+GCNetClient& ASGENetGame::getClient()
+{
+  return client;
+}
 
-  if (gameState == MenuItem::GAME)
-  {
-    renderer->renderText(input_string, 128, 128);
-  }
+[[maybe_unused]] void
+ASGENetGame::netInput(NetUtil::CommandID command_id, const std::string& message)
+{
+  current_scene->netInput(command_id, message);
 }

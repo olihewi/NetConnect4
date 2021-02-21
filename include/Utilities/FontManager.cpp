@@ -28,4 +28,5 @@ void FontManager::loadFonts(ASGE::Renderer* renderer)
   loadFont(renderer, "data/fonts/kanit.ttf", 72);
   loadFont(renderer, "data/fonts/playfair.ttf", 24);
   loadFont(renderer, "data/fonts/comic.ttf", 32);
+  loadFont(renderer, "data/fonts/patrick.ttf", 32);
 }

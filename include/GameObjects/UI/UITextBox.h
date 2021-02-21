@@ -6,6 +6,7 @@
 #define ASGENETGAME_UITEXTBOX_H
 
 #include "GameObjects/GameObject.h"
+#include "Utilities/FontManager.h"
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameComponents/TextComponent.hpp>
 class UITextBox : public GameObject
@@ -20,11 +21,14 @@ class UITextBox : public GameObject
   UITextBox() = default;
   UITextBox(
     ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width,
-    float height, std::string default_text = "", size_t max_length = 16);
+    float height, std::string default_text = "", size_t max_length = 16,
+    int font_index = FONTS::HANDWRITING);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
   std::string getString();
+  bool getSelected() const;
+  void setString(std::string string);
 
  private:
   bool isSelected  = false;

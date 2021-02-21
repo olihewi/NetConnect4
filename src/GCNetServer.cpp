@@ -41,20 +41,23 @@ void GCNetServer::start()
   std::thread thread([&]() {
     while (accept_connections)
     {
-      UserClient& this_user = clients.emplace_back(UserClient());
-      this_user.socket      = server.accept();
-      this_user.username    = this_user.socket.get_recv_endpoint().address + ":" +
+      UserClient this_user;
+      this_user.socket = server.accept();
+      assignPlayerID(this_user);
+      this_user.username = this_user.socket.get_recv_endpoint().address + ":" +
                            std::to_string(this_user.socket.get_recv_endpoint().port);
-      auto& client = this_user.socket;
-      std::cout << "Connection received from " << this_user.socket.get_recv_endpoint().address
-                << ":" << client.get_recv_endpoint().port << std::endl;
+      auto& user_in_list = clients.emplace_back(std::move(this_user));
+      std::cout << "Connection received from " << user_in_list.socket.get_recv_endpoint().address
+                << ":" << user_in_list.socket.get_recv_endpoint().port << std::endl;
 
       /// Client worker thread
       workers.emplace_back([&] {
-        listen(this_user);
-        std::cout << this_user.username << " (" << client.get_recv_endpoint().address << ":"
-                  << client.get_recv_endpoint().port << ") has disconnected." << std::endl;
-        clients.erase(std::find(clients.begin(), clients.end(), this_user));
+        listen(user_in_list);
+        std::cout << user_in_list.username << " ("
+                  << user_in_list.socket.get_recv_endpoint().address << ":"
+                  << user_in_list.socket.get_recv_endpoint().port << ") has disconnected."
+                  << std::endl;
+        clients.erase(std::find(clients.begin(), clients.end(), user_in_list));
       });
       workers.back().detach();
     }
@@ -108,9 +111,14 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         client.username = message_string;
         break;
       case NetUtil::CHAT_MESSAGE:
-        std::cout << "[" << client.username << "] " << message_string << '\n';
+        std::cout << client.username << "> " << message_string << '\n';
         relay(buffer, { client.socket });
         break;
+      case NetUtil::CHANGE_COLOUR:
+        client.colour = static_cast<UserClient::PlayerColour>(message_string[0]);
+        relay(buffer, { client.socket });
+        break;
+      case NetUtil::ASSIGN_PLAYER_ID:
       case NetUtil::MAX_COMMAND_ID:
         // default:
         std::cout << client.username << " sent an invalid message: " << message << std::endl;
@@ -132,4 +140,30 @@ void GCNetServer::relay(const kissnet::buffer<4096>& buffer, const socket_list& 
       client.socket.send(buffer, buffer.size());
     }
   }
+}
+void GCNetServer::send(
+  kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const std::string& message)
+{
+  std::string message_string = std::string(1, static_cast<char>(command_id)) + ":" + message;
+  const auto* as_byte        = reinterpret_cast<const std::byte*>(message_string.c_str());
+  socket.send(as_byte, message_string.size());
+}
+void GCNetServer::assignPlayerID(UserClient& player)
+{
+  size_t id  = 1;
+  bool found = false;
+  while (!found)
+  {
+    found = true;
+    for (auto& client : clients)
+    {
+      if (client.ID == id)
+      {
+        id++;
+        found = false;
+      }
+    }
+  }
+  player.ID = id;
+  send(player.socket, NetUtil::ASSIGN_PLAYER_ID, std::to_string(id));
 }

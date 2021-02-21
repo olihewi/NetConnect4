@@ -6,6 +6,7 @@
 #define GAMELIB_GCNETSERVER_HPP
 
 #include "GComponent.hpp"
+#include "Utilities/NetUtil.h"
 #include <Utilities/UserClient.h>
 #include <atomic>
 #include <kissnet.hpp>
@@ -40,6 +41,8 @@ class GCNetServer final : public GameComponent
   std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;
   void relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude);
+  void send(kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const std::string& message);
+  void assignPlayerID(UserClient& player);
 };
 
 #endif // GAMELIB_GCNETSERVER_HPP

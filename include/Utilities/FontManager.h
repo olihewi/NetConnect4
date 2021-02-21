@@ -15,10 +15,11 @@ class FontManager
 };
 namespace FONTS
 {
-  constexpr int HANDWRITING = 1;
-  constexpr int TITLING     = 2;
-  constexpr int FANCY       = 3;
-  constexpr int COMIC_SANS  = 4;
+  constexpr int HANDWRITING  = 1;
+  constexpr int TITLING      = 2;
+  constexpr int FANCY        = 3;
+  constexpr int COMIC_SANS   = 4;
+  constexpr int CHAT_MESSAGE = 5;
 }
 
 #endif // ASGENETGAME_FONTMANAGER_H

@@ -5,6 +5,7 @@
 #ifndef NETGAME_GCNETCLIENT_HPP
 #define NETGAME_GCNETCLIENT_HPP
 #include "GComponent.hpp"
+#include "Utilities/UserClient.h"
 #include <Utilities/NetUtil.h>
 #include <kissnet.hpp>
 #include <string>
@@ -25,6 +26,8 @@ class GCNetClient : public GameComponent
 
   GCNetClient(const GCNetClient&) = delete;
   GCNetClient& operator=(const GCNetClient&) = delete;
+
+  std::vector<UserClient> players;
 
  private:
   kissnet::tcp_socket socket;

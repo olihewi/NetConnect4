@@ -6,9 +6,9 @@
 #define ASGENETGAME_GAMESCENE_H
 
 #include <GameComponents/SpriteComponent.hpp>
-#include <GameObjects/GameObject.h>
+#include <GameObjects/Scenes/Scene.h>
 
-class GameScene : public GameObject
+class GameScene : public Scene
 {
  public:
   GameScene(ASGE::Renderer* renderer);

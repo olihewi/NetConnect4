@@ -3,12 +3,11 @@
 //
 
 #include "UITextBox.h"
-#include "Utilities/FontManager.h"
 #include <iostream>
 #include <utility>
 UITextBox::UITextBox(
   ASGE::Renderer* renderer, TextBoxColour colour, ASGE::Point2D position, float width, float height,
-  std::string default_text, size_t max_length) :
+  std::string default_text, size_t max_length, int font_index) :
   internal_string(std::move(default_text)),
   max_string_length(max_length)
 {
@@ -33,14 +32,16 @@ UITextBox::UITextBox(
     {
       background[i].getSprite()->height(height);
     }
+    background[i].getSprite()->setGlobalZOrder(1);
   }
   text = TextComponent(
     renderer,
     internal_string,
     ASGE::Point2D(background[7].getPosition().x + 8, background[7].getPosition().y - 16),
-    FONTS::HANDWRITING,
+    font_index,
     1,
     ASGE::COLOURS::BLACK);
+  text.getText().setZOrder(2);
 }
 void UITextBox::clickInput(const ASGE::ClickEvent* clickEvent)
 {
@@ -143,4 +144,13 @@ void UITextBox::render(ASGE::Renderer* renderer)
 std::string UITextBox::getString()
 {
   return internal_string;
+}
+bool UITextBox::getSelected() const
+{
+  return isSelected;
+}
+void UITextBox::setString(std::string string)
+{
+  internal_string = std::move(string);
+  text.getText().setString(internal_string + (isSelected ? '_' : ' '));
 }

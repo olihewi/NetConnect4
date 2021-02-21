@@ -24,11 +24,12 @@ class UIButton : public GameObject
     float height, const std::string& button_text);
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
-  bool clicked = false;
+  bool getClick();
 
  private:
   std::array<SpriteComponent, 9> background;
   TextComponent text;
+  bool clicked = false;
 };
 
 #endif // ASGENETGAME_UIBUTTON_H

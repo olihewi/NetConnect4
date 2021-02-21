@@ -65,3 +65,9 @@ void UIButton::render(ASGE::Renderer* renderer)
   }
   text.render(renderer);
 }
+bool UIButton::getClick()
+{
+  bool return_val = clicked;
+  clicked         = false;
+  return return_val;
+}

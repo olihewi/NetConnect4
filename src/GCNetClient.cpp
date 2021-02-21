@@ -8,8 +8,6 @@
 #include <kissnet.hpp>
 #include <thread>
 
-GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
-
 void GCNetClient::update(double /*dt*/) {}
 
 kissnet::tcp_socket& GCNetClient::connect(
@@ -67,7 +65,7 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
   const auto* message = reinterpret_cast<const char*>(buffer.data());
   std::string message_string(message);
   auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-  message_string  = message_string.substr(message_string.find_last_of(':') + 1);
+  message_string  = message_string.substr(message_string.find_first_of(':') + 1);
   switch (command_id)
   {
     case NetUtil::CHAT_MESSAGE:
@@ -76,9 +74,24 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
     case NetUtil::CHANGE_USERNAME:
       std::cout << " changed their username to " << message << std::endl;
       break;
+    case NetUtil::ASSIGN_PLAYER_ID:
+      if (players.empty())
+      {
+        players.emplace_back(UserClient(static_cast<size_t>(std::stoi(message_string))));
+      }
+      else
+      {
+        players[0].ID = static_cast<size_t>(std::stoi(message_string));
+      }
+      std::cout << "Player ID assigned to " + message_string << std::endl;
+      break;
+    case NetUtil::CHANGE_COLOUR:
+      std::cout << message << std::endl;
+      break;
     case NetUtil::MAX_COMMAND_ID:
       // default:
       std::cout << "Recieved an invalid message: " << message << std::endl;
       break;
   }
 }
+GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}

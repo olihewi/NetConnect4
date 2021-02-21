@@ -7,22 +7,21 @@
 #include <ASGENetLib/GCNetClient.hpp>
 #include <ASGENetLib/GComponent.hpp>
 #include <Engine/OGLGame.h>
-#include <GameComponents/SpriteComponent.hpp>
-#include <GameObjects/GameObject.h>
+#include <GameObjects/Scenes/Scene.h>
 #include <vector>
 
 class ASGENetGame : public ASGE::OGLGame
 {
  public:
-  enum class MenuItem
+  enum class SceneID
   {
-    MENU_GAME = 0,
-    GAME      = 1,
-    //  LOBBY_GAME = 2,
+    TITLE = 0,
+    LOBBY = 1,
+    GAME  = 2,
     //  EXIT_GAME  = 3
   };
 
-  MenuItem gameState = MenuItem::MENU_GAME;
+  SceneID gameState = SceneID::TITLE;
 
  public:
   explicit ASGENetGame(const ASGE::GameSettings& settings);
@@ -38,20 +37,20 @@ class ASGENetGame : public ASGE::OGLGame
   void clickHandler(ASGE::SharedEventData data);
   void mouseHandler(ASGE::SharedEventData data);
   void scrollHandler(ASGE::SharedEventData data);
+  [[maybe_unused]] void netInput(NetUtil::CommandID command_id, const std::string& message);
   void render() override;
   void update(const ASGE::GameTime& us) override;
 
+  void setScene(SceneID scene);
   bool init();
+  GCNetClient& getClient();
 
  private:
-  std::vector<std::unique_ptr<GameComponent>> game_components;
-  std::vector<std::unique_ptr<GameObject>> game_objects;
+  std::unique_ptr<Scene> current_scene;
   GCNetClient client;
 
   int key_callback_id    = -1; /**< Key Input Callback ID. */
   int click_callback_id  = -1; /**< Click Input Callback ID. */
   int mouse_callback_id  = -1; /**< Mouse Input Callback ID. */
   int scroll_callback_id = -1; /**< Scroll Input Callback ID. */
-
-  std::string input_string;
 };

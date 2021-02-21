@@ -12,6 +12,8 @@ class NetUtil
   {
     CHAT_MESSAGE = 65,
     CHANGE_USERNAME,
+    ASSIGN_PLAYER_ID, /// Server-only
+    CHANGE_COLOUR,
     MAX_COMMAND_ID
   };
 };
