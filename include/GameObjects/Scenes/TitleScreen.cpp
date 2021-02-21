@@ -13,6 +13,7 @@ TitleScreen::TitleScreen(ASGE::Renderer* renderer, GCNetClient& _client) : clien
   background         = SpriteComponent(renderer, "data/images/background.png", ASGE::Point2D(0, 0));
   background.getSprite()->width(window_width);
   background.getSprite()->height(window_height);
+
   ip_address = UITextBox(
     renderer,
     UITextBox::RED,

@@ -1,4 +1,5 @@
 #include "ASGEGame.hpp"
+#include <GameObjects/Scenes/GameScene.h>
 #include <GameObjects/Scenes/TitleScreen.h>
 #include <Utilities/FontManager.h>
 //#include <Utilities/NetUtil.h>
@@ -27,7 +28,7 @@ ASGENetGame::~ASGENetGame()
 bool ASGENetGame::init()
 {
   game_objects.emplace_back(std::make_unique<TitleScreen>(renderer.get(), client));
-
+  // game_objects.emplace_back(std::make_unique<GameScene>(renderer.get()));
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
@@ -103,29 +104,7 @@ void ASGENetGame::scrollHandler(ASGE::SharedEventData data)
   }
 }
 
-void ASGENetGame::gameBoard()
-{
-  /*auto x_pos            = 0.0F;
-  auto y_pos            = 0.0F;
-  const int BOARD_Y_POS = 75;
-
-  for (auto& board : game_board)
-  {
-    board = game_objects.emplace_back(std::make_unique<SpriteComponent>(
-      renderer.get(),"data/connectblock.png", ASGE::Point2D(0, 0)));
-    board->getSprite()->width(BOARD_WIDTH);
-    board->getSprite()->height(BOARD_HEIGHT);
-    board->getSprite()->xPos(x_pos);
-    board->getSprite()->yPos(y_pos + BOARD_Y_POS);
-    x_pos += board->getSprite()->width();
-
-    if (x_pos >= board->getSprite()->width() * 8)
-    {
-      x_pos = 0;
-      y_pos += board->getSprite()->height();
-    }
-  }*/
-}
+void ASGENetGame::gameBoard() {}
 
 /// Updates the game and all it's components.
 void ASGENetGame::update(const ASGE::GameTime& us)
@@ -154,21 +133,10 @@ void ASGENetGame::render()
   {
     game_component->render(renderer.get());
   }
-  /*if (gameState == MenuItem::MENU_GAME)
-  {
-    background->render(renderer.get());
-  }*/
+
   if (gameState == MenuItem::GAME)
   {
     renderer->renderText(input_string, 128, 128);
     gameRender();
   }
-}
-
-void ASGENetGame::gameRender()
-{
-  /*for (auto& board : game_board)
-  {
-    board->render(renderer.get());
-  }*/
 }
