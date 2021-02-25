@@ -3,6 +3,7 @@
 //
 
 #include "LobbyScene.h"
+#include <Engine/FileIO.h>
 #include <iostream>
 LobbyScene::LobbyScene(ASGE::Renderer* renderer, ASGENetGame& main) :
   game(main), chat_window(
@@ -10,6 +11,16 @@ LobbyScene::LobbyScene(ASGE::Renderer* renderer, ASGENetGame& main) :
                 ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0)),
   ready_button(renderer, UIButton::GREEN, ASGE::Point2D(0, 0), 300, 50, "READY")
 {
+  soloud.init();
+  ASGE::FILEIO::File file;
+  if (file.open("data/audio/8ball.wav"))
+  {
+    auto io_buffer = file.read();
+    sample.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  sample.setLooping(true);
+  soloud.play(sample);
 }
 void LobbyScene::render(ASGE::Renderer* renderer)
 {

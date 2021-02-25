@@ -8,7 +8,9 @@
 #include <ASGENetLib/GComponent.hpp>
 #include <Engine/OGLGame.h>
 #include <GameObjects/Scenes/Scene.h>
-#include <vector>
+
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud.h"
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud_wav.h"
 
 class ASGENetGame : public ASGE::OGLGame
 {
@@ -48,6 +50,9 @@ class ASGENetGame : public ASGE::OGLGame
  private:
   std::unique_ptr<Scene> current_scene;
   GCNetClient client;
+
+  SoLoud::Soloud soloud;
+  SoLoud::Wav sample;
 
   int key_callback_id    = -1; /**< Key Input Callback ID. */
   int click_callback_id  = -1; /**< Click Input Callback ID. */

@@ -6,6 +6,9 @@
 #define ASGENETGAME_LOBBYSCENE_H
 
 #include "../../../apps/ASGEGame/ASGEGame.hpp"
+
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud.h"
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud_wav.h"
 #include <ASGENetLib/GCNetClient.hpp>
 #include <GameObjects/Scenes/Scene.h>
 #include <GameObjects/UI/ChatWindow.h>
@@ -23,6 +26,8 @@ class LobbyScene : public Scene
   ASGENetGame& game;
   ChatWindow chat_window;
   UIButton ready_button;
+  SoLoud::Soloud soloud;
+  SoLoud::Wav sample;
 };
 
 #endif // ASGENETGAME_LOBBYSCENE_H

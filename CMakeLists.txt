@@ -9,7 +9,7 @@ set(ENABLE_JSON OFF CACHE BOOL "Adds YAML to the Project" FORCE)
 set(ENABLE_KISSNET ON CACHE BOOL "Adds Kissnet Sockets to Project" FORCE)
 set(ENABLE_LIVE_ANALYSIS OFF CACHE BOOL "Adds live static analysis. SLOW!!!" FORCE)
 set(ENABLE_MAGIC_ENUM ON CACHE BOOL "Adds reflection support for ENUMS" FORCE)
-set(ENABLE_SOUND OFF CACHE BOOL "Adds SoLoud Audio" FORCE)
+set(ENABLE_SOUND ON CACHE BOOL "Adds SoLoud Audio" FORCE)
 
 
 #------------------------------------------------------------------------------

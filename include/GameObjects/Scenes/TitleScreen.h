@@ -6,11 +6,14 @@
 #define ASGENETGAME_TITLESCREEN_H
 
 #include "../../../apps/ASGEGame/ASGEGame.hpp"
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud.h"
+#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud_wav.h"
 #include <ASGENetLib/GCNetClient.hpp>
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameObjects/Scenes/Scene.h>
 #include <GameObjects/UI/UIButton.h>
 #include <GameObjects/UI/UITextBox.h>
+
 class TitleScreen : public Scene
 {
  public:

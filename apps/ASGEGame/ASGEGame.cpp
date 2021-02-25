@@ -4,6 +4,7 @@
 #include <GameObjects/Scenes/TitleScreen.h>
 #include <Utilities/FontManager.h>
 //#include <Utilities/NetUtil.h>
+#include <Engine/FileIO.h>
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -35,6 +36,17 @@ bool ASGENetGame::init()
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
   scroll_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_SCROLL, &ASGENetGame::scrollHandler, this);
+
+  soloud.init();
+  ASGE::FILEIO::File file;
+  if (file.open("data/audio/8ball.wav"))
+  {
+    auto io_buffer = file.read();
+    sample.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  sample.setLooping(true);
+  soloud.play(sample);
   return false;
 }
 
