@@ -8,14 +8,18 @@
 #include <iostream>
 #include <utility>
 
-TitleScreen::TitleScreen(ASGE::Renderer* renderer, ASGENetGame& main) : game(main)
+TitleScreen::TitleScreen(
+  ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
+  GCNetClient& _client) :
+  scene_callback(std::move(_scene_callback)),
+  client(_client), background(renderer, "data/images/background.png", ASGE::Point2D(0, 0))
 {
   auto window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
   auto window_height = static_cast<float>(ASGE::SETTINGS.window_height);
-  background         = SpriteComponent(renderer, "data/images/background.png", ASGE::Point2D(0, 0));
-  background.getSprite()->width(window_width);
-  background.getSprite()->height(window_height);
-  background.getSprite()->setGlobalZOrder(-1);
+  auto& bg_sprite    = background.getSprite();
+  bg_sprite->width(window_width);
+  bg_sprite->height(window_height);
+  bg_sprite->setGlobalZOrder(-1);
 
   ip_address = UITextBox(
     renderer,
@@ -63,11 +67,11 @@ void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent)
   connect.clickInput(clickEvent);
   if (connect.getClick())
   {
-    game.getClient().connect(
+    client.connect(
       ip_address.getString(),
       static_cast<uint16_t>(std::stoi(port.getString())),
       username.getString());
-    game.setScene(ASGENetGame::SceneID::LOBBY);
+    scene_callback(Scene::SceneID::LOBBY);
   }
 }
 void TitleScreen::render(ASGE::Renderer* renderer)

@@ -27,7 +27,7 @@ class UITextBox : public GameObject
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
   std::string getString();
-  bool getSelected() const;
+  [[nodiscard]] bool getSelected() const;
   void setString(std::string string);
 
  private:
@@ -35,7 +35,7 @@ class UITextBox : public GameObject
   bool isShiftHeld = false;
   TextComponent text;
   std::string internal_string;
-  size_t max_string_length;
+  size_t max_string_length = 16;
   std::array<SpriteComponent, 9> background;
 };
 

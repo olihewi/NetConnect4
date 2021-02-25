@@ -1,10 +1,8 @@
 #include "ASGEGame.hpp"
+#include <Engine/FileIO.h>
 #include <GameObjects/Scenes/GameScene.h>
 #include <GameObjects/Scenes/LobbyScene.h>
 #include <GameObjects/Scenes/TitleScreen.h>
-#include <Utilities/FontManager.h>
-//#include <Utilities/NetUtil.h>
-#include <Engine/FileIO.h>
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -28,25 +26,26 @@ ASGENetGame::~ASGENetGame()
 /// Initialise Components.
 bool ASGENetGame::init()
 {
+  soloud.init();
+  client.setCallback([this](auto&& PH1) { netInput(PH1); });
   /// For some reason, ASGE only loads in sprites when it is first ran, so load all scenes...
-  setScene(SceneID::LOBBY);
-  setScene(SceneID::TITLE);
+  setScene(Scene::SceneID::LOBBY);
+  setScene(Scene::SceneID::TITLE);
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
   scroll_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_SCROLL, &ASGENetGame::scrollHandler, this);
 
-  soloud.init();
   ASGE::FILEIO::File file;
   if (file.open("data/audio/8ball.wav"))
   {
     auto io_buffer = file.read();
-    sample.loadMem(
+    eight_ball.loadMem(
       io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+    eight_ball.setLooping(true);
   }
-  sample.setLooping(true);
-  soloud.play(sample);
+  soloud.play(eight_ball);
   return false;
 }
 
@@ -91,28 +90,27 @@ void ASGENetGame::render()
   renderer->setFont(0);
   current_scene->render(renderer.get());
 }
-void ASGENetGame::setScene(SceneID scene)
+void ASGENetGame::setScene(Scene::SceneID scene)
 {
   switch (scene)
   {
-    case SceneID::TITLE:
-      current_scene = std::make_unique<TitleScreen>(renderer.get(), *this);
+    case Scene::SceneID::TITLE:
+      current_scene = std::make_unique<TitleScreen>(
+        renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client);
       break;
-    case SceneID::LOBBY:
-      current_scene = std::make_unique<LobbyScene>(renderer.get(), *this);
+    case Scene::SceneID::LOBBY:
+      current_scene = std::make_unique<LobbyScene>(
+        renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client);
       break;
-    case SceneID::GAME:
+    case Scene::SceneID::GAME:
       current_scene = std::make_unique<GameScene>(renderer.get());
       break;
   }
 }
-GCNetClient& ASGENetGame::getClient()
-{
-  return client;
-}
 
-[[maybe_unused]] void
-ASGENetGame::netInput(NetUtil::CommandID command_id, const std::string& message)
+void ASGENetGame::netInput(std::string message)
 {
-  current_scene->netInput(command_id, message);
+  auto command_id = static_cast<NetUtil::CommandID>(message[0]);
+  message         = message.substr(message.find_last_of(':'));
+  current_scene->netInput(renderer.get(), command_id, message);
 }

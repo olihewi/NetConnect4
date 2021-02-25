@@ -7,8 +7,7 @@
 #include <iostream>
 #include <kissnet.hpp>
 #include <thread>
-
-void GCNetClient::update(double /*dt*/) {}
+#include <utility>
 
 kissnet::tcp_socket& GCNetClient::connect(
   const std::string& server_ip, kissnet::port_t server_port, const std::string& username)
@@ -64,6 +63,7 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
 {
   const auto* message = reinterpret_cast<const char*>(buffer.data());
   std::string message_string(message);
+  net_callback(message_string);
   auto command_id = static_cast<NetUtil::CommandID>(message[0]);
   message_string  = message_string.substr(message_string.find_first_of(':') + 1);
   switch (command_id)
@@ -81,7 +81,7 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
       }
       else
       {
-        players[0].ID = static_cast<size_t>(std::stoi(message_string));
+        players.front().user_id = static_cast<size_t>(std::stoi(message_string));
       }
       std::cout << "Player ID assigned to " + message_string << std::endl;
       break;
@@ -95,3 +95,11 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
   }
 }
 GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
+void GCNetClient::setCallback(std::function<void(std::string)> _callback)
+{
+  net_callback = std::move(_callback);
+}
+UserClient& GCNetClient::getPlayer(size_t index)
+{
+  return players[index];
+}

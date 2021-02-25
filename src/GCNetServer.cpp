@@ -157,13 +157,13 @@ void GCNetServer::assignPlayerID(UserClient& player)
     found = true;
     for (auto& client : clients)
     {
-      if (client.ID == id)
+      if (client.user_id == id)
       {
         id++;
         found = false;
       }
     }
   }
-  player.ID = id;
+  player.user_id = id;
   send(player.socket, NetUtil::ASSIGN_PLAYER_ID, std::to_string(id));
 }

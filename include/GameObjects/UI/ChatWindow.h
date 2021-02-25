@@ -10,7 +10,7 @@
 class ChatWindow : public GameObject
 {
  public:
-  ChatWindow(ASGE::Renderer* renderer, GCNetClient& _client, ASGE::Point2D position);
+  ChatWindow(ASGE::Renderer* renderer, ASGE::Point2D position, GCNetClient& _client);
   void render(ASGE::Renderer* renderer) override;
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;

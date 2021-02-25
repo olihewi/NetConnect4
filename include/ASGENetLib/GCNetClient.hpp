@@ -7,30 +7,38 @@
 #include "GComponent.hpp"
 #include "Utilities/UserClient.h"
 #include <Utilities/NetUtil.h>
+#include <functional>
 #include <kissnet.hpp>
 #include <string>
+#include <vector>
 
 class GCNetClient : public GameComponent
 {
  public:
   GCNetClient();
+  GCNetClient(const GCNetClient&) = delete;
+  GCNetClient& operator=(const GCNetClient&) = delete;
   ~GCNetClient() override;
+
+  void setCallback(std::function<void(std::string)> _callback);
+
   kissnet::tcp_socket&
   connect(const std::string& server_ip, unsigned short server_port, const std::string& username);
   void run();
-  void update(double dt) override;
+
   void render(ASGE::Renderer* /*renderer*/) override {}
   void send(NetUtil::CommandID command_id, const std::string& message);
   void processMessage(kissnet::buffer<4096> buffer);
-  std::atomic<bool> connected = false;
 
-  GCNetClient(const GCNetClient&) = delete;
-  GCNetClient& operator=(const GCNetClient&) = delete;
+  [[nodiscard]] UserClient& getPlayer(size_t index);
 
-  std::vector<UserClient> players;
+  void update(double /*dt*/) override {}
 
  private:
   kissnet::tcp_socket socket;
+  std::atomic<bool> connected = false;
+  std::function<void(std::string)> net_callback;
+  std::vector<UserClient> players{};
 };
 
 #endif // NETGAME_GCNETCLIENT_HPP

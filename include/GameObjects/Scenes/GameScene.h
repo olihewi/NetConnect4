@@ -11,9 +11,9 @@
 class GameScene : public Scene
 {
  public:
-  GameScene(ASGE::Renderer* renderer);
+  explicit GameScene(ASGE::Renderer* renderer);
   void render(ASGE::Renderer* renderer) override;
-  void board_game(ASGE::Renderer* renderer);
+  void boardGame(ASGE::Renderer* renderer);
 
  private:
   std::array<SpriteComponent, 32 * 2> game_board;

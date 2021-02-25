@@ -6,7 +6,7 @@
 
 GameScene::GameScene(ASGE::Renderer* renderer)
 {
-  board_game(renderer);
+  boardGame(renderer);
 }
 
 void GameScene::render(ASGE::Renderer* renderer)
@@ -17,7 +17,7 @@ void GameScene::render(ASGE::Renderer* renderer)
   }
 }
 
-void GameScene::board_game(ASGE::Renderer* renderer)
+void GameScene::boardGame(ASGE::Renderer* renderer)
 {
   auto x_pos            = 0.0F;
   auto y_pos            = 0.0F;

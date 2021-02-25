@@ -22,11 +22,11 @@ class UserClient
     WHITE
   };
   bool operator==(const UserClient& rhs) const { return rhs.socket == socket; }
-  UserClient(size_t _ID) : ID(_ID) {}
+  explicit UserClient(size_t this_id) : user_id(this_id) {}
   UserClient() = default;
   kissnet::tcp_socket socket;
-  size_t ID;
-  PlayerColour colour;
+  size_t user_id       = 0;
+  PlayerColour colour  = WHITE;
   std::string username = "UNNAMED";
 };
 

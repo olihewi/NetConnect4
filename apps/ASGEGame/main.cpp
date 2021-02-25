@@ -5,7 +5,7 @@
 int main(int /*argc*/, char* /*argv*/[])
 {
   ASGE::GameSettings game_settings;
-  game_settings.window_title = "ASGENetGame";
+  game_settings.window_title = "Connect 4";
 
   game_settings.window_width  = 1920;
   game_settings.window_height = 1080;
