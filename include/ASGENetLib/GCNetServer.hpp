@@ -40,8 +40,12 @@ class GCNetServer final : public GameComponent
   std::list<UserClient> clients;
   std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;
-  void relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude);
-  void send(kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const std::string& message);
+  void relay(
+    NetUtil::CommandID command_id, UserClient& origin, const std::string& message,
+    const socket_list& exclude);
+  void send(
+    kissnet::tcp_socket& socket, NetUtil::CommandID command_id, UserClient& origin,
+    const std::string& message);
   void assignPlayerID(UserClient& player);
 };
 

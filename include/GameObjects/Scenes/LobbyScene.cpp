@@ -34,11 +34,13 @@ void LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent)
   }
 }
 void LobbyScene::netInput(
-  ASGE::Renderer* renderer, NetUtil::CommandID command_id, const std::string& message)
+  ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
+  const std::string& message)
 {
   if (command_id == NetUtil::CHAT_MESSAGE)
   {
-    std::cout << "Received Message: " << message << std::endl;
-    chat_window.addMessage(renderer, message);
+    std::string message_string = origin.username + " > " + message;
+    std::cout << message_string << std::endl;
+    chat_window.addMessage(renderer, message_string);
   }
 }

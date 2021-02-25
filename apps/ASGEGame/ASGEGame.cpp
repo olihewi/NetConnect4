@@ -3,6 +3,7 @@
 #include <GameObjects/Scenes/GameScene.h>
 #include <GameObjects/Scenes/LobbyScene.h>
 #include <GameObjects/Scenes/TitleScreen.h>
+#include <iostream>
 
 /// Initialises the game.
 ASGENetGame::ASGENetGame(const ASGE::GameSettings& settings) : OGLGame(settings)
@@ -108,9 +109,11 @@ void ASGENetGame::setScene(Scene::SceneID scene)
   }
 }
 
-void ASGENetGame::netInput(std::string message)
+void ASGENetGame::netInput(const char* message)
 {
   auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-  message         = message.substr(message.find_last_of(':'));
-  current_scene->netInput(renderer.get(), command_id, message);
+  auto& user      = client.getPlayer(static_cast<size_t>(message[1] - 64));
+  std::string message_string(message);
+  message_string = message_string.substr(message_string.find_last_of(':') + 1);
+  current_scene->netInput(renderer.get(), command_id, user, message_string);
 }

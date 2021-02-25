@@ -15,7 +15,7 @@ ChatWindow::ChatWindow(ASGE::Renderer* renderer, ASGE::Point2D position, GCNetCl
     600, 50, "", 48, FONTS::CHAT_MESSAGE)
 {
   background.getSprite()->setGlobalZOrder(-1);
-  addMessage(renderer, "Olihewi > This is a test message\nand its contents are top-secret!");
+  addMessage(renderer, "This is the start of the chat.");
 }
 void ChatWindow::render(ASGE::Renderer* renderer)
 {

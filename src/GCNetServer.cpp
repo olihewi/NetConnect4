@@ -101,22 +101,23 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
   std::string message_string(message);
   if (message_string.find(':') != std::string::npos)
   {
-    auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-    message_string  = message_string.substr(message_string.find_last_of(':') + 1);
+    auto command_id              = static_cast<NetUtil::CommandID>(message[0]);
+    std::string message_contents = message_string.substr(message_string.find_first_of(':') + 1);
     switch (command_id)
     {
       case NetUtil::CHANGE_USERNAME: /// Username change
         std::cout << client.username << " changed their username to " << message_string
                   << std::endl;
         client.username = message_string;
+        relay(NetUtil::CHANGE_USERNAME, client, message_contents, {});
         break;
       case NetUtil::CHAT_MESSAGE:
         std::cout << client.username << "> " << message_string << '\n';
-        relay(buffer, { client.socket });
+        relay(NetUtil::CHAT_MESSAGE, client, message_contents, {});
         break;
       case NetUtil::CHANGE_COLOUR:
         client.colour = static_cast<UserClient::PlayerColour>(message_string[0]);
-        relay(buffer, { client.socket });
+        relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
       case NetUtil::ASSIGN_PLAYER_ID:
       case NetUtil::MAX_COMMAND_ID:
@@ -131,21 +132,34 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
   }
 }
 
-void GCNetServer::relay(const kissnet::buffer<4096>& buffer, const socket_list& exclude)
+void GCNetServer::relay(
+  NetUtil::CommandID command_id, UserClient& origin, const std::string& message,
+  const socket_list& exclude)
 {
+  std::string message_string;
+  message_string += static_cast<char>(command_id);
+  message_string += static_cast<char>(origin.user_id + 64);
+  message_string += ':';
+  message_string += message;
+  const auto* as_byte = reinterpret_cast<const std::byte*>(message_string.c_str());
   for (auto& client : clients)
   {
     if (auto it = std::find(exclude.cbegin(), exclude.cend(), client.socket); it == exclude.cend())
     {
-      client.socket.send(buffer, buffer.size());
+      client.socket.send(as_byte, message_string.size());
     }
   }
 }
 void GCNetServer::send(
-  kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const std::string& message)
+  kissnet::tcp_socket& socket, NetUtil::CommandID command_id, UserClient& client,
+  const std::string& message)
 {
-  std::string message_string = std::string(1, static_cast<char>(command_id)) + ":" + message;
-  const auto* as_byte        = reinterpret_cast<const std::byte*>(message_string.c_str());
+  std::string message_string;
+  message_string += static_cast<char>(command_id);
+  message_string += static_cast<char>(client.user_id + 64);
+  message_string += ':';
+  message_string += message;
+  const auto* as_byte = reinterpret_cast<const std::byte*>(message_string.c_str());
   socket.send(as_byte, message_string.size());
 }
 void GCNetServer::assignPlayerID(UserClient& player)
@@ -165,5 +179,5 @@ void GCNetServer::assignPlayerID(UserClient& player)
     }
   }
   player.user_id = id;
-  send(player.socket, NetUtil::ASSIGN_PLAYER_ID, std::to_string(id));
+  send(player.socket, NetUtil::ASSIGN_PLAYER_ID, player, std::to_string(id));
 }

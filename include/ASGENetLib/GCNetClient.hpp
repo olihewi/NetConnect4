@@ -20,7 +20,7 @@ class GCNetClient : public GameComponent
   GCNetClient& operator=(const GCNetClient&) = delete;
   ~GCNetClient() override;
 
-  void setCallback(std::function<void(std::string)> _callback);
+  void setCallback(std::function<void(const char*)> _callback);
 
   kissnet::tcp_socket&
   connect(const std::string& server_ip, unsigned short server_port, const std::string& username);
@@ -37,7 +37,7 @@ class GCNetClient : public GameComponent
  private:
   kissnet::tcp_socket socket;
   std::atomic<bool> connected = false;
-  std::function<void(std::string)> net_callback;
+  std::function<void(const char*)> net_callback;
   std::vector<UserClient> players{};
 };
 

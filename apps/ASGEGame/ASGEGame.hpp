@@ -29,7 +29,7 @@ class ASGENetGame : public ASGE::OGLGame
   void update(const ASGE::GameTime& us) override;
   void fixedUpdate(const ASGE::GameTime& us) override;
 
-  void netInput(std::string message);
+  void netInput(const char* message);
 
   void render() override;
 

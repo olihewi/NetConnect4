@@ -19,7 +19,8 @@ class LobbyScene : public Scene
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer*) override;
   void netInput(
-    ASGE::Renderer* renderer, NetUtil::CommandID command_id, const std::string& message) override;
+    ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
+    const std::string& message) override;
 
  private:
   std::function<void(Scene::SceneID)> scene_callback;

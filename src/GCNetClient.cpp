@@ -63,43 +63,46 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
 {
   const auto* message = reinterpret_cast<const char*>(buffer.data());
   std::string message_string(message);
-  net_callback(message_string);
   auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-  message_string  = message_string.substr(message_string.find_first_of(':') + 1);
-  switch (command_id)
+  message_string  = message_string.substr(message_string.find_last_of(':') + 1);
+  if (command_id == NetUtil::ASSIGN_PLAYER_ID)
   {
-    case NetUtil::CHAT_MESSAGE:
-      std::cout << message_string << std::endl;
-      break;
-    case NetUtil::CHANGE_USERNAME:
-      std::cout << " changed their username to " << message << std::endl;
-      break;
-    case NetUtil::ASSIGN_PLAYER_ID:
-      if (players.empty())
-      {
-        players.emplace_back(UserClient(static_cast<size_t>(std::stoi(message_string))));
-      }
-      else
-      {
-        players.front().user_id = static_cast<size_t>(std::stoi(message_string));
-      }
-      std::cout << "Player ID assigned to " + message_string << std::endl;
-      break;
-    case NetUtil::CHANGE_COLOUR:
-      std::cout << message << std::endl;
-      break;
-    case NetUtil::MAX_COMMAND_ID:
-      // default:
-      std::cout << "Recieved an invalid message: " << message << std::endl;
-      break;
+    if (players.empty())
+    {
+      players.emplace_back(UserClient(static_cast<size_t>(std::stoi(message_string))));
+    }
+    else
+    {
+      players.front().user_id = static_cast<size_t>(std::stoi(message_string));
+    }
+    std::cout << "User ID assigned: " << message_string << std::endl;
   }
+  auto& user = getPlayer(static_cast<size_t>(message[1] - 64));
+  if (command_id == NetUtil::CHANGE_USERNAME)
+  {
+    std::cout << user.username << " changed their username to " << message_string << std::endl;
+    user.username = message_string;
+  }
+  else if (command_id == NetUtil::CHANGE_COLOUR)
+  {
+    std::cout << user.username << " changed their colour to " << message_string << std::endl;
+    user.colour = static_cast<UserClient::PlayerColour>(message_string[0]);
+  }
+  net_callback(message);
 }
 GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
-void GCNetClient::setCallback(std::function<void(std::string)> _callback)
+void GCNetClient::setCallback(std::function<void(const char*)> _callback)
 {
   net_callback = std::move(_callback);
 }
 UserClient& GCNetClient::getPlayer(size_t index)
 {
-  return players[index];
+  for (auto& player : players)
+  {
+    if (player.user_id == index)
+    {
+      return player;
+    }
+  }
+  return players.emplace_back(UserClient(index));
 }
