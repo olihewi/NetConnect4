@@ -35,7 +35,7 @@ class GCNetServer final : public GameComponent
  private:
   void listen(UserClient& client);
   void processMessage(UserClient& client, kissnet::buffer<4096>& buffer);
-
+  void onConnection(UserClient& client);
   kissnet::tcp_socket server;
   std::list<UserClient> clients;
   std::vector<std::thread> workers;

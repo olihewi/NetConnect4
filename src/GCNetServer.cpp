@@ -43,7 +43,7 @@ void GCNetServer::start()
     {
       UserClient this_user;
       this_user.socket = server.accept();
-      assignPlayerID(this_user);
+      onConnection(this_user);
       this_user.username = this_user.socket.get_recv_endpoint().address + ":" +
                            std::to_string(this_user.socket.get_recv_endpoint().port);
       auto& user_in_list = clients.emplace_back(std::move(this_user));
@@ -180,4 +180,13 @@ void GCNetServer::assignPlayerID(UserClient& player)
   }
   player.user_id = id;
   send(player.socket, NetUtil::ASSIGN_PLAYER_ID, player, std::to_string(id));
+}
+
+void GCNetServer::onConnection(UserClient& client)
+{
+  assignPlayerID(client);
+  for (auto& user : clients)
+  {
+    send(client.socket, NetUtil::CHANGE_USERNAME, user, user.username);
+  }
 }
