@@ -123,3 +123,8 @@ UserClient& GCNetClient::getPlayer(size_t index)
   }
   return players.emplace_back(UserClient(index));
 }
+
+void GCNetClient::disconnect()
+{
+  connected = false;
+}

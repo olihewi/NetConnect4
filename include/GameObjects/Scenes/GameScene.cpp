@@ -7,6 +7,8 @@
 GameScene::GameScene(ASGE::Renderer* renderer)
 {
   boardGame(renderer);
+  playerTurn = TextComponent(
+    renderer, "TURNS", ASGE::Point2D(500, 500), FONTS::CHAT_MESSAGE, 1, ASGE::COLOURS::GREEN);
 }
 
 void GameScene::render(ASGE::Renderer* renderer)
@@ -15,6 +17,7 @@ void GameScene::render(ASGE::Renderer* renderer)
   {
     board.render(renderer);
   }
+  playerTurn.render(renderer);
 }
 
 void GameScene::boardGame(ASGE::Renderer* renderer)

@@ -5,7 +5,9 @@
 #ifndef ASGENETGAME_GAMESCENE_H
 #define ASGENETGAME_GAMESCENE_H
 
+#include "Utilities/FontManager.h"
 #include <GameComponents/SpriteComponent.hpp>
+#include <GameComponents/TextComponent.hpp>
 #include <GameObjects/Scenes/Scene.h>
 
 class GameScene : public Scene
@@ -17,6 +19,7 @@ class GameScene : public Scene
 
  private:
   std::array<SpriteComponent, 32 * 2> game_board;
+  TextComponent playerTurn;
 };
 
 #endif // ASGENETGAME_GAMESCENE_H

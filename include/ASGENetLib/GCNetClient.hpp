@@ -29,6 +29,7 @@ class GCNetClient : public GameComponent
   void render(ASGE::Renderer* /*renderer*/) override {}
   void send(NetUtil::CommandID command_id, const std::string& message);
   void processMessage(kissnet::buffer<4096> buffer);
+  void disconnect();
 
   [[nodiscard]] UserClient& getPlayer(size_t index);
 
