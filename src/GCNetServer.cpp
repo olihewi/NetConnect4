@@ -188,5 +188,7 @@ void GCNetServer::onConnection(UserClient& client)
   for (auto& user : clients)
   {
     send(client.socket, NetUtil::CHANGE_USERNAME, user, user.username);
+    send(
+      client.socket, NetUtil::CHANGE_COLOUR, user, std::string(1, static_cast<char>(user.colour)));
   }
 }

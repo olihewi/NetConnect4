@@ -25,7 +25,7 @@ void GameScene::boardGame(ASGE::Renderer* renderer)
 
   for (auto& board : game_board)
   {
-    board = SpriteComponent(renderer, "data/connectblock.png", ASGE::Point2D(0, 0));
+    board = SpriteComponent(renderer, "data/images/connectblock.png", ASGE::Point2D(0, 0));
     board.getSprite()->width(static_cast<float>(ASGE::SETTINGS.window_width) / 8.F);
     board.getSprite()->height(124.0F);
     board.getSprite()->xPos(x_pos);

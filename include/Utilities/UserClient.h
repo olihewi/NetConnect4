@@ -11,7 +11,7 @@ class UserClient
  public:
   enum PlayerColour
   {
-    RED,
+    RED = 64,
     YELLOW,
     CYAN,
     GREEN,
