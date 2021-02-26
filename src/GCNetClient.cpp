@@ -6,7 +6,6 @@
 #include <atomic>
 #include <iostream>
 #include <kissnet.hpp>
-#include <sstream>
 #include <thread>
 #include <utility>
 
@@ -63,18 +62,18 @@ void GCNetClient::run()
 void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
 {
   std::string net_string(reinterpret_cast<const char*>(buffer.data()));
-  std::cout << net_string << std::endl;
   std::vector<std::string> net_messages;
-  std::stringstream ss(net_string);
   std::string current_message;
-  for (char i = 0; ss >> i;)
+  for (char c : net_string)
   {
-    current_message += i;
-    if (ss.peek() == '|')
+    if (c == '|')
     {
       net_messages.emplace_back(current_message);
       current_message = "";
-      ss.ignore();
+    }
+    else
+    {
+      current_message += c;
     }
   }
   for (auto& message : net_messages)
@@ -126,5 +125,6 @@ UserClient& GCNetClient::getPlayer(size_t index)
 
 void GCNetClient::disconnect()
 {
+  socket.close();
   connected = false;
 }
