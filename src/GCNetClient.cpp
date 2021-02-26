@@ -6,6 +6,7 @@
 #include <atomic>
 #include <iostream>
 #include <kissnet.hpp>
+#include <sstream>
 #include <thread>
 #include <utility>
 
@@ -61,34 +62,50 @@ void GCNetClient::run()
 }
 void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
 {
-  const auto* message = reinterpret_cast<const char*>(buffer.data());
-  std::string message_string(message);
-  auto command_id = static_cast<NetUtil::CommandID>(message[0]);
-  message_string  = message_string.substr(message_string.find_last_of(':') + 1);
-  if (command_id == NetUtil::ASSIGN_PLAYER_ID)
+  std::string net_string(reinterpret_cast<const char*>(buffer.data()));
+  std::cout << net_string << std::endl;
+  std::vector<std::string> net_messages;
+  std::stringstream ss(net_string);
+  std::string current_message;
+  for (char i = 0; ss >> i;)
   {
-    if (players.empty())
+    current_message += i;
+    if (ss.peek() == '|')
     {
-      players.emplace_back(UserClient(static_cast<size_t>(std::stoi(message_string))));
+      net_messages.emplace_back(current_message);
+      current_message = "";
+      ss.ignore();
     }
-    else
+  }
+  for (auto& message : net_messages)
+  {
+    std::string message_contents = message.substr(message.find_first_of(':') + 1);
+    auto command_id              = static_cast<NetUtil::CommandID>(message[0]);
+    if (command_id == NetUtil::ASSIGN_PLAYER_ID)
     {
-      players.front().user_id = static_cast<size_t>(std::stoi(message_string));
+      if (players.empty())
+      {
+        players.emplace_back(UserClient(static_cast<size_t>(std::stoi(message_contents))));
+      }
+      else
+      {
+        players.front().user_id = static_cast<size_t>(std::stoi(message_contents));
+      }
+      std::cout << "User ID assigned: " << message_contents << std::endl;
     }
-    std::cout << "User ID assigned: " << message_string << std::endl;
+    auto& origin = getPlayer(static_cast<size_t>(message[1] - 64));
+    if (command_id == NetUtil::CHANGE_USERNAME)
+    {
+      std::cout << origin.username << " set their username to " << message_contents << std::endl;
+      origin.username = message_contents;
+    }
+    else if (command_id == NetUtil::CHANGE_COLOUR)
+    {
+      std::cout << origin.username << " set their colour to " << message_contents << std::endl;
+      origin.colour = static_cast<UserClient::PlayerColour>(message_contents[0]);
+    }
+    net_callback(message.c_str());
   }
-  auto& user = getPlayer(static_cast<size_t>(message[1] - 64));
-  if (command_id == NetUtil::CHANGE_USERNAME)
-  {
-    std::cout << user.username << " changed their username to " << message_string << std::endl;
-    user.username = message_string;
-  }
-  else if (command_id == NetUtil::CHANGE_COLOUR)
-  {
-    std::cout << user.username << " changed their colour to " << message_string << std::endl;
-    user.colour = static_cast<UserClient::PlayerColour>(message_string[0]);
-  }
-  net_callback(message);
 }
 GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
 void GCNetClient::setCallback(std::function<void(const char*)> _callback)

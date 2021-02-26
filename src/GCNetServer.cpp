@@ -106,17 +106,17 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
     switch (command_id)
     {
       case NetUtil::CHANGE_USERNAME: /// Username change
-        std::cout << client.username << " changed their username to " << message_string
+        std::cout << client.username << " changed their username to " << message_contents
                   << std::endl;
-        client.username = message_string;
+        client.username = message_contents;
         relay(NetUtil::CHANGE_USERNAME, client, message_contents, {});
         break;
       case NetUtil::CHAT_MESSAGE:
-        std::cout << client.username << "> " << message_string << '\n';
+        std::cout << client.username << " > " << message_contents << '\n';
         relay(NetUtil::CHAT_MESSAGE, client, message_contents, {});
         break;
       case NetUtil::CHANGE_COLOUR:
-        client.colour = static_cast<UserClient::PlayerColour>(message_string[0]);
+        client.colour = static_cast<UserClient::PlayerColour>(message_contents[0]);
         relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
       case NetUtil::ASSIGN_PLAYER_ID:
@@ -136,17 +136,11 @@ void GCNetServer::relay(
   NetUtil::CommandID command_id, UserClient& origin, const std::string& message,
   const socket_list& exclude)
 {
-  std::string message_string;
-  message_string += static_cast<char>(command_id);
-  message_string += static_cast<char>(origin.user_id + 64);
-  message_string += ':';
-  message_string += message;
-  const auto* as_byte = reinterpret_cast<const std::byte*>(message_string.c_str());
   for (auto& client : clients)
   {
     if (auto it = std::find(exclude.cbegin(), exclude.cend(), client.socket); it == exclude.cend())
     {
-      client.socket.send(as_byte, message_string.size());
+      send(client.socket, command_id, origin, message);
     }
   }
 }
@@ -159,6 +153,7 @@ void GCNetServer::send(
   message_string += static_cast<char>(client.user_id + 64);
   message_string += ':';
   message_string += message;
+  message_string += '|';
   const auto* as_byte = reinterpret_cast<const std::byte*>(message_string.c_str());
   socket.send(as_byte, message_string.size());
 }

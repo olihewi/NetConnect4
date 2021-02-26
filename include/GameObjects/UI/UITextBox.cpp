@@ -111,6 +111,9 @@ void UITextBox::keyInput(const ASGE::KeyEvent* keyEvent)
           case ASGE::KEYS::KEY_SLASH:
             shift_offset = 16;
             break;
+          case ASGE::KEYS::KEY_SPACE:
+            shift_offset = 0;
+            break;
           default:
             shift_offset = 32;
             break;
