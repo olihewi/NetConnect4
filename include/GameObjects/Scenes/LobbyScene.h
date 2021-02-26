@@ -24,8 +24,10 @@ class LobbyScene : public Scene
 
  private:
   std::function<void(Scene::SceneID)> scene_callback;
+  GCNetClient& client;
   ChatWindow chat_window;
   UIButton ready_button;
+  UIButton disconnect_button;
 };
 
 #endif // ASGENETGAME_LOBBYSCENE_H
