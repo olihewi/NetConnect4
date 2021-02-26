@@ -30,8 +30,10 @@ bool ASGENetGame::init()
   soloud.init();
   client.setCallback([this](auto&& PH1) { netInput(PH1); });
   /// For some reason, ASGE only loads in sprites when it is first ran, so load all scenes...
+  setScene(Scene::SceneID::GAME);
   setScene(Scene::SceneID::LOBBY);
   setScene(Scene::SceneID::TITLE);
+
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
   click_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &ASGENetGame::clickHandler, this);
   mouse_callback_id = inputs->addCallbackFnc(ASGE::E_MOUSE_MOVE, &ASGENetGame::mouseHandler, this);
@@ -91,6 +93,7 @@ void ASGENetGame::render()
   renderer->setFont(0);
   current_scene->render(renderer.get());
 }
+
 void ASGENetGame::setScene(Scene::SceneID scene)
 {
   switch (scene)
