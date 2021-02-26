@@ -101,8 +101,8 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
     }
     else if (command_id == NetUtil::CHANGE_COLOUR)
     {
-      std::cout << origin.username << " set their colour to " << message_contents << std::endl;
       origin.colour = static_cast<UserClient::PlayerColour>(message_contents[0]);
+      std::cout << origin.username << " set their colour to " << origin.colour << std::endl;
     }
     net_callback(message.c_str());
   }
