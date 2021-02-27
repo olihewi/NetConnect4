@@ -5,7 +5,6 @@
 #include "TitleScreen.h"
 
 #include <Engine/FileIO.h>
-#include <iostream>
 #include <utility>
 
 TitleScreen::TitleScreen(

@@ -4,9 +4,6 @@
 
 #include "UIButton.h"
 #include "Utilities/FontManager.h"
-#include <GameComponents/SpriteComponent.hpp>
-#include <GameComponents/TextComponent.hpp>
-#include <iostream>
 
 UIButton::UIButton(
   ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width, float height,

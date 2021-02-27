@@ -41,7 +41,7 @@ class GCNetServer final : public GameComponent
   std::vector<std::thread> workers;
   std::atomic<bool> accept_connections = false;
   void relay(
-    NetUtil::CommandID command_id, UserClient& origin, const std::string& message,
+    NetUtil::CommandID command_id, const UserClient& origin, const std::string& message,
     const socket_list& exclude);
   void send(
     kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const UserClient& origin,
