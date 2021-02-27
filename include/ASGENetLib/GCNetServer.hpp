@@ -44,7 +44,7 @@ class GCNetServer final : public GameComponent
     NetUtil::CommandID command_id, UserClient& origin, const std::string& message,
     const socket_list& exclude);
   void send(
-    kissnet::tcp_socket& socket, NetUtil::CommandID command_id, UserClient& origin,
+    kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const UserClient& origin,
     const std::string& message);
   void assignPlayerID(UserClient& player);
 };

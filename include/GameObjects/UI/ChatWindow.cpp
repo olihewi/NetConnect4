@@ -21,9 +21,9 @@ void ChatWindow::render(ASGE::Renderer* renderer)
 {
   background.render(renderer);
   text_box.render(renderer);
-  for (auto& message : messages)
+  for (auto& each_message : messages)
   {
-    message.render(renderer);
+    each_message.render(renderer);
   }
 }
 void ChatWindow::keyInput(const ASGE::KeyEvent* keyEvent)
@@ -48,16 +48,17 @@ void ChatWindow::clickInput(const ASGE::ClickEvent* clickEvent)
 }
 void ChatWindow::addMessage(ASGE::Renderer* renderer, std::string message)
 {
-  for (auto& _message : messages)
-  {
-    _message.getText().setPosition(
-      ASGE::Point2D(_message.getText().getPosition().x, _message.getText().getPosition().y - 100));
-  }
-  messages.emplace_back(TextComponent(
+  TextComponent this_message(
     renderer,
     std::move(message),
     ASGE::Point2D(background.getPosition().x + 64, background.getPosition().y + 920),
     FONTS::CHAT_MESSAGE,
     1,
-    ASGE::COLOURS::BLACK));
+    ASGE::COLOURS::BLACK);
+  for (auto& each_message : messages)
+  {
+    each_message.getText().setPosition(ASGE::Point2D(
+      each_message.getText().getPosition().x, each_message.getText().getPosition().y - 50));
+  }
+  messages.emplace_back(std::move(this_message));
 }

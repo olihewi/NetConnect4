@@ -5,8 +5,6 @@
 #ifndef ASGENETGAME_TITLESCREEN_H
 #define ASGENETGAME_TITLESCREEN_H
 
-#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud.h"
-#include "../../../cmake-build-debug/_deps/soloud-src/include/soloud_wav.h"
 #include <ASGENetLib/GCNetClient.hpp>
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameObjects/Scenes/Scene.h>

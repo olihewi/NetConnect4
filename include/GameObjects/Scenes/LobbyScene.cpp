@@ -53,4 +53,8 @@ void LobbyScene::netInput(
     std::cout << message_string << std::endl;
     chat_window.addMessage(renderer, message_string);
   }
+  else if (command_id == NetUtil::CHANGE_USERNAME)
+  {
+    chat_window.addMessage(renderer, origin.username + " joined the lobby.");
+  }
 }

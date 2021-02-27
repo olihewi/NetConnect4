@@ -54,7 +54,7 @@ void GCNetClient::run()
     else
     {
       connected = false;
-      std::cout << "disconnected" << std::endl;
+      std::cout << "Disconnected from server." << std::endl;
       socket.close();
     }
   }

@@ -17,7 +17,7 @@ class LobbyScene : public Scene
     GCNetClient& _client);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
-  void render(ASGE::Renderer*) override;
+  void render(ASGE::Renderer* renderer) override;
   void netInput(
     ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
     const std::string& message) override;

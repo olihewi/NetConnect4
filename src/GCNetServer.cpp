@@ -145,12 +145,12 @@ void GCNetServer::relay(
   }
 }
 void GCNetServer::send(
-  kissnet::tcp_socket& socket, NetUtil::CommandID command_id, UserClient& client,
+  kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const UserClient& origin,
   const std::string& message)
 {
   std::string message_string;
   message_string += static_cast<char>(command_id);
-  message_string += static_cast<char>(client.user_id + 64);
+  message_string += static_cast<char>(origin.user_id + 64);
   message_string += ':';
   message_string += message;
   message_string += '|';
