@@ -54,7 +54,7 @@ TitleScreen::TitleScreen(
   exit_game = UIButton(
     renderer,
     UIButton::YELLOW,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144t),
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144),
     300,
     50,
     "QUIT GAME");
@@ -79,10 +79,6 @@ void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent)
       username.getString());
     scene_callback(Scene::SceneID::LOBBY);
   }
-  /*  if(exit_game.getClick())
-    {
-
-    } */
 }
 void TitleScreen::render(ASGE::Renderer* renderer)
 {
