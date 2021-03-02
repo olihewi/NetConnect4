@@ -33,6 +33,7 @@ class TitleScreen : public Scene
   UITextBox username;
   UIButton connect;
   UIButton exit_game;
+  SpriteComponent counter;
 };
 
 #endif // ASGENETGAME_TITLESCREEN_H
