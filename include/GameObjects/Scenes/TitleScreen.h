@@ -30,6 +30,7 @@ class TitleScreen : public Scene
   UITextBox port;
   UITextBox username;
   UIButton connect;
+  UIButton exit_game;
 };
 
 #endif // ASGENETGAME_TITLESCREEN_H

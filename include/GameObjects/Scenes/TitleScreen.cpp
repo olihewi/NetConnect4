@@ -51,6 +51,13 @@ TitleScreen::TitleScreen(
     300,
     50,
     "CONNECT");
+  exit_game = UIButton(
+    renderer,
+    UIButton::YELLOW,
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144t),
+    300,
+    50,
+    "QUIT GAME");
 }
 void TitleScreen::keyInput(const ASGE::KeyEvent* keyEvent)
 {
@@ -72,6 +79,10 @@ void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent)
       username.getString());
     scene_callback(Scene::SceneID::LOBBY);
   }
+  /*  if(exit_game.getClick())
+    {
+
+    } */
 }
 void TitleScreen::render(ASGE::Renderer* renderer)
 {
@@ -80,4 +91,5 @@ void TitleScreen::render(ASGE::Renderer* renderer)
   port.render(renderer);
   username.render(renderer);
   connect.render(renderer);
+  exit_game.render(renderer);
 }
