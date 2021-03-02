@@ -23,7 +23,7 @@ class UIButton : public GameObject
   UIButton(
     ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width,
     float height, const std::string& button_text, std::function<void()> _callback);
-  void clickInput(const ASGE::ClickEvent* clickEvent) override;
+  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/) override;
   void render(ASGE::Renderer* renderer) override;
 
  private:

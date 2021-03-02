@@ -43,7 +43,7 @@ UIButton::UIButton(
     1,
     ASGE::COLOURS::WHITE);
 }
-void UIButton::clickInput(const ASGE::ClickEvent* clickEvent)
+void UIButton::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
 {
   if (clickEvent->action == ASGE::KEYS::KEY_PRESSED)
   {

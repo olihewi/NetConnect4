@@ -43,7 +43,7 @@ UITextBox::UITextBox(
     ASGE::COLOURS::BLACK);
   text.getText().setZOrder(2);
 }
-void UITextBox::clickInput(const ASGE::ClickEvent* clickEvent)
+void UITextBox::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
 {
   if (clickEvent->action == ASGE::KEYS::KEY_PRESSED)
   {
