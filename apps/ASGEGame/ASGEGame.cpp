@@ -61,7 +61,7 @@ void ASGENetGame::keyHandler(ASGE::SharedEventData data)
 void ASGENetGame::clickHandler(ASGE::SharedEventData data)
 {
   const auto* click = dynamic_cast<const ASGE::ClickEvent*>(data.get());
-  current_scene->clickInput(click);
+  current_scene->clickInput(click, renderer.get());
 }
 void ASGENetGame::mouseHandler(ASGE::SharedEventData data)
 {

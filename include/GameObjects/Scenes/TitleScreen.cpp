@@ -12,7 +12,8 @@ TitleScreen::TitleScreen(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
   GCNetClient& _client, std::function<void()> _signal_exit) :
   scene_callback(std::move(_scene_callback)),
-  client(_client), background(renderer, "data/images/background.png", ASGE::Point2D(0, 0))
+  client(_client), background(renderer, "data/images/background.png", ASGE::Point2D(0, 0)),
+  test(renderer, "/data/images/chips/green.png", ASGE::Point2D(200, 200))
 {
   auto window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
   auto window_height = static_cast<float>(ASGE::SETTINGS.window_height);
@@ -68,12 +69,12 @@ void TitleScreen::keyInput(const ASGE::KeyEvent* keyEvent)
   port.keyInput(keyEvent);
   username.keyInput(keyEvent);
 }
-void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent)
+void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer)
 {
-  ip_address.clickInput(clickEvent);
-  port.clickInput(clickEvent);
-  username.clickInput(clickEvent);
-  connect.clickInput(clickEvent);
+  ip_address.clickInput(clickEvent, renderer);
+  port.clickInput(clickEvent, renderer);
+  username.clickInput(clickEvent, renderer);
+  connect.clickInput(clickEvent, renderer);
 }
 void TitleScreen::render(ASGE::Renderer* renderer)
 {
@@ -83,6 +84,7 @@ void TitleScreen::render(ASGE::Renderer* renderer)
   username.render(renderer);
   connect.render(renderer);
   exit_game.render(renderer);
+  test.render(renderer);
 }
 void TitleScreen::onConnectButton()
 {

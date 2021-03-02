@@ -42,9 +42,9 @@ void ChatWindow::keyInput(const ASGE::KeyEvent* keyEvent)
     }
   }
 }
-void ChatWindow::clickInput(const ASGE::ClickEvent* clickEvent)
+void ChatWindow::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer)
 {
-  text_box.clickInput(clickEvent);
+  text_box.clickInput(clickEvent, renderer);
 }
 void ChatWindow::addMessage(ASGE::Renderer* renderer, std::string message)
 {

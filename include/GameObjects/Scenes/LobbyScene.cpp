@@ -31,11 +31,11 @@ void LobbyScene::keyInput(const ASGE::KeyEvent* keyEvent)
 {
   chat_window.keyInput(keyEvent);
 }
-void LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent)
+void LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer)
 {
-  chat_window.clickInput(clickEvent);
-  ready_button.clickInput(clickEvent);
-  disconnect_button.clickInput(clickEvent);
+  chat_window.clickInput(clickEvent, renderer);
+  disconnect_button.clickInput(clickEvent, renderer);
+  ready_button.clickInput(clickEvent, renderer);
 }
 
 void LobbyScene::netInput(

@@ -24,7 +24,7 @@ class UITextBox : public GameObject
     float height, std::string default_text = "", size_t max_length = 16,
     int font_index = FONTS::HANDWRITING);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
-  void clickInput(const ASGE::ClickEvent* clickEvent) override;
+  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/) override;
   void render(ASGE::Renderer* renderer) override;
   std::string getString();
   [[nodiscard]] bool getSelected() const;

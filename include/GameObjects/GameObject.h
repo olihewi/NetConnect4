@@ -14,7 +14,7 @@ class GameObject
   virtual ~GameObject() = default;
   virtual void update(float /*dt*/) {}
   virtual void keyInput(const ASGE::KeyEvent* /*keyEvent*/) {}
-  virtual void clickInput(const ASGE::ClickEvent* /*clickEvent*/) {}
+  virtual void clickInput(const ASGE::ClickEvent* /*clickEvent*/, ASGE::Renderer* /*renderer*/) {}
   virtual void mouseInput(const ASGE::MoveEvent* /*moveEvent*/) {}
   virtual void mouseScrollInput(const ASGE::ScrollEvent* /*scrollEvent*/) {}
   virtual void render(ASGE::Renderer* /*renderer*/) {}
