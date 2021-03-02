@@ -125,7 +125,8 @@ void UITextBox::keyInput(const ASGE::KeyEvent* keyEvent)
         shift_offset = -shift_offset;
       }
       internal_string += static_cast<char>(key + shift_offset);
-      text.getText().setString(internal_string + '_');
+      text.getText().setString(
+        internal_string + (internal_string.length() == max_string_length ? ' ' : '_'));
     }
     if (
       keyEvent->key == ASGE::KEYS::KEY_BACKSPACE && keyEvent->action != ASGE::KEYS::KEY_RELEASED &&

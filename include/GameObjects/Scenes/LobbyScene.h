@@ -23,6 +23,9 @@ class LobbyScene : public Scene
     const std::string& message) override;
 
  private:
+  void onReadyButton();
+  void onDisconnectButton();
+
   std::function<void(Scene::SceneID)> scene_callback;
   GCNetClient& client;
   ChatWindow chat_window;

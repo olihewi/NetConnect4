@@ -5,11 +5,12 @@
 #include "TitleScreen.h"
 
 #include <Engine/FileIO.h>
+#include <iostream>
 #include <utility>
 
 TitleScreen::TitleScreen(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
-  GCNetClient& _client) :
+  GCNetClient& _client, std::function<void()> _signal_exit) :
   scene_callback(std::move(_scene_callback)),
   client(_client), background(renderer, "data/images/background.png", ASGE::Point2D(0, 0))
 {
@@ -50,14 +51,16 @@ TitleScreen::TitleScreen(
     ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 74),
     300,
     50,
-    "CONNECT");
+    "CONNECT",
+    [this]() { onConnectButton(); });
   exit_game = UIButton(
     renderer,
     UIButton::YELLOW,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144t),
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144),
     300,
     50,
-    "QUIT GAME");
+    "QUIT GAME",
+    std::move(_signal_exit));
 }
 void TitleScreen::keyInput(const ASGE::KeyEvent* keyEvent)
 {
@@ -71,18 +74,6 @@ void TitleScreen::clickInput(const ASGE::ClickEvent* clickEvent)
   port.clickInput(clickEvent);
   username.clickInput(clickEvent);
   connect.clickInput(clickEvent);
-  if (connect.getClick())
-  {
-    client.connect(
-      ip_address.getString(),
-      static_cast<uint16_t>(std::stoi(port.getString())),
-      username.getString());
-    scene_callback(Scene::SceneID::LOBBY);
-  }
-  /*  if(exit_game.getClick())
-    {
-
-    } */
 }
 void TitleScreen::render(ASGE::Renderer* renderer)
 {
@@ -92,4 +83,12 @@ void TitleScreen::render(ASGE::Renderer* renderer)
   username.render(renderer);
   connect.render(renderer);
   exit_game.render(renderer);
+}
+void TitleScreen::onConnectButton()
+{
+  client.connect(
+    ip_address.getString(),
+    static_cast<uint16_t>(std::stoi(port.getString())),
+    username.getString());
+  scene_callback(Scene::SceneID::LOBBY);
 }

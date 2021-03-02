@@ -7,7 +7,8 @@
 
 UIButton::UIButton(
   ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width, float height,
-  const std::string& button_text)
+  const std::string& button_text, std::function<void()> _callback) :
+  callback(std::move(_callback))
 {
   std::string file_path = "data/images/ui/button/";
   file_path += colour == BLUE    ? "blue/"
@@ -49,7 +50,7 @@ void UIButton::clickInput(const ASGE::ClickEvent* clickEvent)
     if (background[4].isInside(ASGE::Point2D(
           static_cast<float>(clickEvent->xpos), static_cast<float>(clickEvent->ypos))))
     {
-      clicked = true;
+      callback();
     }
   }
 }
@@ -61,10 +62,4 @@ void UIButton::render(ASGE::Renderer* renderer)
     bg.render(renderer);
   }
   text.render(renderer);
-}
-bool UIButton::getClick()
-{
-  bool return_val = clicked;
-  clicked         = false;
-  return return_val;
 }

@@ -8,6 +8,7 @@
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameComponents/TextComponent.hpp>
 #include <GameObjects/GameObject.h>
+#include <functional>
 class UIButton : public GameObject
 {
  public:
@@ -21,15 +22,14 @@ class UIButton : public GameObject
   UIButton() = default;
   UIButton(
     ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width,
-    float height, const std::string& button_text);
+    float height, const std::string& button_text, std::function<void()> _callback);
   void clickInput(const ASGE::ClickEvent* clickEvent) override;
   void render(ASGE::Renderer* renderer) override;
-  bool getClick();
 
  private:
   std::array<SpriteComponent, 9> background;
   TextComponent text;
-  bool clicked = false;
+  std::function<void()> callback;
 };
 
 #endif // ASGENETGAME_UIBUTTON_H

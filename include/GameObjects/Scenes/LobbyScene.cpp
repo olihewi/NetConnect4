@@ -13,8 +13,12 @@ LobbyScene::LobbyScene(
   client(_client),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
-  ready_button(renderer, UIButton::GREEN, ASGE::Point2D(0, 0), 300, 50, "READY"),
-  disconnect_button(renderer, UIButton::RED, ASGE::Point2D(500, 0), 300, 50, "DISCONNECT")
+  ready_button(
+    renderer, UIButton::GREEN, ASGE::Point2D(0, 0), 300, 50, "READY",
+    [this]() { onReadyButton(); }),
+  disconnect_button(
+    renderer, UIButton::RED, ASGE::Point2D(500, 0), 300, 50, "DISCONNECT",
+    [this]() { onDisconnectButton(); })
 {
 }
 void LobbyScene::render(ASGE::Renderer* renderer)
@@ -32,15 +36,6 @@ void LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent)
   chat_window.clickInput(clickEvent);
   ready_button.clickInput(clickEvent);
   disconnect_button.clickInput(clickEvent);
-  if (ready_button.getClick())
-  {
-    scene_callback(Scene::SceneID::GAME);
-  }
-  if (disconnect_button.getClick())
-  {
-    client.disconnect();
-    scene_callback(Scene::SceneID::TITLE);
-  }
 }
 
 void LobbyScene::netInput(
@@ -57,4 +52,13 @@ void LobbyScene::netInput(
   {
     chat_window.addMessage(renderer, origin.username + " joined the lobby.");
   }
+}
+void LobbyScene::onReadyButton()
+{
+  scene_callback(SceneID::GAME);
+}
+void LobbyScene::onDisconnectButton()
+{
+  client.disconnect();
+  scene_callback(SceneID::TITLE);
 }

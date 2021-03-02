@@ -100,7 +100,7 @@ void ASGENetGame::setScene(Scene::SceneID scene)
   {
     case Scene::SceneID::TITLE:
       current_scene = std::make_unique<TitleScreen>(
-        renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client);
+        renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client, [this]() { signalExit(); });
       break;
     case Scene::SceneID::LOBBY:
       current_scene = std::make_unique<LobbyScene>(
