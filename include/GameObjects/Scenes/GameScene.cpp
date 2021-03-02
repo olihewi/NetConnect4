@@ -11,15 +11,6 @@ GameScene::GameScene(ASGE::Renderer* renderer)
     renderer, "TURNS", ASGE::Point2D(500, 500), FONTS::CHAT_MESSAGE, 1, ASGE::COLOURS::GREEN);
 }
 
-void GameScene::render(ASGE::Renderer* renderer)
-{
-  for (auto& board : game_board)
-  {
-    board.render(renderer);
-  }
-  playerTurn.render(renderer);
-}
-
 void GameScene::boardGame(ASGE::Renderer* renderer)
 {
   auto x_pos            = 0.0F;
@@ -41,4 +32,12 @@ void GameScene::boardGame(ASGE::Renderer* renderer)
       y_pos += board.getSprite()->height();
     }
   }
+}
+void GameScene::render(ASGE::Renderer* renderer)
+{
+  for (auto& board : game_board)
+  {
+    board.render(renderer);
+  }
+  playerTurn.render(renderer);
 }
