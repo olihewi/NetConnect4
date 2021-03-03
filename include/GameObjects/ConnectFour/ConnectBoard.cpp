@@ -76,10 +76,10 @@ bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* ren
         ((click->xpos - board_sprites.front().getPosition().x) /
          (board_sprites.back().getPosition().x + board_sprites.back().getSprite()->width())) *
         width);
-      int click_y = static_cast<int>(
+      /*int click_y = static_cast<int>(
         ((click->ypos - board_sprites.front().getPosition().y) /
          (board_sprites.back().getPosition().y + board_sprites.back().getSprite()->height())) *
-        height);
+        height);*/
       int drop_index = dropCounter(static_cast<size_t>(click_x), client.getThisPlayer().user_id);
       if (drop_index != -1)
       {
