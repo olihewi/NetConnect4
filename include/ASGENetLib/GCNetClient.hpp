@@ -32,6 +32,7 @@ class GCNetClient : public GameComponent
   void disconnect();
 
   [[nodiscard]] UserClient& getPlayer(size_t index);
+  [[nodiscard]] UserClient& getThisPlayer();
 
   void update(double /*dt*/) override {}
 

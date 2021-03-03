@@ -43,14 +43,16 @@ UITextBox::UITextBox(
     ASGE::COLOURS::BLACK);
   text.getText().setZOrder(2);
 }
-void UITextBox::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
+bool UITextBox::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
 {
   if (clickEvent->action == ASGE::KEYS::KEY_PRESSED)
   {
     isSelected = background[4].isInside(
       ASGE::Point2D(static_cast<float>(clickEvent->xpos), static_cast<float>(clickEvent->ypos)));
     text.getText().setString(internal_string + (isSelected ? '_' : ' '));
+    return isSelected;
   }
+  return false;
 }
 void UITextBox::keyInput(const ASGE::KeyEvent* keyEvent)
 {

@@ -19,10 +19,11 @@ class TitleScreen : public Scene
     ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
     GCNetClient& _client, std::function<void()> _signal_exit);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
-  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
+  bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
   void render(ASGE::Renderer* renderer) override;
 
   void onConnectButton();
+  void update(float dt) override;
 
  private:
   std::function<void(Scene::SceneID)> scene_callback;
@@ -33,7 +34,7 @@ class TitleScreen : public Scene
   UITextBox username;
   UIButton connect;
   UIButton exit_game;
-  SpriteComponent counter;
+  std::vector<SpriteComponent> falling_counters;
 };
 
 #endif // ASGENETGAME_TITLESCREEN_H

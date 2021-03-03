@@ -9,6 +9,7 @@
 #include <GameObjects/Scenes/Scene.h>
 #include <GameObjects/UI/ChatWindow.h>
 #include <GameObjects/UI/UIButton.h>
+#include <array>
 class LobbyScene : public Scene
 {
  public:
@@ -16,7 +17,7 @@ class LobbyScene : public Scene
     ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
     GCNetClient& _client);
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
-  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
+  bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
   void render(ASGE::Renderer* renderer) override;
   void netInput(
     ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
@@ -31,6 +32,7 @@ class LobbyScene : public Scene
   ChatWindow chat_window;
   UIButton ready_button;
   UIButton disconnect_button;
+  std::array<SpriteComponent, 9> colour_selects;
 };
 
 #endif // ASGENETGAME_LOBBYSCENE_H

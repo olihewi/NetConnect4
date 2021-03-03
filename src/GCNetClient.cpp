@@ -128,3 +128,7 @@ void GCNetClient::disconnect()
   socket.close();
   connected = false;
 }
+UserClient& GCNetClient::getThisPlayer()
+{
+  return players[0];
+}

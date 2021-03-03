@@ -4,7 +4,8 @@
 
 #include "GameScene.h"
 
-GameScene::GameScene(ASGE::Renderer* renderer)
+GameScene::GameScene(ASGE::Renderer* renderer, GCNetClient& _client) :
+  client(_client), board(renderer, 7, 6, 1, client)
 {
   boardGame(renderer);
   // board_space(renderer);
@@ -17,20 +18,20 @@ void GameScene::boardGame(ASGE::Renderer* renderer)
   auto x_pos            = 0.0F;
   auto y_pos            = 0.0F;
   const int BOARD_Y_POS = 75;
-  for (auto& board : game_board)
+  for (auto& board_tile : game_board)
   {
-    board = SpriteComponent(renderer, "data/images/connectblock.png", ASGE::Point2D(0, 0));
-    board.getSprite()->width(static_cast<float>(ASGE::SETTINGS.window_width) / 8.F);
-    board.getSprite()->height(124.0F);
-    board.getSprite()->xPos(x_pos);
-    board.getSprite()->yPos(y_pos + BOARD_Y_POS);
-    x_pos += board.getSprite()->width();
-    board.getSprite()->setGlobalZOrder(0);
+    board_tile = SpriteComponent(renderer, "data/images/connectblock.png", ASGE::Point2D(0, 0));
+    board_tile.getSprite()->width(static_cast<float>(ASGE::SETTINGS.window_width) / 8.F);
+    board_tile.getSprite()->height(124.0F);
+    board_tile.getSprite()->xPos(x_pos);
+    board_tile.getSprite()->yPos(y_pos + BOARD_Y_POS);
+    x_pos += board_tile.getSprite()->width();
+    board_tile.getSprite()->setGlobalZOrder(0);
 
-    if (x_pos >= board.getSprite()->width() * 8)
+    if (x_pos >= board_tile.getSprite()->width() * 8)
     {
       x_pos = 0;
-      y_pos += board.getSprite()->height();
+      y_pos += board_tile.getSprite()->height();
     }
   }
   for (auto& click_grid : board_space)
@@ -51,22 +52,26 @@ void GameScene::boardGame(ASGE::Renderer* renderer)
   }
 }
 
-void GameScene::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer)
+bool GameScene::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer)
 {
-  if (click->xpos >= 0 && click->xpos <= 1920)
+  board.clickInput(click, renderer);
+  /*if (click->xpos >= 0 && click->xpos <= 1920)
   {
-    game_board[0].loadSprite(renderer, "/data/images/chips/green.png");
-  }
+    game_board[0].loadSprite(renderer, "data/images/chips/red.png");
+    return true;
+  }*/
+  return false;
 }
 void GameScene::render(ASGE::Renderer* renderer)
 {
-  for (auto& board : game_board)
+  /*for (auto& board_tile : game_board)
   {
-    board.render(renderer);
-  }
-  for (auto& board : board_space)
+    board_tile.render(renderer);
+  }*/
+  for (auto& board_item : board_space)
   {
-    board.render(renderer);
+    board_item.render(renderer);
   }
+  board.render(renderer);
   playerTurn.render(renderer);
 }

@@ -36,14 +36,13 @@ UIButton::UIButton(
     }
   }
   text = TextComponent(
-    renderer,
-    button_text,
-    ASGE::Point2D(background[7].getPosition().x + 8, background[7].getPosition().y - 16),
-    FONTS::HANDWRITING,
-    1,
-    ASGE::COLOURS::WHITE);
+    renderer, button_text, ASGE::Point2D(0, 0), FONTS::HANDWRITING, 1, ASGE::COLOURS::WHITE);
+  text.getText().setPosition(ASGE::Point2D(
+    background[4].getPosition().x + background[4].getSprite()->width() / 2 -
+      text.getText().getWidth() / 2,
+    background[4].getPosition().y + background[4].getSprite()->height() / 2 + 8));
 }
-void UIButton::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
+bool UIButton::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)
 {
   if (clickEvent->action == ASGE::KEYS::KEY_PRESSED)
   {
@@ -51,8 +50,10 @@ void UIButton::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*
           static_cast<float>(clickEvent->xpos), static_cast<float>(clickEvent->ypos))))
     {
       callback();
+      return true;
     }
   }
+  return false;
 }
 
 void UIButton::render(ASGE::Renderer* renderer)

@@ -12,8 +12,8 @@ class UserClient
   enum PlayerColour
   {
     RED = 64,
+    ORANGE,
     YELLOW,
-    CYAN,
     GREEN,
     BLUE,
     PURPLE,
@@ -24,6 +24,40 @@ class UserClient
   bool operator==(const UserClient& rhs) const { return rhs.socket == socket; }
   explicit UserClient(size_t this_id) : user_id(this_id) {}
   UserClient() = default;
+  static std::string getCounterFilepath(PlayerColour colour)
+  {
+    std::string file_path = "data/images/chips/";
+    switch (colour)
+    {
+      case RED:
+        file_path += "red";
+        break;
+      case ORANGE:
+        file_path += "orange";
+        break;
+      case YELLOW:
+        file_path += "yellow";
+        break;
+      case GREEN:
+        file_path += "green";
+        break;
+      case BLUE:
+        file_path += "blue";
+        break;
+      case PURPLE:
+        file_path += "purple";
+        break;
+      case PINK:
+        file_path += "pink";
+        break;
+      case BLACK:
+        file_path += "black";
+        break;
+      case WHITE:
+        file_path += "white";
+    }
+    return file_path + ".png";
+  }
   kissnet::tcp_socket socket;
   size_t user_id       = 0;
   PlayerColour colour  = WHITE;

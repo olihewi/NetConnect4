@@ -107,7 +107,7 @@ void ASGENetGame::setScene(Scene::SceneID scene)
         renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client);
       break;
     case Scene::SceneID::GAME:
-      current_scene = std::make_unique<GameScene>(renderer.get());
+      current_scene = std::make_unique<GameScene>(renderer.get(), client);
       break;
   }
 }

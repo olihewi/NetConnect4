@@ -13,7 +13,7 @@ class ChatWindow : public GameObject
   ChatWindow(ASGE::Renderer* renderer, ASGE::Point2D position, GCNetClient& _client);
   void render(ASGE::Renderer* renderer) override;
   void keyInput(const ASGE::KeyEvent* keyEvent) override;
-  void clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
+  bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
   void addMessage(ASGE::Renderer* renderer, std::string message);
 
  private:
