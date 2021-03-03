@@ -118,6 +118,9 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         client.colour = static_cast<UserClient::PlayerColour>(message_contents[0]);
         relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
+      case NetUtil::DROP_COUNTER:
+        relay(NetUtil::DROP_COUNTER, client, message_contents, {});
+        break;
       case NetUtil::ASSIGN_PLAYER_ID:
       case NetUtil::MAX_COMMAND_ID:
         // default:

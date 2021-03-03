@@ -15,7 +15,8 @@ class ConnectBoard : public GameObject
     GCNetClient& _client);
   int dropCounter(size_t column, size_t player_id);
   void render(ASGE::Renderer* renderer) override;
-  bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer) override;
+  bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/) override;
+  void inputDrop(ASGE::Renderer* renderer, UserClient& origin, int input);
 
  private:
   GCNetClient& client;

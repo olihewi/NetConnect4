@@ -20,6 +20,9 @@ class GameScene : public Scene
   void render(ASGE::Renderer* renderer) override;
   void boardGame(ASGE::Renderer* renderer);
   bool clickInput(const ASGE::ClickEvent*, ASGE::Renderer* renderer) override;
+  void netInput(
+    ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
+    const std::string& message) override;
 
  private:
   GCNetClient& client;

@@ -14,6 +14,7 @@ class NetUtil
     CHANGE_USERNAME,
     ASSIGN_PLAYER_ID, /// Server-only
     CHANGE_COLOUR,
+    DROP_COUNTER,
     MAX_COMMAND_ID
   };
 };

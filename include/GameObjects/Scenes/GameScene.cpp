@@ -75,3 +75,12 @@ void GameScene::render(ASGE::Renderer* renderer)
   board.render(renderer);
   playerTurn.render(renderer);
 }
+void GameScene::netInput(
+  ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
+  const std::string& message)
+{
+  if (command_id == NetUtil::DROP_COUNTER)
+  {
+    board.inputDrop(renderer, origin, std::stoi(message));
+  }
+}

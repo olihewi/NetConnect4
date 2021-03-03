@@ -60,7 +60,7 @@ void ConnectBoard::render(ASGE::Renderer* renderer)
     counter_sprite.render(renderer);
   }
 }
-bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer)
+bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/)
 {
   if (click->action == ASGE::KEYS::KEY_PRESSED)
   {
@@ -76,18 +76,22 @@ bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* ren
         ((click->xpos - board_sprites.front().getPosition().x) /
          (board_sprites.back().getPosition().x + board_sprites.back().getSprite()->width())) *
         width);
+      client.send(NetUtil::DROP_COUNTER, std::to_string(click_x));
       /*int click_y = static_cast<int>(
         ((click->ypos - board_sprites.front().getPosition().y) /
          (board_sprites.back().getPosition().y + board_sprites.back().getSprite()->height())) *
         height);*/
-      int drop_index = dropCounter(static_cast<size_t>(click_x), client.getThisPlayer().user_id);
-      if (drop_index != -1)
-      {
-        auto sprite_path = UserClient::getCounterFilepath(client.getThisPlayer().colour);
-        counter_sprites.emplace_back(SpriteComponent(
-          renderer, sprite_path, board_sprites[static_cast<size_t>(drop_index)].getPosition()));
-      }
     }
   }
   return true;
+}
+void ConnectBoard::inputDrop(ASGE::Renderer* renderer, UserClient& origin, int input)
+{
+  int drop_index = dropCounter(static_cast<size_t>(input), origin.user_id);
+  if (drop_index != -1)
+  {
+    auto sprite_path = UserClient::getCounterFilepath(origin.colour);
+    counter_sprites.emplace_back(SpriteComponent(
+      renderer, sprite_path, board_sprites[static_cast<size_t>(drop_index)].getPosition()));
+  }
 }
