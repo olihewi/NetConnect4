@@ -1,3 +1,4 @@
+![](https://i.imgur.com/yH8duF0.png)
 # Brief 
 
 > The knock on the door echoed through the empty rooms. Where furniture once
