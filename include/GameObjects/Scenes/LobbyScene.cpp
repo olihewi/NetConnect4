@@ -83,6 +83,12 @@ void LobbyScene::netInput(
   {
     chat_window.addMessage(renderer, origin.username + " joined the lobby.");
   }
+  else if (command_id == NetUtil::CHANGE_COLOUR)
+  {
+    chat_window.addMessage(
+      renderer,
+      origin.username + " changed their colour to " + UserClient::getColourName(origin.colour));
+  }
 }
 void LobbyScene::onReadyButton()
 {

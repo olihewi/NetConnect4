@@ -27,36 +27,32 @@ class UserClient
   static std::string getCounterFilepath(PlayerColour colour)
   {
     std::string file_path = "data/images/chips/";
+    file_path += getColourName(colour);
+    return file_path + ".png";
+  }
+  static std::string getColourName(PlayerColour colour)
+  {
     switch (colour)
     {
       case RED:
-        file_path += "red";
-        break;
+        return "red";
       case ORANGE:
-        file_path += "orange";
-        break;
+        return "orange";
       case YELLOW:
-        file_path += "yellow";
-        break;
+        return "yellow";
       case GREEN:
-        file_path += "green";
-        break;
+        return "green";
       case BLUE:
-        file_path += "blue";
-        break;
+        return "blue";
       case PURPLE:
-        file_path += "purple";
-        break;
+        return "purple";
       case PINK:
-        file_path += "pink";
-        break;
+        return "pink";
       case BLACK:
-        file_path += "black";
-        break;
+        return "black";
       case WHITE:
-        file_path += "white";
+        return "white";
     }
-    return file_path + ".png";
   }
   kissnet::tcp_socket socket;
   size_t user_id       = 0;

@@ -18,8 +18,7 @@ class GameScene : public Scene
  public:
   GameScene(ASGE::Renderer* renderer, GCNetClient& _client);
   void render(ASGE::Renderer* renderer) override;
-  void boardGame(ASGE::Renderer* renderer);
-  bool clickInput(const ASGE::ClickEvent*, ASGE::Renderer* renderer) override;
+  bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer) override;
   void netInput(
     ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
     const std::string& message) override;
@@ -27,10 +26,6 @@ class GameScene : public Scene
  private:
   GCNetClient& client;
   ConnectBoard board;
-  std::array<SpriteComponent, 32 * 2> board_space;
-  std::array<SpriteComponent, 32 * 2> game_board;
-  TextComponent playerTurn;
-  UserClient user;
 };
 
 #endif // ASGENETGAME_GAMESCENE_H

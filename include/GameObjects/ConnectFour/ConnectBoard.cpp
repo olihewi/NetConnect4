@@ -85,7 +85,7 @@ bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*r
   }
   return true;
 }
-void ConnectBoard::inputDrop(ASGE::Renderer* renderer, UserClient& origin, int input)
+void ConnectBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input)
 {
   int drop_index = dropCounter(static_cast<size_t>(input), origin.user_id);
   if (drop_index != -1)
