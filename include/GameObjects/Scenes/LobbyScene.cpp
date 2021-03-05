@@ -19,6 +19,12 @@ LobbyScene::LobbyScene(
   disconnect_button(
     renderer, UIButton::RED, ASGE::Point2D(500, 0), 300, 50, "DISCONNECT",
     [this]() { onDisconnectButton(); }),
+  game_rules(
+    renderer,
+    "RULES OF CONNECT FOUR \n \n EACH PLAYER HAS A TURN WHERE THEY ARE ABLE TO DROP A CHIP INTO "
+    "THE BOARD. \n TO WIN THE GAME ONE PLAYER WOULD, \n HAVE TO ACHIEVE A DIAGONAL FOUR "
+    "COMBINATION OF THE CHIPS.\n",
+    ASGE::Point2D(0, 800), 1, 1, ASGE::COLOURS::BLACK),
   colour_selects(std::array<SpriteComponent, 9>{
     SpriteComponent(renderer, "data/images/chips/red.png", ASGE::Point2D(50, 200)),
     SpriteComponent(renderer, "data/images/chips/orange.png", ASGE::Point2D(200, 200)),
@@ -36,6 +42,7 @@ void LobbyScene::render(ASGE::Renderer* renderer)
   chat_window.render(renderer);
   ready_button.render(renderer);
   disconnect_button.render(renderer);
+  game_rules.render(renderer);
   for (auto& colour_select : colour_selects)
   {
     colour_select.render(renderer);
@@ -89,6 +96,12 @@ void LobbyScene::netInput(
       renderer,
       origin.username + " changed their colour to " + UserClient::getColourName(origin.colour));
   }
+  /*else if(command_id == NetUtil::DISCONNECTED)
+  {
+      chat_window.addMessage(renderer,
+                             origin.username + "has disconnected.");
+  }
+  ///TODO: ADD DISCONNECT MESSAGE.*/
 }
 void LobbyScene::onReadyButton()
 {
