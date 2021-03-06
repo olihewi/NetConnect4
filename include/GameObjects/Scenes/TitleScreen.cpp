@@ -12,7 +12,7 @@ TitleScreen::TitleScreen(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
   GCNetClient& _client, std::function<void()> _signal_exit) :
   scene_callback(std::move(_scene_callback)),
-  client(_client), background(renderer, "data/images/background2.png", ASGE::Point2D(0, 0))
+  client(_client), background(renderer, "data/images/background.png", ASGE::Point2D(0, 0))
 {
   auto window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
   auto window_height = static_cast<float>(ASGE::SETTINGS.window_height);

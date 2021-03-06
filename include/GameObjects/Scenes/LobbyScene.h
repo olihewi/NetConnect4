@@ -32,6 +32,8 @@ class LobbyScene : public Scene
   ChatWindow chat_window;
   UIButton ready_button;
   UIButton disconnect_button;
+  UITextBox game_rules_box;
+  TextComponent game_rules;
   std::array<SpriteComponent, 9> colour_selects;
 };
 

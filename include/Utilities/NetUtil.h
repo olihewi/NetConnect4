@@ -15,6 +15,7 @@ class NetUtil
     ASSIGN_PLAYER_ID, /// Server-only
     CHANGE_COLOUR,
     DROP_COUNTER,
+    // DISCONNECTED,
     MAX_COMMAND_ID
   };
 };
