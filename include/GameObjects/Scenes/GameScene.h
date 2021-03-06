@@ -12,6 +12,7 @@
 #include <GameComponents/TextComponent.hpp>
 #include <GameObjects/ConnectFour/ConnectBoard.h>
 #include <GameObjects/Scenes/Scene.h>
+#include <GameObjects/UI/ChatWindow.h>
 
 class GameScene : public Scene
 {
@@ -19,6 +20,7 @@ class GameScene : public Scene
   GameScene(ASGE::Renderer* renderer, GCNetClient& _client);
   void render(ASGE::Renderer* renderer) override;
   bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer) override;
+  void keyInput(const ASGE::KeyEvent* key) override;
   void netInput(
     ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
     const std::string& message) override;
@@ -26,6 +28,7 @@ class GameScene : public Scene
  private:
   GCNetClient& client;
   ConnectBoard board;
+  ChatWindow chat_window;
 };
 
 #endif // ASGENETGAME_GAMESCENE_H

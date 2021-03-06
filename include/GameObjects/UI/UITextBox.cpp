@@ -12,27 +12,43 @@ UITextBox::UITextBox(
   max_string_length(max_length)
 {
   std::string file_path = "data/images/ui/textbox/";
-  file_path += colour == BLUE ? "blue/" : colour == RED ? "red/" : "yellow/";
+  file_path += colour == BLUE     ? "blue/"
+               : colour == RED    ? "red/"
+               : colour == YELLOW ? "yellow/"
+                                  : "fancy/";
   for (size_t i = 0; i < background.size(); i++)
   {
     std::string this_file_path = file_path;
     this_file_path += i / 3 == 0 ? "u" : i / 3 == 1 ? "m" : "b";
     this_file_path += i % 3 == 0 ? "l" : i % 3 == 1 ? "m" : "r";
     this_file_path += ".png";
-    int y_index   = static_cast<int>(i) / 3;
-    float x_pos   = static_cast<float>(i % 3) * 6 + (i % 3 == 2 ? width - 6 : 0);
-    float y_pos   = static_cast<float>(y_index) * 6 + (i / 3 == 2 ? height - 6 : 0);
-    background[i] = SpriteComponent(
-      renderer, this_file_path, ASGE::Point2D(position.x + x_pos, position.y + y_pos));
-    if (i % 3 == 1)
-    {
-      background[i].getSprite()->width(width);
-    }
-    if (i / 3 == 1)
-    {
-      background[i].getSprite()->height(height);
-    }
+    background[i] =
+      SpriteComponent(renderer, this_file_path, ASGE::Point2D(position.x, position.y));
     background[i].getSprite()->setGlobalZOrder(1);
+  }
+  for (size_t i = 1; i < 8; i += 3) /// Positioning middle column
+  {
+    background[i].getSprite()->xPos(
+      background[i - 1].getSprite()->xPos() + background[i - 1].getSprite()->width());
+    background[i].getSprite()->width(
+      width - background[0].getSprite()->width() - background[2].getSprite()->width());
+  }
+  for (size_t i = 2; i < 9; i += 3) /// Positioning right column
+  {
+    background[i].getSprite()->xPos(
+      background[i - 1].getSprite()->xPos() + background[i - 1].getSprite()->width());
+  }
+  for (size_t i = 3; i < 6; i++) /// Positioning middle row
+  {
+    background[i].getSprite()->yPos(
+      background[i - 3].getSprite()->yPos() + background[i - 3].getSprite()->height());
+    background[i].getSprite()->height(
+      height - background[0].getSprite()->height() - background[6].getSprite()->height());
+  }
+  for (size_t i = 6; i < 9; i++) /// Positioning bottom row
+  {
+    background[i].getSprite()->yPos(
+      background[i - 3].getSprite()->yPos() + background[i - 3].getSprite()->height());
   }
   text = TextComponent(
     renderer,
@@ -40,7 +56,7 @@ UITextBox::UITextBox(
     ASGE::Point2D(background[7].getPosition().x + 8, background[7].getPosition().y - 16),
     font_index,
     1,
-    ASGE::COLOURS::BLACK);
+    colour == FANCY ? ASGE::COLOURS::WHITE : ASGE::COLOURS::BLACK);
   text.getText().setZOrder(2);
 }
 bool UITextBox::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/)

@@ -23,44 +23,49 @@ TitleScreen::TitleScreen(
 
   ip_address = UITextBox(
     renderer,
-    UITextBox::RED,
-    ASGE::Point2D(window_width / 2 - 226, window_height / 2 - 62),
+    UITextBox::FANCY,
+    ASGE::Point2D(window_width / 2 - 226, window_height / 2 - 150),
     300,
-    50,
+    100,
     "127.0.0.1",
-    15);
+    15,
+    FONTS::FANCY);
   port = UITextBox(
     renderer,
-    UITextBox::YELLOW,
-    ASGE::Point2D(window_width / 2 + 86, window_height / 2 - 62),
+    UITextBox::FANCY,
+    ASGE::Point2D(window_width / 2 + 86, window_height / 2 - 150),
     128,
-    50,
+    100,
     "31276",
-    5);
+    5,
+    FONTS::FANCY);
   username = UITextBox(
     renderer,
-    UITextBox::BLUE,
-    ASGE::Point2D(window_width / 2 - 226, window_height / 2 + 4),
+    UITextBox::FANCY,
+    ASGE::Point2D(window_width / 2 - 226, window_height / 2 + -35),
     440,
-    50,
+    100,
     "Username",
-    24);
+    24,
+    FONTS::FANCY);
   connect = UIButton(
     renderer,
-    UIButton::GREEN,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 74),
+    UIButton::FANCY,
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 75),
     300,
-    50,
+    75,
     "CONNECT",
-    [this]() { onConnectButton(); });
+    [this]() { onConnectButton(); },
+    FONTS::FANCY);
   exit_game = UIButton(
     renderer,
-    UIButton::YELLOW,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 144),
+    UIButton::FANCY,
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 175),
     300,
-    50,
+    75,
     "QUIT GAME",
-    std::move(_signal_exit));
+    std::move(_signal_exit),
+    FONTS::FANCY);
   falling_counters.emplace_back(
     SpriteComponent(renderer, "data/images/chips/black.png", ASGE::Point2D(0, 0)));
   falling_counters.emplace_back(

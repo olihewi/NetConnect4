@@ -16,7 +16,8 @@ class UITextBox : public GameObject
   {
     BLUE,
     RED,
-    YELLOW
+    YELLOW,
+    FANCY
   };
   UITextBox() = default;
   UITextBox(

@@ -8,6 +8,7 @@
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameComponents/TextComponent.hpp>
 #include <GameObjects/GameObject.h>
+#include <Utilities/FontManager.h>
 #include <functional>
 class UIButton : public GameObject
 {
@@ -17,12 +18,14 @@ class UIButton : public GameObject
     BLUE,
     GREEN,
     RED,
-    YELLOW
+    YELLOW,
+    FANCY
   };
   UIButton() = default;
   UIButton(
     ASGE::Renderer* renderer, ButtonColour colour, ASGE::Point2D position, float width,
-    float height, const std::string& button_text, std::function<void()> _callback);
+    float height, const std::string& button_text, std::function<void()> _callback,
+    int font_index = FONTS::HANDWRITING);
   bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/) override;
   void render(ASGE::Renderer* renderer) override;
 
