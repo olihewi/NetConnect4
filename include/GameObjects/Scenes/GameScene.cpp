@@ -26,6 +26,11 @@ void GameScene::netInput(
   ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
   const std::string& message)
 {
+  if (command_id == NetUtil::CHAT_MESSAGE)
+  {
+    std::string message_string = origin.username + " > " + message;
+    chat_window.addMessage(renderer, message_string);
+  }
   if (command_id == NetUtil::DROP_COUNTER)
   {
     board.inputDrop(renderer, origin, std::stoi(message));
