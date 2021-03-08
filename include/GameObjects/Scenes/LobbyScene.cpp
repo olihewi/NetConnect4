@@ -10,7 +10,7 @@ LobbyScene::LobbyScene(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
   GCNetClient& _client) :
   scene_callback(std::move(_scene_callback)),
-  client(_client),
+  client(_client), background(renderer, "data/images/background3.png", ASGE::Point2D(0, 0)),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   ready_button(
@@ -36,6 +36,7 @@ LobbyScene::LobbyScene(
     SpriteComponent(renderer, "data/images/chips/black.png", ASGE::Point2D(500, 350)),
     SpriteComponent(renderer, "data/images/chips/white.png", ASGE::Point2D(650, 350)) })
 {
+  background.getSprite()->setGlobalZOrder(-2);
 }
 void LobbyScene::render(ASGE::Renderer* renderer)
 {
@@ -43,6 +44,7 @@ void LobbyScene::render(ASGE::Renderer* renderer)
   ready_button.render(renderer);
   disconnect_button.render(renderer);
   game_rules.render(renderer);
+  background.render(renderer);
   for (auto& colour_select : colour_selects)
   {
     colour_select.render(renderer);
@@ -55,12 +57,13 @@ void LobbyScene::keyInput(const ASGE::KeyEvent* keyEvent)
 bool LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer)
 {
   chat_window.clickInput(clickEvent, renderer);
-  if (!disconnect_button.clickInput(clickEvent, renderer))
+  if (ready_button.clickInput(clickEvent, renderer))
   {
-    if (ready_button.clickInput(clickEvent, renderer))
-    {
-      return true;
-    }
+    return true;
+  }
+  if (disconnect_button.clickInput(clickEvent, renderer))
+  {
+    return false;
   }
   if (clickEvent->action == ASGE::KEYS::KEY_PRESSED)
   {
@@ -96,12 +99,10 @@ void LobbyScene::netInput(
       renderer,
       origin.username + " changed their colour to " + UserClient::getColourName(origin.colour));
   }
-  /*else if(command_id == NetUtil::DISCONNECTED)
+  else if (command_id == NetUtil::DISCONNECTED)
   {
-      chat_window.addMessage(renderer,
-                             origin.username + "has disconnected.");
+    chat_window.addMessage(renderer, origin.username + " has disconnected.");
   }
-  ///TODO: ADD DISCONNECT MESSAGE.*/
 }
 void LobbyScene::onReadyButton()
 {

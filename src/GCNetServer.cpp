@@ -56,6 +56,7 @@ void GCNetServer::start()
                   << user_in_list.socket.get_recv_endpoint().address << ":"
                   << user_in_list.socket.get_recv_endpoint().port << ") has disconnected."
                   << std::endl;
+        relay(NetUtil::DISCONNECTED, user_in_list, user_in_list.username, { user_in_list.socket });
         clients.erase(std::find(clients.begin(), clients.end(), user_in_list));
       });
       workers.back().detach();
@@ -122,6 +123,7 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(NetUtil::DROP_COUNTER, client, message_contents, {});
         break;
       case NetUtil::ASSIGN_PLAYER_ID:
+      case NetUtil::DISCONNECTED:
       case NetUtil::MAX_COMMAND_ID:
         // default:
         std::cout << client.username << " sent an invalid message: " << message << std::endl;

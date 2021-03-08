@@ -29,6 +29,7 @@ class GameScene : public Scene
   GCNetClient& client;
   ConnectBoard board;
   ChatWindow chat_window;
+  SpriteComponent background;
 };
 
 #endif // ASGENETGAME_GAMESCENE_H
