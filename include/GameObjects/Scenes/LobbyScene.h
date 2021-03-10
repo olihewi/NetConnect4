@@ -29,6 +29,9 @@ class LobbyScene : public Scene
 
   std::function<void(Scene::SceneID)> scene_callback;
   GCNetClient& client;
+  SpriteComponent background;
+  SpriteComponent chat_box;
+
   ChatWindow chat_window;
   UIButton ready_button;
   UIButton disconnect_button;

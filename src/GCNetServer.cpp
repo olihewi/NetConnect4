@@ -57,6 +57,7 @@ void GCNetServer::start()
                   << user_in_list.socket.get_recv_endpoint().address << ":"
                   << user_in_list.socket.get_recv_endpoint().port << ") has disconnected."
                   << std::endl;
+        relay(NetUtil::DISCONNECTED, user_in_list, user_in_list.username, { user_in_list.socket });
         clients.erase(std::find(clients.begin(), clients.end(), user_in_list));
       });
       workers.back().detach();

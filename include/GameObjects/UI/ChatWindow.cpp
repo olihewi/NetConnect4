@@ -7,7 +7,7 @@
 #include "Utilities/FontManager.h"
 #include <utility>
 ChatWindow::ChatWindow(ASGE::Renderer* renderer, ASGE::Point2D position, GCNetClient& _client) :
-  client(_client), background(renderer, "data/images/ui/chat_background.png", position),
+  client(_client), background(renderer, "data/images/ui/chatbox.png", position),
   text_box(
     renderer, UITextBox::BLUE,
     ASGE::Point2D(
