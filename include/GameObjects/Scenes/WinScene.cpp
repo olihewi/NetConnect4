@@ -11,7 +11,7 @@ WinScene::WinScene(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
   GCNetClient& _client) :
   scene_callback(std::move(_scene_callback)),
-  client(_client), background(renderer, "/data/images/background.png", ASGE::Point2D(0, 0))
+  client(_client), background(renderer, "/data/images/background3.png", ASGE::Point2D(0, 0))
 {
   auto window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
   auto window_height = static_cast<float>(ASGE::SETTINGS.window_height);
@@ -76,5 +76,5 @@ void WinScene::onReplayButton()
 void WinScene::onExitButton()
 {
   client.disconnect();
-  // ADD EXIT FUNCTION.
+  scene_callback(SceneID::LOBBY);
 }
