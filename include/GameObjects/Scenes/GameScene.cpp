@@ -5,7 +5,7 @@
 #include "GameScene.h"
 
 GameScene::GameScene(ASGE::Renderer* renderer, GCNetClient& _client) :
-  client(_client), board(renderer, 7, 6, 1, client),
+  client(_client), board(renderer, 7, 6, 1, client, true),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client)
 {
@@ -34,6 +34,10 @@ void GameScene::netInput(
   if (command_id == NetUtil::DROP_COUNTER)
   {
     board.inputDrop(renderer, origin, std::stoi(message));
+  }
+  if (command_id == NetUtil::POP_OUT_COUNTER)
+  {
+    board.popOut(static_cast<size_t>(std::stoi(message)), origin.user_id);
   }
 }
 void GameScene::keyInput(const ASGE::KeyEvent* key)

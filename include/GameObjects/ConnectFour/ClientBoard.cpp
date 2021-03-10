@@ -2,9 +2,9 @@
 // Created by hewis on 03/03/2021.
 //
 
-#include "ConnectBoard.h"
+#include "ClientBoard.h"
 #include <iostream>
-ConnectBoard::ConnectBoard(
+ClientBoard::ClientBoard(
   ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float board_scale,
   GCNetClient& _client, bool _pop_out) :
   client(_client),
@@ -29,11 +29,8 @@ ConnectBoard::ConnectBoard(
         ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
     }
   }
-  // int drop_index = dropCounter(1);
-  // counter_sprites.emplace_back(SpriteComponent(renderer,
-  // "data/images/chips/green.png",board_sprites[static_cast<size_t>(drop_index)].getPosition()));
 }
-int ConnectBoard::dropCounter(size_t column, size_t player_id)
+int ClientBoard::dropCounter(size_t column, size_t player_id)
 {
   if (column < width)
   {
@@ -53,18 +50,36 @@ int ConnectBoard::dropCounter(size_t column, size_t player_id)
   }
   return -1;
 }
-void ConnectBoard::render(ASGE::Renderer* renderer)
+int ClientBoard::popOut(size_t column, size_t player_id)
 {
-  for (auto& board_sprite : board_sprites)
+  if (column < width)
   {
-    board_sprite.render(renderer);
+    if (counters[(width * height - width) + column] == player_id) /// If it is the player's counter
+    {
+      for (size_t row = height - 1; row > 0; row--)
+      {
+        counters[column + row * width] = counters[column + (row - 1) * width];
+      }
+      counters[column] = 0;
+      return 1;
+    }
   }
-  for (auto& counter_sprite : counter_sprites)
+  return -1;
+}
+
+void ClientBoard::render(ASGE::Renderer* renderer)
+{
+  /// Range-based for loops cannot be used due to multithreading...
+  for (size_t i = 0; i < board_sprites.size(); i++)
   {
-    counter_sprite.render(renderer);
+    board_sprites[i].render(renderer);
+  }
+  for (size_t i = 0; i < counter_sprites.size(); i++)
+  {
+    counter_sprites[i].render(renderer);
   }
 }
-bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/)
+bool ClientBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/)
 {
   if (click->action == ASGE::KEYS::KEY_PRESSED)
   {
@@ -76,20 +91,25 @@ bool ConnectBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*r
       click->ypos <=
         board_sprites.back().getPosition().x + board_sprites.back().getSprite()->height())
     {
-      int click_x = static_cast<int>(
+      size_t click_x = static_cast<size_t>(
         ((click->xpos - board_sprites.front().getPosition().x) /
          (board_sprites.back().getPosition().x + board_sprites.back().getSprite()->width())) *
         width);
-      client.send(NetUtil::DROP_COUNTER, std::to_string(click_x));
-      /*int click_y = static_cast<int>(
-        ((click->ypos - board_sprites.front().getPosition().y) /
-         (board_sprites.back().getPosition().y + board_sprites.back().getSprite()->height())) *
-        height);*/
+      if (
+        pop_out && click->ypos >= board_sprites.back().getPosition().y &&
+        counters[(width * height - width) + click_x] == client.getThisPlayer().user_id)
+      {
+        client.send(NetUtil::POP_OUT_COUNTER, std::to_string(click_x));
+      }
+      else
+      {
+        client.send(NetUtil::DROP_COUNTER, std::to_string(click_x));
+      }
     }
   }
   return true;
 }
-void ConnectBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input)
+void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input)
 {
   int drop_index = dropCounter(static_cast<size_t>(input), origin.user_id);
   if (drop_index != -1)
@@ -103,7 +123,11 @@ void ConnectBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin,
       renderer, sprite_path, board_sprites[static_cast<size_t>(drop_index)].getPosition()));
   }
 }
-size_t ConnectBoard::checkVictory()
+void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& /*origin*/, int /*input*/)
+{
+}
+
+size_t ClientBoard::checkVictory()
 {
   auto horizontal = horizontalCheck();
   if (horizontal != 0)
@@ -127,7 +151,7 @@ size_t ConnectBoard::checkVictory()
   }
   return 0;
 }
-size_t ConnectBoard::horizontalCheck()
+size_t ClientBoard::horizontalCheck()
 {
   int count = 0;
   for (size_t row = 0; row < height; row++)
@@ -154,7 +178,7 @@ size_t ConnectBoard::horizontalCheck()
   }
   return 0;
 }
-size_t ConnectBoard::verticalCheck()
+size_t ClientBoard::verticalCheck()
 {
   int count = 0;
   for (size_t column = 0; column < width; column++)
@@ -181,7 +205,7 @@ size_t ConnectBoard::verticalCheck()
   }
   return 0;
 }
-size_t ConnectBoard::upwardsDiagonalCheck()
+size_t ClientBoard::upwardsDiagonalCheck()
 {
   int count = 0;
   for (int row = width - num_counters_to_win; row < height + num_counters_to_win; row++)
@@ -212,7 +236,7 @@ size_t ConnectBoard::upwardsDiagonalCheck()
   }
   return 0;
 }
-size_t ConnectBoard::downwardsDiagonalCheck()
+size_t ClientBoard::downwardsDiagonalCheck()
 {
   int count = 0;
   for (int row = num_counters_to_win - width; row < height + 1 - num_counters_to_win; row++)

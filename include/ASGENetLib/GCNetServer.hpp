@@ -7,6 +7,7 @@
 
 #include "GComponent.hpp"
 #include "Utilities/NetUtil.h"
+#include <GameObjects/ConnectFour/ServerBoard.h>
 #include <Utilities/UserClient.h>
 #include <atomic>
 #include <kissnet.hpp>
@@ -39,6 +40,7 @@ class GCNetServer final : public GameComponent
   kissnet::tcp_socket server;
   std::list<UserClient> clients;
   std::vector<std::thread> workers;
+  ServerBoard board;
   std::atomic<bool> accept_connections = false;
   void relay(
     NetUtil::CommandID command_id, const UserClient& origin, const std::string& message,

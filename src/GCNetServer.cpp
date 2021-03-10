@@ -3,6 +3,7 @@
 //
 
 #include "GCNetServer.hpp"
+#include <algorithm>
 #include <iostream>
 #include <kissnet.hpp>
 
@@ -119,8 +120,40 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
       case NetUtil::DROP_COUNTER:
-        relay(NetUtil::DROP_COUNTER, client, message_contents, {});
+        board.drop(static_cast<size_t>(std::stoi(message_contents)), client);
+        relay(command_id, client, message_contents, {});
         break;
+      case NetUtil::POP_OUT_COUNTER:
+        board.pop(static_cast<size_t>(std::stoi(message_contents)), client);
+        relay(command_id, client, message_contents, {});
+        break;
+      case NetUtil::SET_BOARD_WIDTH:
+        board.settings.width = static_cast<size_t>(std::stoi(message_contents));
+        relay(command_id, client, message_contents, {});
+        break;
+      case NetUtil::SET_BOARD_HEIGHT:
+        board.settings.height = static_cast<size_t>(std::stoi(message_contents));
+        relay(command_id, client, message_contents, {});
+        break;
+      case NetUtil::SET_BOARD_POP_OUT:
+        board.settings.pop_out = message_contents[0] == '1';
+        relay(command_id, client, message_contents, {});
+        break;
+      case NetUtil::SET_BOARD_NUM_TO_WIN:
+        board.settings.num_counters_to_win = static_cast<size_t>(std::stoi(message_contents));
+        relay(command_id, client, message_contents, {});
+        break;
+      case NetUtil::READY_UP:
+        client.ready = message_contents[0] == '1';
+        if (std::all_of(clients.begin(), clients.end(), [](UserClient& i) { return i.ready; }))
+        {
+          board.constructBoard();
+          relay(NetUtil::START_GAME, client, "1", {});
+        }
+        break;
+      case NetUtil::START_GAME:
+      case NetUtil::DISCONNECTED:
+      case NetUtil::FILL_ENTIRE_BOARD:
       case NetUtil::ASSIGN_PLAYER_ID:
       case NetUtil::MAX_COMMAND_ID:
         // default:

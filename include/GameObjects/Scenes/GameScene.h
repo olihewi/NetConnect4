@@ -10,7 +10,7 @@
 #include "Utilities/UserClient.h"
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameComponents/TextComponent.hpp>
-#include <GameObjects/ConnectFour/ConnectBoard.h>
+#include <GameObjects/ConnectFour/ClientBoard.h>
 #include <GameObjects/Scenes/Scene.h>
 #include <GameObjects/UI/ChatWindow.h>
 
@@ -27,7 +27,7 @@ class GameScene : public Scene
 
  private:
   GCNetClient& client;
-  ConnectBoard board;
+  ClientBoard board;
   ChatWindow chat_window;
 };
 

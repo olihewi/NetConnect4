@@ -58,6 +58,7 @@ class UserClient
   size_t user_id       = 0;
   PlayerColour colour  = WHITE;
   std::string username = "UNNAMED";
+  bool ready           = false;
 };
 
 #endif // ASGENETGAME_USERCLIENT_H
