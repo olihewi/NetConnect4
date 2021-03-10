@@ -14,10 +14,10 @@ LobbyScene::LobbyScene(
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   ready_button(
-    renderer, UIButton::GREEN, ASGE::Point2D(0, 0), 300, 50, "READY",
+    renderer, UIButton::GREEN, ASGE::Point2D(675, 575), 400, 75, "READY",
     [this]() { onReadyButton(); }),
   disconnect_button(
-    renderer, UIButton::RED, ASGE::Point2D(500, 0), 300, 50, "DISCONNECT",
+    renderer, UIButton::RED, ASGE::Point2D(675, 675), 400, 75, "DISCONNECT",
     [this]() { onDisconnectButton(); }),
   game_rules(
     renderer,
