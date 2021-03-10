@@ -19,16 +19,16 @@ class WinScene : public Scene
   bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* renderer) override;
   void render(ASGE::Renderer* renderer) override;
   void onReplayButton();
-  void onMenuButton();
-  void onExitButton();
+  void onLobbyButton();
+  void onTitleButton();
 
  private:
   std::function<void(Scene::SceneID)> scene_callback;
   GCNetClient& client;
   SpriteComponent background;
   UIButton replay_button;
-  UIButton menu_button;
-  UIButton exit_button;
+  UIButton lobby_button;
+  UIButton title_button;
 };
 
 #endif // ASGENETGAME_WINSCENE_H
