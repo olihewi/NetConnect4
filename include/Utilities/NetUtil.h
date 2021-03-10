@@ -24,6 +24,7 @@ class NetUtil
     READY_UP,
     START_GAME,
     FILL_ENTIRE_BOARD,
+    IT_IS_YOUR_TURN_NOW,
     MAX_COMMAND_ID
   };
 };

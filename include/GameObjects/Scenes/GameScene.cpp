@@ -21,7 +21,7 @@ bool GameScene::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* render
   board.clickInput(click, renderer);
   if (board.checkVictory() != 0)
   {
-    // scene_callback(Scene::SceneID::WIN_GAME);
+    scene_callback(Scene::SceneID::WIN_GAME);
   }
   chat_window.clickInput(click, renderer);
   return false;
@@ -48,6 +48,10 @@ void GameScene::netInput(
   if (command_id == NetUtil::POP_OUT_COUNTER)
   {
     board.inputPop(renderer, origin, std::stoi(message));
+  }
+  if (command_id == NetUtil::IT_IS_YOUR_TURN_NOW)
+  {
+    board.is_it_my_turn = true;
   }
 }
 void GameScene::keyInput(const ASGE::KeyEvent* key)

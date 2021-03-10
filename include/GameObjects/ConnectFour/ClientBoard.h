@@ -27,9 +27,11 @@ class ClientBoard : public GameObject
   size_t verticalCheck();
   size_t upwardsDiagonalCheck();
   size_t downwardsDiagonalCheck();
+  std::atomic<bool> is_it_my_turn = true;
 
  private:
   GCNetClient& client;
+
   uint16_t width;
   uint16_t height;
   uint16_t num_counters_to_win = 4;

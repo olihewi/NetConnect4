@@ -117,6 +117,7 @@ void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, 
   int drop_index = dropCounter(static_cast<size_t>(input), origin.user_id);
   if (drop_index != -1)
   {
+    is_it_my_turn = false;
     if (checkVictory() != 0)
     {
       std::cout << "has won" << std::endl;
@@ -134,6 +135,10 @@ void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origi
   int pop_index = popOut(static_cast<size_t>(input), origin.user_id);
   if (pop_index != -1)
   {
+    if (origin.user_id == client.getThisPlayer().user_id)
+    {
+      is_it_my_turn = false;
+    }
     for (size_t i = 0; i < counter_sprites.size(); i++)
     {
       if (counter_sprites[i].grid_pos == (width * height - width) + static_cast<size_t>(input))
@@ -323,6 +328,10 @@ void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
       static_cast<float>(click_x) * board_sprites.front().getSprite()->width()));
   }
   else
+  {
+    cursor.setVisibility(false);
+  }
+  if (!is_it_my_turn)
   {
     cursor.setVisibility(false);
   }

@@ -121,8 +121,19 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
       case NetUtil::DROP_COUNTER:
+        // if (clients[board.turn].user_id != client.user_id) { return; }
         board.drop(static_cast<size_t>(std::stoi(message_contents)), client);
+        board.turn++;
+        if (board.turn > 1) /// Improve this to add support for multiple players
+        {
+          board.turn = 0;
+        }
+        if (clients.size() < 2) /// Do stuff here for AI
+        {
+          board.turn = 0;
+        }
         relay(command_id, client, message_contents, {});
+        send(clients[board.turn].socket, NetUtil::IT_IS_YOUR_TURN_NOW, clients[0], "1");
         break;
       case NetUtil::POP_OUT_COUNTER:
         board.pop(static_cast<size_t>(std::stoi(message_contents)), client);
@@ -156,6 +167,7 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
       case NetUtil::DISCONNECTED:
       case NetUtil::FILL_ENTIRE_BOARD:
       case NetUtil::ASSIGN_PLAYER_ID:
+      case NetUtil::IT_IS_YOUR_TURN_NOW:
       case NetUtil::MAX_COMMAND_ID:
         // default:
         std::cout << client.username << " sent an invalid message: " << message << std::endl;

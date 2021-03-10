@@ -17,6 +17,7 @@ class ServerBoard
   std::string getBoardString();
   size_t checkVictory();
   BoardSettings settings;
+  std::atomic<size_t> turn;
 
  private:
   size_t checkHorizontal();
