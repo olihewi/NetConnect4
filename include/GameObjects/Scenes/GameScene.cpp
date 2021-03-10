@@ -39,10 +39,14 @@ void GameScene::netInput(
   }
   if (command_id == NetUtil::POP_OUT_COUNTER)
   {
-    board.popOut(static_cast<size_t>(std::stoi(message)), origin.user_id);
+    board.inputPop(renderer, origin, std::stoi(message));
   }
 }
 void GameScene::keyInput(const ASGE::KeyEvent* key)
 {
   chat_window.keyInput(key);
+}
+void GameScene::update(float dt)
+{
+  board.update(dt);
 }

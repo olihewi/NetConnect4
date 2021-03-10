@@ -118,13 +118,41 @@ void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, 
     {
       std::cout << "has won" << std::endl;
     }
-    auto sprite_path = UserClient::getCounterFilepath(origin.colour);
-    counter_sprites.emplace_back(SpriteComponent(
-      renderer, sprite_path, board_sprites[static_cast<size_t>(drop_index)].getPosition()));
+    counter_sprites.emplace_back(CounterSprite(
+      renderer,
+      origin.colour,
+      ASGE::Point2D(board_sprites[static_cast<size_t>(drop_index)].getPosition().x, -128),
+      board_sprites[static_cast<size_t>(drop_index)].getPosition().y,
+      static_cast<size_t>(drop_index)));
   }
 }
-void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& /*origin*/, int /*input*/)
+void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origin, int input)
 {
+  int pop_index = popOut(static_cast<size_t>(input), origin.user_id);
+  if (pop_index != -1)
+  {
+    if (checkVictory() != 0)
+    {
+      std::cout << "has won" << std::endl;
+    }
+    for (size_t i = 0; i < counter_sprites.size(); i++)
+    {
+      if (counter_sprites[i].grid_pos == (width * height - width) + static_cast<size_t>(input))
+      {
+        counter_sprites.erase(counter_sprites.begin() + static_cast<int>(i));
+        i--;
+        if (i >= counter_sprites.size())
+        {
+          continue;
+        }
+      }
+      if (counter_sprites[i].grid_pos % width == static_cast<size_t>(input))
+      {
+        counter_sprites[i].dropDownOne();
+        counter_sprites[i].grid_pos += width;
+      }
+    }
+  }
 }
 
 size_t ClientBoard::checkVictory()
@@ -267,4 +295,11 @@ size_t ClientBoard::downwardsDiagonalCheck()
     count = 0;
   }
   return 0;
+}
+void ClientBoard::update(float dt)
+{
+  for (size_t i = 0; i < counter_sprites.size(); i++)
+  {
+    counter_sprites[i].update(dt);
+  }
 }

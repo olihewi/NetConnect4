@@ -6,7 +6,7 @@
 #define ASGENETGAME_CLIENTBOARD_H
 #include "../GameObject.h"
 #include <ASGENetLib/GCNetClient.hpp>
-#include <GameComponents/SpriteComponent.hpp>
+#include <GameObjects/ConnectFour/CounterSprite.h>
 class ClientBoard : public GameObject
 {
  public:
@@ -16,6 +16,7 @@ class ClientBoard : public GameObject
   int dropCounter(size_t column, size_t player_id);
   int popOut(size_t column, size_t player_id);
   void render(ASGE::Renderer* renderer) override;
+  void update(float dt) override;
   bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/) override;
   void inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   void inputPop(ASGE::Renderer* renderer, const UserClient& origin, int input);
@@ -34,7 +35,7 @@ class ClientBoard : public GameObject
   bool pop_out;
   std::vector<size_t> counters;
   std::vector<SpriteComponent> board_sprites;
-  std::vector<SpriteComponent> counter_sprites;
+  std::vector<CounterSprite> counter_sprites;
 };
 
 #endif // ASGENETGAME_CLIENTBOARD_H

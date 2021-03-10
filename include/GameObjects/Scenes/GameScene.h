@@ -21,6 +21,7 @@ class GameScene : public Scene
   void render(ASGE::Renderer* renderer) override;
   bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer) override;
   void keyInput(const ASGE::KeyEvent* key) override;
+  void update(float dt) override;
   void netInput(
     ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
     const std::string& message) override;
