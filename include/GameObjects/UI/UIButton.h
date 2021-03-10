@@ -28,6 +28,8 @@ class UIButton : public GameObject
     int font_index = FONTS::HANDWRITING);
   bool clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* /*renderer*/) override;
   void render(ASGE::Renderer* renderer) override;
+  void changeColour(ASGE::Renderer* renderer, ButtonColour colour);
+  bool isInside(ASGE::Point2D position);
 
  private:
   std::array<SpriteComponent, 9> background;

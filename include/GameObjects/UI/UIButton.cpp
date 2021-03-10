@@ -77,3 +77,33 @@ void UIButton::render(ASGE::Renderer* renderer)
   }
   text.render(renderer);
 }
+
+void UIButton::changeColour(ASGE::Renderer* renderer, UIButton::ButtonColour colour)
+{
+  std::string file_path = "data/images/ui/button/";
+  file_path += colour == BLUE     ? "blue/"
+               : colour == GREEN  ? "green/"
+               : colour == RED    ? "red/"
+               : colour == YELLOW ? "yellow/"
+                                  : "fancy/";
+  for (size_t i = 0; i < background.size(); i++)
+  {
+    std::string this_file_path = file_path;
+    this_file_path += i / 3 == 0 ? "u" : i / 3 == 1 ? "m" : "b";
+    this_file_path += i % 3 == 0 ? "l" : i % 3 == 1 ? "m" : "r";
+    this_file_path += ".png";
+    background[i].loadSprite(renderer, this_file_path);
+  }
+}
+
+bool UIButton::isInside(ASGE::Point2D position)
+{
+  for (auto& sprite : background)
+  {
+    if (sprite.isInside(position))
+    {
+      return true;
+    }
+  }
+  return false;
+}

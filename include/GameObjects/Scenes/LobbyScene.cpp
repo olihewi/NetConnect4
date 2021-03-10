@@ -14,11 +14,13 @@ LobbyScene::LobbyScene(
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   ready_button(
-    renderer, UIButton::GREEN, ASGE::Point2D(675, 575), 400, 75, "READY",
+    renderer, UIButton::GREEN, ASGE::Point2D(675, 490), 400, 75, "READY",
     [this]() { onReadyButton(); }),
   disconnect_button(
-    renderer, UIButton::RED, ASGE::Point2D(675, 675), 400, 75, "DISCONNECT",
+    renderer, UIButton::RED, ASGE::Point2D(675, 690), 400, 75, "DISCONNECT",
     [this]() { onDisconnectButton(); }),
+  popout_button(
+    renderer, UIButton::GREEN, ASGE::Point2D(675, 590), 400, 75, "POP OUT GAMEMODE", []() {}),
   game_rules(
     renderer,
     "RULES OF CONNECT FOUR \n \n EACH PLAYER HAS A TURN WHERE THEY ARE ABLE TO DROP A CHIP INTO "
@@ -42,6 +44,7 @@ void LobbyScene::render(ASGE::Renderer* renderer)
 {
   chat_window.render(renderer);
   ready_button.render(renderer);
+  popout_button.render(renderer);
   disconnect_button.render(renderer);
   game_rules.render(renderer);
   background.render(renderer);
@@ -75,7 +78,13 @@ bool LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* 
         client.send(NetUtil::CHANGE_COLOUR, std::string(1, static_cast<char>(i + 64)));
       }
     }
+    if (popout_button.isInside(ASGE::Point2D(
+          static_cast<float>(clickEvent->xpos), static_cast<float>(clickEvent->ypos))))
+    {
+      popout_button.changeColour(renderer, UIButton::RED);
+    }
   }
+
   return true;
 }
 
@@ -108,6 +117,7 @@ void LobbyScene::onReadyButton()
 {
   scene_callback(SceneID::GAME);
 }
+
 void LobbyScene::onDisconnectButton()
 {
   client.disconnect();

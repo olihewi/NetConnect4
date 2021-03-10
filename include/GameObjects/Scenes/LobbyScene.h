@@ -26,6 +26,7 @@ class LobbyScene : public Scene
  private:
   void onReadyButton();
   void onDisconnectButton();
+  // void onPopOutButton();
 
   std::function<void(Scene::SceneID)> scene_callback;
   GCNetClient& client;
@@ -35,6 +36,7 @@ class LobbyScene : public Scene
   ChatWindow chat_window;
   UIButton ready_button;
   UIButton disconnect_button;
+  UIButton popout_button;
   UITextBox game_rules_box;
   TextComponent game_rules;
   std::array<SpriteComponent, 9> colour_selects;
