@@ -8,7 +8,8 @@ ClientBoard::ClientBoard(
   ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float board_scale,
   GCNetClient& _client, bool _pop_out) :
   client(_client),
-  width(board_width), height(board_height), pop_out(_pop_out)
+  width(board_width), height(board_height), pop_out(_pop_out),
+  cursor(renderer, "data/images/chips/white.png", ASGE::Point2D(0, 0))
 {
   for (uint16_t y = 0; y < board_height; y++)
   {
@@ -29,6 +30,7 @@ ClientBoard::ClientBoard(
         ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
     }
   }
+  cursor.setVisibility(false);
 }
 int ClientBoard::dropCounter(size_t column, size_t player_id)
 {
@@ -78,6 +80,7 @@ void ClientBoard::render(ASGE::Renderer* renderer)
   {
     counter_sprites[i].render(renderer);
   }
+  cursor.render(renderer);
 }
 bool ClientBoard::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/)
 {
@@ -131,10 +134,6 @@ void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origi
   int pop_index = popOut(static_cast<size_t>(input), origin.user_id);
   if (pop_index != -1)
   {
-    if (checkVictory() != 0)
-    {
-      std::cout << "has won" << std::endl;
-    }
     for (size_t i = 0; i < counter_sprites.size(); i++)
     {
       if (counter_sprites[i].grid_pos == (width * height - width) + static_cast<size_t>(input))
@@ -301,5 +300,30 @@ void ClientBoard::update(float dt)
   for (size_t i = 0; i < counter_sprites.size(); i++)
   {
     counter_sprites[i].update(dt);
+  }
+  opacity_timer += dt;
+  cursor.getSprite()->opacity(sin(3 * opacity_timer) / 8 + 0.25F);
+}
+void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
+{
+  if (
+    mouse->xpos >= board_sprites.front().getPosition().x &&
+    mouse->xpos <=
+      board_sprites.back().getPosition().x + board_sprites.back().getSprite()->width() &&
+    mouse->ypos >= board_sprites.front().getPosition().y &&
+    mouse->ypos <= board_sprites.back().getPosition().y + board_sprites.back().getSprite()->width())
+  {
+    cursor.setVisibility(true);
+    size_t click_x = static_cast<size_t>(
+      ((mouse->xpos - board_sprites.front().getPosition().x) /
+       (board_sprites.back().getPosition().x + board_sprites.back().getSprite()->width())) *
+      width);
+    cursor.setPosition(ASGE::Point2D(
+      board_sprites.front().getPosition().x +
+      static_cast<float>(click_x) * board_sprites.front().getSprite()->width()));
+  }
+  else
+  {
+    cursor.setVisibility(false);
   }
 }

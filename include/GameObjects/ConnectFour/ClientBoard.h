@@ -18,6 +18,7 @@ class ClientBoard : public GameObject
   void render(ASGE::Renderer* renderer) override;
   void update(float dt) override;
   bool clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* /*renderer*/) override;
+  void mouseInput(const ASGE::MoveEvent* mouse) override;
   void inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   void inputPop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   size_t checkVictory();
@@ -36,6 +37,8 @@ class ClientBoard : public GameObject
   std::vector<size_t> counters;
   std::vector<SpriteComponent> board_sprites;
   std::vector<CounterSprite> counter_sprites;
+  SpriteComponent cursor;
+  float opacity_timer = 0;
 };
 
 #endif // ASGENETGAME_CLIENTBOARD_H

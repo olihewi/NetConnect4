@@ -4,17 +4,25 @@
 
 #include "GameScene.h"
 
-GameScene::GameScene(ASGE::Renderer* renderer, GCNetClient& _client) :
+GameScene::GameScene(
+  ASGE::Renderer* renderer, GCNetClient& _client,
+  std::function<void(Scene::SceneID)> _scene_callback) :
+  scene_callback(_scene_callback),
   client(_client), board(renderer, 7, 6, 1, client, true),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   background(renderer, "data/images/background3.png", ASGE::Point2D(0, 0))
 {
+  background.getSprite()->setGlobalZOrder(-2);
 }
 
 bool GameScene::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* renderer)
 {
   board.clickInput(click, renderer);
+  if (board.checkVictory() != 0)
+  {
+    // scene_callback(Scene::SceneID::WIN_GAME);
+  }
   chat_window.clickInput(click, renderer);
   return false;
 }
@@ -49,4 +57,8 @@ void GameScene::keyInput(const ASGE::KeyEvent* key)
 void GameScene::update(float dt)
 {
   board.update(dt);
+}
+void GameScene::mouseInput(const ASGE::MoveEvent* mouse)
+{
+  board.mouseInput(mouse);
 }
