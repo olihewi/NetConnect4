@@ -21,6 +21,7 @@ class ClientBoard : public GameObject
   void mouseInput(const ASGE::MoveEvent* mouse) override;
   void inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   void inputPop(ASGE::Renderer* renderer, const UserClient& origin, int input);
+  void fillBoard(ASGE::Renderer* renderer, std::string message);
   size_t checkVictory();
 
   size_t horizontalCheck();

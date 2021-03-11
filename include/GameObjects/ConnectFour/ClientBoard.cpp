@@ -336,3 +336,57 @@ void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
     cursor.setVisibility(false);
   }
 }
+
+void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
+{
+  size_t _height = 0;
+  size_t _width  = 0;
+  counters.clear();
+  board_sprites.clear();
+  counter_sprites.clear();
+  for (auto& c : message)
+  {
+    if (c >= '0' && c <= '9')
+    {
+      counters.emplace_back(std::stoi(std::string(1, c)));
+      _height++;
+    }
+  }
+  for (size_t i = 0; i < message.size(); ++i)
+  {
+    if (message[i] == ',')
+    {
+      _width = i;
+      break;
+    }
+  }
+  _height /= _width;
+  width  = static_cast<uint16_t>(_width);
+  height = static_cast<uint16_t>(_height);
+  for (uint16_t y = 0; y < height; y++)
+  {
+    for (uint16_t x = 0; x < width; x++)
+    {
+      auto& board_sprite = board_sprites.emplace_back(
+        SpriteComponent(renderer, "data/images/board/regular.png", ASGE::Point2D(0, 0)));
+      if (pop_out && y == height - 1)
+      {
+        board_sprite.loadSprite(renderer, "data/images/board/pop_out.png");
+      }
+      float block_size = board_sprite.getSprite()->width();
+      board_sprite.getSprite()->width(block_size);
+      board_sprite.getSprite()->height(block_size);
+      board_sprite.getSprite()->setGlobalZOrder(1);
+      board_sprite.setPosition(
+        ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
+    }
+  }
+  for (auto& counter : counters)
+  {
+    if (counter != 0)
+    {
+      counter_sprites.emplace_back(
+        CounterSprite(renderer, client.getPlayer(counter).colour, ASGE::Point2D(0, 0), 100, 0));
+    }
+  }
+}

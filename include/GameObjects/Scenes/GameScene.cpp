@@ -55,7 +55,12 @@ void GameScene::netInput(
   {
     board.is_it_my_turn = true;
   }
+  if (command_id == NetUtil::FILL_ENTIRE_BOARD)
+  {
+    board.fillBoard(renderer, message);
+  }
 }
+
 void GameScene::keyInput(const ASGE::KeyEvent* key)
 {
   chat_window.keyInput(key);
