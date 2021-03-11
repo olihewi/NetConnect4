@@ -7,6 +7,7 @@
 #include <chrono>
 #include <iostream>
 #include <kissnet.hpp>
+#include <random>
 
 // TCP section
 namespace
@@ -276,13 +277,56 @@ UserClient& GCNetServer::getPlayer(size_t player_id)
 }
 void GCNetServer::aiTurn()
 {
-  for (size_t column = 0; column < board.settings.width; column++)
+  int ai_move = aiScore();
+  board.drop(static_cast<size_t>(ai_move), UserClient(9));
+  relay(NetUtil::DROP_COUNTER, UserClient(9), std::to_string(ai_move), {});
+  board.turn--;
+}
+
+int GCNetServer::aiScore()
+{
+  auto board_copy = board.getBoard();
+  std::vector<int> boring_moves;
+  for (size_t x = 0; x < board.settings.width; x++)
   {
-    if (board.drop(column, UserClient(9)))
+    board.setBoard(board_copy);
+    if (!board.drop(x, UserClient(9)))
     {
-      relay(NetUtil::DROP_COUNTER, UserClient(9), std::to_string(column), {});
-      board.turn--;
-      return;
+      continue; /// If it's an invalid move, don't do it!
+    }
+    auto victory = board.checkVictory();
+    if (victory == 9)
+    {
+      std::cout << "playing winning move" << std::endl;
+      return static_cast<int>(x); /// If this is a winning move, play it!
+    }
+    auto board_copy2    = board.getBoard();
+    bool is_losing_move = false;
+    for (size_t x2 = 0; x2 < board.settings.width; x2++)
+    {
+      board.setBoard(board_copy2);
+      if (!board.drop(x2, clients.front()))
+      {
+        continue;
+      }
+      if (board.checkVictory() != 0)
+      {
+        std::cout << "avoiding a losing move: " << x << std::endl;
+        is_losing_move = true;
+      }
+    }
+    if (!is_losing_move)
+    {
+      boring_moves.emplace_back(x);
     }
   }
+  if (!boring_moves.empty())
+  {
+    std::random_device r;
+    std::default_random_engine gen(r());
+    std::uniform_int_distribution<int> distribution(0, static_cast<int>(boring_moves.size() - 1));
+    auto dice_roll = static_cast<size_t>(distribution(gen));
+    return boring_moves[dice_roll];
+  }
+  return 0;
 }

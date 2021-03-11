@@ -217,3 +217,11 @@ bool ServerBoard::isEmpty()
 {
   return !(std::any_of(counters.begin(), counters.end(), [](int i) { return i != 0; }));
 }
+std::vector<size_t> ServerBoard::getBoard()
+{
+  return counters;
+}
+void ServerBoard::setBoard(std::vector<size_t> _board)
+{
+  counters = _board;
+}

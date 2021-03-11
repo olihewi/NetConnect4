@@ -51,6 +51,8 @@ class GCNetServer final : public GameComponent
   void assignPlayerID(UserClient& player);
   UserClient& getPlayer(size_t player_id);
   void aiTurn();
+  int minMax(int depth);
+  int aiScore();
 };
 
 #endif // GAMELIB_GCNETSERVER_HPP

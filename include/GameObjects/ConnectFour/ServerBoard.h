@@ -15,6 +15,8 @@ class ServerBoard
   bool drop(size_t column, const UserClient& player);
   bool pop(size_t column, const UserClient& player);
   bool isEmpty();
+  std::vector<size_t> getBoard();
+  void setBoard(std::vector<size_t> _board);
   std::string getBoardString();
   size_t checkVictory();
   BoardSettings settings;
