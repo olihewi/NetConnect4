@@ -14,10 +14,10 @@ LobbyScene::LobbyScene(
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   ready_button(
-    renderer, UIButton::GREEN, ASGE::Point2D(675, 490), 400, 75, "READY",
+    renderer, UIButton::RED, ASGE::Point2D(675, 490), 400, 75, "READY",
     [this]() { onReadyButton(); }),
   disconnect_button(
-    renderer, UIButton::RED, ASGE::Point2D(675, 690), 400, 75, "DISCONNECT",
+    renderer, UIButton::BLUE, ASGE::Point2D(675, 690), 400, 75, "DISCONNECT",
     [this]() { onDisconnectButton(); }),
   popout_button(
     renderer, UIButton::GREEN, ASGE::Point2D(675, 590), 400, 75, "POP OUT GAMEMODE", []() {}),
@@ -26,7 +26,7 @@ LobbyScene::LobbyScene(
     "RULES OF CONNECT FOUR \n \n EACH PLAYER HAS A TURN WHERE THEY ARE ABLE TO DROP A CHIP INTO "
     "THE BOARD. \n TO WIN THE GAME ONE PLAYER WOULD, \n HAVE TO ACHIEVE A DIAGONAL FOUR "
     "COMBINATION OF THE CHIPS.\n",
-    ASGE::Point2D(0, 800), 1, 1, ASGE::COLOURS::BLACK),
+    ASGE::Point2D(0, 800), 1, 1, ASGE::COLOURS::WHITE),
   colour_selects(std::array<SpriteComponent, 9>{
     SpriteComponent(renderer, "data/images/chips/red.png", ASGE::Point2D(50, 200)),
     SpriteComponent(renderer, "data/images/chips/orange.png", ASGE::Point2D(200, 200)),
