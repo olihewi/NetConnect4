@@ -21,7 +21,7 @@ class CounterSprite : public GameObject
  private:
   SpriteComponent sprite;
   float end_pos;
-  float y_vel;
+  float y_vel = 0;
 };
 
 #endif // ASGENETGAME_COUNTERSPRITE_H

@@ -21,20 +21,14 @@ class ClientBoard : public GameObject
   void mouseInput(const ASGE::MoveEvent* mouse) override;
   void inputDrop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   void inputPop(ASGE::Renderer* renderer, const UserClient& origin, int input);
-  size_t checkVictory();
 
-  size_t horizontalCheck();
-  size_t verticalCheck();
-  size_t upwardsDiagonalCheck();
-  size_t downwardsDiagonalCheck();
-  std::atomic<bool> is_it_my_turn = false;
+  std::atomic<bool> is_it_my_turn = true;
 
  private:
   GCNetClient& client;
 
   uint16_t width;
   uint16_t height;
-  uint16_t num_counters_to_win = 4;
   bool pop_out;
   std::vector<size_t> counters;
   std::vector<SpriteComponent> board_sprites;

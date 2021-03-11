@@ -4,6 +4,7 @@
 
 #include "ClientBoard.h"
 #include <iostream>
+#include <math.h>
 ClientBoard::ClientBoard(
   ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float board_scale,
   GCNetClient& _client, bool _pop_out) :
@@ -118,10 +119,6 @@ void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, 
   if (drop_index != -1)
   {
     is_it_my_turn = false;
-    if (checkVictory() != 0)
-    {
-      std::cout << "has won" << std::endl;
-    }
     counter_sprites.emplace_back(CounterSprite(
       renderer,
       origin.colour,
@@ -159,147 +156,6 @@ void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origi
   }
 }
 
-size_t ClientBoard::checkVictory()
-{
-  auto horizontal = horizontalCheck();
-  if (horizontal != 0)
-  {
-    return horizontal;
-  }
-  auto vertical = verticalCheck();
-  if (vertical != 0)
-  {
-    return vertical;
-  }
-  auto diag_up = upwardsDiagonalCheck();
-  if (diag_up != 0)
-  {
-    return diag_up;
-  }
-  auto diag_down = downwardsDiagonalCheck();
-  if (diag_down != 0)
-  {
-    return diag_down;
-  }
-  return 0;
-}
-size_t ClientBoard::horizontalCheck()
-{
-  int count = 0;
-  for (size_t row = 0; row < height; row++)
-  {
-    size_t last_player = 0;
-    for (size_t column = 0; column < width; column++)
-    {
-      size_t this_counter = counters[column + row * width];
-      if (this_counter == last_player && this_counter != 0)
-      {
-        count++;
-        if (count >= num_counters_to_win - 1)
-        {
-          return this_counter;
-        }
-      }
-      else
-      {
-        count = 0;
-      }
-      last_player = this_counter;
-    }
-    count = 0;
-  }
-  return 0;
-}
-size_t ClientBoard::verticalCheck()
-{
-  int count = 0;
-  for (size_t column = 0; column < width; column++)
-  {
-    size_t last_player = 0;
-    for (size_t row = 0; row < height; row++)
-    {
-      size_t this_counter = counters[column + row * width];
-      if (this_counter == last_player && this_counter != 0)
-      {
-        count++;
-        if (count >= num_counters_to_win - 1)
-        {
-          return this_counter;
-        }
-      }
-      else
-      {
-        count = 0;
-      }
-      last_player = this_counter;
-    }
-    count = 0;
-  }
-  return 0;
-}
-size_t ClientBoard::upwardsDiagonalCheck()
-{
-  int count = 0;
-  for (int row = width - num_counters_to_win; row < height + num_counters_to_win; row++)
-  {
-    size_t last_player = 0;
-    for (int iter_up = row * width; iter_up > 0; iter_up += 1 - width)
-    {
-      if (iter_up > static_cast<int>(counters.size() - 1))
-      {
-        continue;
-      }
-      size_t this_counter = counters[static_cast<size_t>(iter_up)];
-      if (this_counter == last_player && this_counter != 0)
-      {
-        count++;
-        if (count >= num_counters_to_win - 1)
-        {
-          return this_counter;
-        }
-      }
-      else
-      {
-        count = 0;
-      }
-      last_player = this_counter;
-    }
-    count = 0;
-  }
-  return 0;
-}
-size_t ClientBoard::downwardsDiagonalCheck()
-{
-  int count = 0;
-  for (int row = num_counters_to_win - width; row < height + 1 - num_counters_to_win; row++)
-  {
-    size_t last_player = 0;
-    for (int iter_down = row * width; iter_down < static_cast<int>(counters.size());
-         iter_down += width + 1)
-    {
-      if (iter_down < 0)
-      {
-        continue;
-      }
-      size_t this_counter = counters[static_cast<size_t>(iter_down)];
-      if (this_counter == last_player && this_counter != 0)
-      {
-        count++;
-        if (count >= num_counters_to_win - 1)
-        {
-          return this_counter;
-        }
-      }
-      else
-      {
-        count = 0;
-      }
-      last_player = this_counter;
-    }
-    count = 0;
-  }
-  return 0;
-}
 void ClientBoard::update(float dt)
 {
   for (size_t i = 0; i < counter_sprites.size(); i++)

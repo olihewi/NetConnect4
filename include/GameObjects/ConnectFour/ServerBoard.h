@@ -10,7 +10,7 @@
 class ServerBoard
 {
  public:
-  ServerBoard(BoardSettings _settings = BoardSettings());
+  ServerBoard(const BoardSettings& _settings = BoardSettings());
   void constructBoard();
   bool drop(size_t column, const UserClient& player);
   bool pop(size_t column, const UserClient& player);

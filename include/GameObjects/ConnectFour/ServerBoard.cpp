@@ -4,7 +4,7 @@
 
 #include "ServerBoard.h"
 #include <algorithm>
-ServerBoard::ServerBoard(BoardSettings _settings) : settings(_settings)
+ServerBoard::ServerBoard(const BoardSettings& _settings) : settings(_settings)
 {
   constructBoard();
 }

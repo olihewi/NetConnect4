@@ -25,6 +25,7 @@ class NetUtil
     START_GAME,
     FILL_ENTIRE_BOARD,
     IT_IS_YOUR_TURN_NOW,
+    WON_GAME,
     MAX_COMMAND_ID
   };
 };

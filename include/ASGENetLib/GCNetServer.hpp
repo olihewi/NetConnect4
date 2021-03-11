@@ -49,6 +49,8 @@ class GCNetServer final : public GameComponent
     kissnet::tcp_socket& socket, NetUtil::CommandID command_id, const UserClient& origin,
     const std::string& message);
   void assignPlayerID(UserClient& player);
+  UserClient& getPlayer(size_t player_id);
+  void aiTurn();
 };
 
 #endif // GAMELIB_GCNETSERVER_HPP

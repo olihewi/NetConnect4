@@ -4,6 +4,7 @@
 
 #include "GCNetServer.hpp"
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <kissnet.hpp>
 
@@ -130,7 +131,17 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(command_id, client, message_contents, {});
         if (clients.size() < 2)
         {
-          /// Do stuff for AI here!
+          board.turn++;
+          std::thread ai_thread([&]() {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            aiTurn();
+          });
+          ai_thread.detach();
+        }
+        if (board.checkVictory() != 0)
+        {
+          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
+          board.constructBoard();
         }
         break;
       case NetUtil::POP_OUT_COUNTER:
@@ -143,7 +154,17 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(command_id, client, message_contents, {});
         if (clients.size() < 2)
         {
-          /// Do stuff for AI here!
+          board.turn++;
+          std::thread ai_thread([&]() {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            aiTurn();
+          });
+          ai_thread.detach();
+        }
+        if (board.checkVictory() != 0)
+        {
+          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
+          board.constructBoard();
         }
         break;
       case NetUtil::SET_BOARD_WIDTH:
@@ -174,6 +195,7 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
       case NetUtil::FILL_ENTIRE_BOARD:
       case NetUtil::ASSIGN_PLAYER_ID:
       case NetUtil::IT_IS_YOUR_TURN_NOW:
+      case NetUtil::WON_GAME:
       case NetUtil::MAX_COMMAND_ID:
         // default:
         std::cout << client.username << " sent an invalid message: " << message << std::endl;
@@ -239,5 +261,28 @@ void GCNetServer::onConnection(UserClient& client)
     send(client.socket, NetUtil::CHANGE_USERNAME, user, user.username);
     send(
       client.socket, NetUtil::CHANGE_COLOUR, user, std::string(1, static_cast<char>(user.colour)));
+  }
+}
+UserClient& GCNetServer::getPlayer(size_t player_id)
+{
+  for (auto& player : clients)
+  {
+    if (player.user_id == player_id)
+    {
+      return player;
+    }
+  }
+  return clients.emplace_back(UserClient(0));
+}
+void GCNetServer::aiTurn()
+{
+  for (size_t column = 0; column < board.settings.width; column++)
+  {
+    if (board.drop(column, UserClient(9)))
+    {
+      relay(NetUtil::DROP_COUNTER, UserClient(9), std::to_string(column), {});
+      board.turn--;
+      return;
+    }
   }
 }
