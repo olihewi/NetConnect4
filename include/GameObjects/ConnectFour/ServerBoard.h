@@ -14,10 +14,11 @@ class ServerBoard
   void constructBoard();
   bool drop(size_t column, const UserClient& player);
   bool pop(size_t column, const UserClient& player);
+  bool isEmpty();
   std::string getBoardString();
   size_t checkVictory();
   BoardSettings settings;
-  std::atomic<size_t> turn;
+  std::atomic<size_t> turn = 1;
 
  private:
   size_t checkHorizontal();

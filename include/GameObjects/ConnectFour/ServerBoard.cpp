@@ -3,6 +3,7 @@
 //
 
 #include "ServerBoard.h"
+#include <algorithm>
 ServerBoard::ServerBoard(BoardSettings _settings) : settings(_settings)
 {
   constructBoard();
@@ -211,4 +212,8 @@ std::string ServerBoard::getBoardString()
   }
   board_string.pop_back();
   return board_string;
+}
+bool ServerBoard::isEmpty()
+{
+  return !(std::any_of(counters.begin(), counters.end(), [](int i) { return i != 0; }));
 }

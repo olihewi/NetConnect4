@@ -4,10 +4,12 @@
 
 #include "GameScene.h"
 
+#include <utility>
+
 GameScene::GameScene(
   ASGE::Renderer* renderer, GCNetClient& _client,
   std::function<void(Scene::SceneID)> _scene_callback) :
-  scene_callback(_scene_callback),
+  scene_callback(std::move(_scene_callback)),
   client(_client), board(renderer, 7, 6, 1, client, true),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),

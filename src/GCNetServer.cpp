@@ -121,23 +121,30 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(NetUtil::CHANGE_COLOUR, client, message_contents, {});
         break;
       case NetUtil::DROP_COUNTER:
-        // if (clients[board.turn].user_id != client.user_id) { return; }
+        if (board.turn != client.user_id)
+        {
+          return;
+        }
         board.drop(static_cast<size_t>(std::stoi(message_contents)), client);
-        board.turn++;
-        if (board.turn > 1) /// Improve this to add support for multiple players
-        {
-          board.turn = 0;
-        }
-        if (clients.size() < 2) /// Do stuff here for AI
-        {
-          board.turn = 0;
-        }
+        board.turn = board.turn % clients.size() + 1;
         relay(command_id, client, message_contents, {});
-        send(clients[board.turn].socket, NetUtil::IT_IS_YOUR_TURN_NOW, clients[0], "1");
+        if (clients.size() < 2)
+        {
+          /// Do stuff for AI here!
+        }
         break;
       case NetUtil::POP_OUT_COUNTER:
+        if (board.turn != client.user_id)
+        {
+          return;
+        }
         board.pop(static_cast<size_t>(std::stoi(message_contents)), client);
+        board.turn = board.turn % clients.size() + 1;
         relay(command_id, client, message_contents, {});
+        if (clients.size() < 2)
+        {
+          /// Do stuff for AI here!
+        }
         break;
       case NetUtil::SET_BOARD_WIDTH:
         board.settings.width = static_cast<size_t>(std::stoi(message_contents));
@@ -156,12 +163,11 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(command_id, client, message_contents, {});
         break;
       case NetUtil::READY_UP:
-        client.ready = message_contents[0] == '1';
-        if (std::all_of(clients.begin(), clients.end(), [](UserClient& i) { return i.ready; }))
+        if (board.isEmpty())
         {
           board.constructBoard();
-          relay(NetUtil::START_GAME, client, "1", {});
         }
+        send(client.socket, NetUtil::FILL_ENTIRE_BOARD, client, board.getBoardString());
         break;
       case NetUtil::START_GAME:
       case NetUtil::DISCONNECTED:

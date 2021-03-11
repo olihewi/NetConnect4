@@ -9,10 +9,10 @@
 ChatWindow::ChatWindow(ASGE::Renderer* renderer, ASGE::Point2D position, GCNetClient& _client) :
   client(_client), background(renderer, "data/images/ui/chatbox.png", position),
   text_box(
-    renderer, UITextBox::BLUE,
+    renderer, UITextBox::FANCY,
     ASGE::Point2D(
-      position.x + 64, position.y + static_cast<float>(ASGE::SETTINGS.window_height) - 62),
-    600, 50, "", 48, FONTS::CHAT_MESSAGE)
+      position.x + 64, position.y + static_cast<float>(ASGE::SETTINGS.window_height) - 100),
+    600, 100, "", 48, FONTS::CHAT_MESSAGE)
 {
   background.getSprite()->setGlobalZOrder(-1);
   addMessage(renderer, "This is the start of the chat.");
@@ -55,7 +55,7 @@ void ChatWindow::addMessage(ASGE::Renderer* renderer, std::string message)
     ASGE::Point2D(background.getPosition().x + 64, background.getPosition().y + 920),
     FONTS::CHAT_MESSAGE,
     1,
-    ASGE::COLOURS::BLACK);
+    ASGE::COLOURS::WHITE);
   for (auto& each_message : messages)
   {
     each_message.getText().setPosition(ASGE::Point2D(

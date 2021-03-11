@@ -24,6 +24,7 @@ UIButton::UIButton(
     background[i] =
       SpriteComponent(renderer, this_file_path, ASGE::Point2D(position.x, position.y));
   }
+
   for (size_t i = 1; i < 8; i += 3) /// Positioning middle column
   {
     background[i].getSprite()->xPos(
@@ -48,6 +49,7 @@ UIButton::UIButton(
     background[i].getSprite()->yPos(
       background[i - 3].getSprite()->yPos() + background[i - 3].getSprite()->height());
   }
+
   text =
     TextComponent(renderer, button_text, ASGE::Point2D(0, 0), font_index, 1, ASGE::COLOURS::WHITE);
   text.getText().setPosition(ASGE::Point2D(
@@ -80,6 +82,12 @@ void UIButton::render(ASGE::Renderer* renderer)
 
 void UIButton::changeColour(ASGE::Renderer* renderer, UIButton::ButtonColour colour)
 {
+  ASGE::Point2D position = background[0].getPosition();
+  ASGE::Point2D size     = ASGE::Point2D(
+    background[0].getSprite()->width() + background[1].getSprite()->width() +
+      background[2].getSprite()->width(),
+    background[0].getSprite()->height() + background[3].getSprite()->height() +
+      background[6].getSprite()->height());
   std::string file_path = "data/images/ui/button/";
   file_path += colour == BLUE     ? "blue/"
                : colour == GREEN  ? "green/"
@@ -93,6 +101,31 @@ void UIButton::changeColour(ASGE::Renderer* renderer, UIButton::ButtonColour col
     this_file_path += i % 3 == 0 ? "l" : i % 3 == 1 ? "m" : "r";
     this_file_path += ".png";
     background[i].loadSprite(renderer, this_file_path);
+    background[i].setPosition(position);
+  }
+  for (size_t i = 1; i < 8; i += 3) /// Positioning middle column
+  {
+    background[i].getSprite()->xPos(
+      background[i - 1].getSprite()->xPos() + background[i - 1].getSprite()->width());
+    background[i].getSprite()->width(
+      size.x - background[0].getSprite()->width() - background[2].getSprite()->width());
+  }
+  for (size_t i = 2; i < 9; i += 3) /// Positioning right column
+  {
+    background[i].getSprite()->xPos(
+      background[i - 1].getSprite()->xPos() + background[i - 1].getSprite()->width());
+  }
+  for (size_t i = 3; i < 6; i++) /// Positioning middle row
+  {
+    background[i].getSprite()->yPos(
+      background[i - 3].getSprite()->yPos() + background[i - 3].getSprite()->height());
+    background[i].getSprite()->height(
+      size.y - background[0].getSprite()->height() - background[6].getSprite()->height());
+  }
+  for (size_t i = 6; i < 9; i++) /// Positioning bottom row
+  {
+    background[i].getSprite()->yPos(
+      background[i - 3].getSprite()->yPos() + background[i - 3].getSprite()->height());
   }
 }
 
