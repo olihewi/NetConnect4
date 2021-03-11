@@ -2,6 +2,7 @@
 #include <Engine/FileIO.h>
 #include <GameObjects/Scenes/GameScene.h>
 #include <GameObjects/Scenes/LobbyScene.h>
+#include <GameObjects/Scenes/SpriteScene.h>
 #include <GameObjects/Scenes/TitleScreen.h>
 #include <GameObjects/Scenes/WinScene.h>
 #include <iostream>
@@ -31,9 +32,7 @@ bool ASGENetGame::init()
   soloud.init();
   client.setCallback([this](auto&& PH1) { netInput(PH1); });
   /// For some reason, ASGE only loads in sprites when it is first ran, so load all scenes...
-  setScene(Scene::SceneID::WIN_GAME);
-  setScene(Scene::SceneID::GAME);
-  setScene(Scene::SceneID::LOBBY);
+  setScene(Scene::SceneID::SPRITE_DEBUG);
   setScene(Scene::SceneID::TITLE);
 
   key_callback_id   = inputs->addCallbackFnc(ASGE::E_KEY, &ASGENetGame::keyHandler, this);
@@ -115,6 +114,9 @@ void ASGENetGame::setScene(Scene::SceneID scene)
     case Scene::SceneID::WIN_GAME:
       current_scene = std::make_unique<WinScene>(
         renderer.get(), [this](auto&& PH1) { setScene(PH1); }, client);
+      break;
+    case Scene::SceneID::SPRITE_DEBUG:
+      current_scene = std::make_unique<SpriteScene>(renderer.get());
       break;
   }
 }

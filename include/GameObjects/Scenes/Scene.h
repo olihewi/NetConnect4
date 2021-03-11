@@ -12,10 +12,11 @@ class Scene : public GameObject
  public:
   enum class SceneID
   {
-    TITLE    = 0,
-    LOBBY    = 1,
-    GAME     = 2,
-    WIN_GAME = 3
+    TITLE        = 0,
+    LOBBY        = 1,
+    GAME         = 2,
+    WIN_GAME     = 3,
+    SPRITE_DEBUG = 4
   };
   virtual void netInput(
     ASGE::Renderer* /*renderer*/, NetUtil::CommandID /*command_id*/, UserClient& /*origin*/,

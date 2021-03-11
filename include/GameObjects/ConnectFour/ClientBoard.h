@@ -23,7 +23,8 @@ class ClientBoard : public GameObject
   void inputPop(ASGE::Renderer* renderer, const UserClient& origin, int input);
   void fillBoard(ASGE::Renderer* renderer, std::string message);
 
-  std::atomic<bool> is_it_my_turn = true;
+  std::atomic<bool> is_it_my_turn  = true;
+  std::atomic<bool> is_initialized = false;
 
  private:
   GCNetClient& client;

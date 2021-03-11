@@ -73,6 +73,10 @@ int ClientBoard::popOut(size_t column, size_t player_id)
 
 void ClientBoard::render(ASGE::Renderer* renderer)
 {
+  if (!is_initialized)
+  {
+    return;
+  }
   /// Range-based for loops cannot be used due to multithreading...
   for (size_t i = 0; i < board_sprites.size(); i++)
   {
@@ -242,12 +246,23 @@ void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
         ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
     }
   }
+  int counter_index = 0;
   for (auto& counter : counters)
   {
     if (counter != 0)
     {
-      counter_sprites.emplace_back(
-        CounterSprite(renderer, client.getPlayer(counter).colour, ASGE::Point2D(0, 0), 100, 0));
+      float x_pos =
+        static_cast<float>(counter_index % width) * board_sprites.front().getSprite()->width();
+      int y_grid_pos = counter_index / width;
+      float y_pos    = static_cast<float>(y_grid_pos) * board_sprites.front().getSprite()->height();
+      counter_sprites.emplace_back(CounterSprite(
+        renderer,
+        client.getPlayer(counter).colour,
+        ASGE::Point2D(x_pos, y_pos),
+        y_pos,
+        static_cast<size_t>(counter_index)));
     }
+    counter_index++;
   }
+  is_initialized = true;
 }
