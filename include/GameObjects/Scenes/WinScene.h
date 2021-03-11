@@ -26,6 +26,7 @@ class WinScene : public Scene
   std::function<void(Scene::SceneID)> scene_callback;
   GCNetClient& client;
   SpriteComponent background;
+  TextComponent player_win;
   UIButton replay_button;
   UIButton lobby_button;
   UIButton title_button;

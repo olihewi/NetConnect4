@@ -13,25 +13,6 @@ ClientBoard::ClientBoard(
   cursor(renderer, "data/images/chips/white.png", ASGE::Point2D(0, 0))
 {
   client.send(NetUtil::READY_UP, "1");
-  /*for (uint16_t y = 0; y < board_height; y++)
-  {
-    for (uint16_t x = 0; x < board_width; x++)
-    {
-      counters.emplace_back(0);
-      auto& board_sprite = board_sprites.emplace_back(
-        SpriteComponent(renderer, "data/images/board/regular.png", ASGE::Point2D(0, 0)));
-      if (pop_out && y == board_height - 1)
-      {
-        board_sprite.loadSprite(renderer, "data/images/board/pop_out.png");
-      }
-      float block_size = board_sprite.getSprite()->width() * board_scale;
-      board_sprite.getSprite()->width(block_size);
-      board_sprite.getSprite()->height(block_size);
-      board_sprite.getSprite()->setGlobalZOrder(1);
-      board_sprite.setPosition(
-        ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
-    }
-  }*/
   cursor.setVisibility(false);
 }
 int ClientBoard::dropCounter(size_t column, size_t player_id)
