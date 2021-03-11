@@ -4,6 +4,7 @@
 
 #include "ServerBoard.h"
 #include <algorithm>
+#include <utility>
 ServerBoard::ServerBoard(const BoardSettings& _settings) : settings(_settings)
 {
   constructBoard();
@@ -223,5 +224,5 @@ std::vector<size_t> ServerBoard::getBoard()
 }
 void ServerBoard::setBoard(std::vector<size_t> _board)
 {
-  counters = _board;
+  counters = std::move(_board);
 }

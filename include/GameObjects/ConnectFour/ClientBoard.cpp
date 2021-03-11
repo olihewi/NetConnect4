@@ -6,13 +6,14 @@
 #include <iostream>
 #include <math.h>
 ClientBoard::ClientBoard(
-  ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float board_scale,
+  ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float /*board_scale*/,
   GCNetClient& _client, bool _pop_out) :
   client(_client),
   width(board_width), height(board_height), pop_out(_pop_out),
   cursor(renderer, "data/images/chips/white.png", ASGE::Point2D(0, 0))
 {
-  for (uint16_t y = 0; y < board_height; y++)
+  client.send(NetUtil::READY_UP, "1");
+  /*for (uint16_t y = 0; y < board_height; y++)
   {
     for (uint16_t x = 0; x < board_width; x++)
     {
@@ -30,7 +31,7 @@ ClientBoard::ClientBoard(
       board_sprite.setPosition(
         ASGE::Point2D(static_cast<float>(x) * block_size, static_cast<float>(y) * block_size));
     }
-  }
+  }*/
   cursor.setVisibility(false);
 }
 int ClientBoard::dropCounter(size_t column, size_t player_id)
@@ -167,6 +168,10 @@ void ClientBoard::update(float dt)
 }
 void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
 {
+  if (board_sprites.empty())
+  {
+    return;
+  }
   if (
     mouse->xpos >= board_sprites.front().getPosition().x &&
     mouse->xpos <=
@@ -196,7 +201,7 @@ void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
 void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
 {
   size_t _height = 0;
-  size_t _width  = 0;
+  size_t _width  = 7;
   counters.clear();
   board_sprites.clear();
   counter_sprites.clear();

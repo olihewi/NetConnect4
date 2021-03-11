@@ -4,6 +4,7 @@
 
 #ifndef ASGENETGAME_BOARDSETTINGS_H
 #define ASGENETGAME_BOARDSETTINGS_H
+#include <stddef.h>
 struct BoardSettings
 {
  public:
