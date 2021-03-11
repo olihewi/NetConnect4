@@ -62,7 +62,6 @@ bool LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* 
   chat_window.clickInput(clickEvent, renderer);
   if (ready_button.clickInput(clickEvent, renderer))
   {
-    // client.send(NetUtil::READY_UP, "1");
     return true;
   }
   if (disconnect_button.clickInput(clickEvent, renderer))
