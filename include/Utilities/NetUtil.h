@@ -25,6 +25,7 @@ class NetUtil
     START_GAME,
     FILL_ENTIRE_BOARD,
     WON_GAME,
+    FORFEIT,
     MAX_COMMAND_ID
   };
 };

@@ -49,6 +49,36 @@ bool ASGENetGame::init()
       io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
     eight_ball.setLooping(true);
   }
+  if (file.open("data/audio/counter_drop.wav"))
+  {
+    auto io_buffer = file.read();
+    counter_drop.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  if (file.open("data/audio/counter_pop.wav"))
+  {
+    auto io_buffer = file.read();
+    counter_pop.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  if (file.open("data/audio/door_bell.wav"))
+  {
+    auto io_buffer = file.read();
+    door_bell.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  if (file.open("data/audio/game_over.wav"))
+  {
+    auto io_buffer = file.read();
+    game_over.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
+  if (file.open("data/audio/door_closed.wav"))
+  {
+    auto io_buffer = file.read();
+    door_closed.loadMem(
+      io_buffer.as_unsigned_char(), static_cast<unsigned int>(io_buffer.length), false, false);
+  }
   soloud.play(eight_ball);
   return false;
 }
@@ -128,4 +158,24 @@ void ASGENetGame::netInput(const char* message)
   std::string message_string(message);
   message_string = message_string.substr(message_string.find_last_of(':') + 1);
   current_scene->netInput(renderer.get(), command_id, user, message_string);
+  if (command_id == NetUtil::DROP_COUNTER)
+  {
+    soloud.play(counter_drop);
+  }
+  else if (command_id == NetUtil::POP_OUT_COUNTER)
+  {
+    soloud.play(counter_pop);
+  }
+  else if (command_id == NetUtil::ASSIGN_PLAYER_ID)
+  {
+    soloud.play(door_bell);
+  }
+  else if (command_id == NetUtil::WON_GAME)
+  {
+    soloud.play(game_over);
+  }
+  else if (command_id == NetUtil::DISCONNECTED)
+  {
+    soloud.play(door_closed);
+  }
 }

@@ -196,6 +196,9 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         send(client.socket, NetUtil::SET_BOARD_POP_OUT, client, board.settings.pop_out ? "1" : "0");
         send(client.socket, NetUtil::FILL_ENTIRE_BOARD, client, board.getBoardString());
         break;
+      case NetUtil::FORFEIT:
+        relay(NetUtil::FORFEIT, client, "1", {});
+        break;
       case NetUtil::START_GAME:
       case NetUtil::DISCONNECTED:
       case NetUtil::FILL_ENTIRE_BOARD:

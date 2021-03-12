@@ -14,29 +14,33 @@ LobbyScene::LobbyScene(
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
   ready_button(
-    renderer, UIButton::RED, ASGE::Point2D(675, 490), 400, 75, "READY",
+    renderer, UIButton::GREEN, ASGE::Point2D(675, 100), 400, 125, "Ready",
     [this]() { onReadyButton(); }),
   disconnect_button(
-    renderer, UIButton::BLUE, ASGE::Point2D(675, 690), 400, 75, "DISCONNECT",
+    renderer, UIButton::RED, ASGE::Point2D(675, 400), 400, 125, "Disconnect",
     [this]() { onDisconnectButton(); }),
   popout_button(
-    renderer, UIButton::YELLOW, ASGE::Point2D(675, 590), 400, 75, "Pop-Out Enabled", []() {}),
+    renderer, UIButton::YELLOW, ASGE::Point2D(675, 250), 400, 125, "Pop-Out Enabled", []() {}),
   game_rules(
     renderer,
-    "RULES OF CONNECT FOUR \n \n EACH PLAYER HAS A TURN WHERE THEY ARE ABLE TO DROP A CHIP INTO "
-    "THE BOARD. \n TO WIN THE GAME ONE PLAYER WOULD, \n HAVE TO ACHIEVE A DIAGONAL FOUR "
-    "COMBINATION OF THE CHIPS.\n",
-    ASGE::Point2D(0, 800), 1, 1, ASGE::COLOURS::WHITE),
+    "How To Play: \n \n Each player takes turns to place counters into the board.\n "
+    "In order to win, a player must achieve a row of 4 counters.\n"
+    "This can be horizontally, vertically or diagonally.\n\n"
+    "When playing with the The Pop-Out Ruleset,\n"
+    "players can pop their counters from the bottom row of the board.",
+    ASGE::Point2D(50, 650), FONTS::FANCY, 1, ASGE::COLOURS::WHITE),
+  select_colour(
+    renderer, "Select your Colour:", ASGE::Point2D(50, 75), FONTS::FANCY, 1, ASGE::COLOURS::WHITE),
   colour_selects(std::array<SpriteComponent, 9>{
-    SpriteComponent(renderer, "data/images/chips/red.png", ASGE::Point2D(50, 200)),
-    SpriteComponent(renderer, "data/images/chips/orange.png", ASGE::Point2D(200, 200)),
-    SpriteComponent(renderer, "data/images/chips/yellow.png", ASGE::Point2D(350, 200)),
-    SpriteComponent(renderer, "data/images/chips/green.png", ASGE::Point2D(500, 200)),
-    SpriteComponent(renderer, "data/images/chips/blue.png", ASGE::Point2D(50, 350)),
-    SpriteComponent(renderer, "data/images/chips/purple.png", ASGE::Point2D(200, 350)),
-    SpriteComponent(renderer, "data/images/chips/pink.png", ASGE::Point2D(350, 350)),
-    SpriteComponent(renderer, "data/images/chips/black.png", ASGE::Point2D(500, 350)),
-    SpriteComponent(renderer, "data/images/chips/white.png", ASGE::Point2D(650, 350)) })
+    SpriteComponent(renderer, "data/images/chips/red.png", ASGE::Point2D(50, 100)),
+    SpriteComponent(renderer, "data/images/chips/orange.png", ASGE::Point2D(200, 100)),
+    SpriteComponent(renderer, "data/images/chips/yellow.png", ASGE::Point2D(350, 100)),
+    SpriteComponent(renderer, "data/images/chips/green.png", ASGE::Point2D(50, 250)),
+    SpriteComponent(renderer, "data/images/chips/blue.png", ASGE::Point2D(200, 250)),
+    SpriteComponent(renderer, "data/images/chips/purple.png", ASGE::Point2D(350, 250)),
+    SpriteComponent(renderer, "data/images/chips/pink.png", ASGE::Point2D(50, 400)),
+    SpriteComponent(renderer, "data/images/chips/black.png", ASGE::Point2D(200, 400)),
+    SpriteComponent(renderer, "data/images/chips/white.png", ASGE::Point2D(350, 400)) })
 {
   background.getSprite()->setGlobalZOrder(-2);
 }
@@ -48,6 +52,7 @@ void LobbyScene::render(ASGE::Renderer* renderer)
   disconnect_button.render(renderer);
   game_rules.render(renderer);
   background.render(renderer);
+  select_colour.render(renderer);
   for (auto& colour_select : colour_selects)
   {
     colour_select.render(renderer);

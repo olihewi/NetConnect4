@@ -37,8 +37,8 @@ class LobbyScene : public Scene
   UIButton ready_button;
   UIButton disconnect_button;
   UIButton popout_button;
-  UITextBox game_rules_box;
   TextComponent game_rules;
+  TextComponent select_colour;
   std::array<SpriteComponent, 9> colour_selects;
 
   bool pop_out = true;

@@ -13,6 +13,7 @@
 #include <GameObjects/ConnectFour/ClientBoard.h>
 #include <GameObjects/Scenes/Scene.h>
 #include <GameObjects/UI/ChatWindow.h>
+#include <GameObjects/UI/UIButton.h>
 
 class GameScene : public Scene
 {
@@ -35,6 +36,7 @@ class GameScene : public Scene
   ClientBoard board;
   ChatWindow chat_window;
   SpriteComponent background;
+  UIButton forfeit;
 };
 
 #endif // ASGENETGAME_GAMESCENE_H

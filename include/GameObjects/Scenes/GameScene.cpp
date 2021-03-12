@@ -13,7 +13,11 @@ GameScene::GameScene(
   client(_client), board(renderer, 7, 6, 1, client, true),
   chat_window(
     renderer, ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), _client),
-  background(renderer, "data/images/background3.png", ASGE::Point2D(0, 0))
+  background(renderer, "data/images/background3.png", ASGE::Point2D(0, 0)),
+  forfeit(
+    renderer, UIButton::FANCY,
+    ASGE::Point2D(static_cast<float>(ASGE::SETTINGS.window_width) - 676, 0), 676, 75, "Forfeit",
+    [this]() { client.send(NetUtil::FORFEIT, "1"); }, FONTS::FANCY)
 {
   background.getSprite()->setGlobalZOrder(-2);
 }
@@ -22,6 +26,7 @@ bool GameScene::clickInput(const ASGE::ClickEvent* click, ASGE::Renderer* render
 {
   board.clickInput(click, renderer);
   chat_window.clickInput(click, renderer);
+  forfeit.clickInput(click, renderer);
   return false;
 }
 void GameScene::render(ASGE::Renderer* renderer)
@@ -29,6 +34,7 @@ void GameScene::render(ASGE::Renderer* renderer)
   board.render(renderer);
   chat_window.render(renderer);
   background.render(renderer);
+  forfeit.render(renderer);
 }
 void GameScene::netInput(
   ASGE::Renderer* renderer, NetUtil::CommandID command_id, UserClient& origin,
@@ -47,7 +53,7 @@ void GameScene::netInput(
   {
     board.inputPop(renderer, origin, std::stoi(message));
   }
-  else if (command_id == NetUtil::WON_GAME)
+  else if (command_id == NetUtil::WON_GAME || command_id == NetUtil::FORFEIT)
   {
     chat_window.addMessage(renderer, origin.username + " has won!");
     scene_callback(Scene::SceneID::WIN_GAME);

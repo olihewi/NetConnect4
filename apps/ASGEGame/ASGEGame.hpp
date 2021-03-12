@@ -41,6 +41,11 @@ class ASGENetGame : public ASGE::OGLGame
   GCNetClient client;
   SoLoud::Soloud soloud;
   SoLoud::Wav eight_ball;
+  SoLoud::Wav counter_drop;
+  SoLoud::Wav counter_pop;
+  SoLoud::Wav door_bell;
+  SoLoud::Wav game_over;
+  SoLoud::Wav door_closed;
 
   int key_callback_id    = -1; /**< Key Input Callback ID. */
   int click_callback_id  = -1; /**< Click Input Callback ID. */
