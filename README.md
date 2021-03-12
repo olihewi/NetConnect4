@@ -1,5 +1,7 @@
 ![](https://i.imgur.com/yH8duF0.png)
 
+# Let's Play Video
+https://www.youtube.com/watch?v=UxKs0hA7EyM
 # Instructions
 
 The game that has been developed is Connect Four. The game comes with a couple of additional game modes such as Pop-Out & Connect Five.
