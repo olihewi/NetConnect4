@@ -21,9 +21,9 @@ void ChatWindow::render(ASGE::Renderer* renderer)
 {
   background.render(renderer);
   text_box.render(renderer);
-  for (size_t i = 0; i < messages.size(); i++)
+  for (auto& message : messages)
   {
-    messages[i].render(renderer);
+    message.render(renderer);
   }
 }
 void ChatWindow::keyInput(const ASGE::KeyEvent* keyEvent)

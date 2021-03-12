@@ -6,11 +6,12 @@
 #define ASGENETGAME_SERVERBOARD_H
 #include <Utilities/BoardSettings.h>
 #include <Utilities/UserClient.h>
+#include <atomic>
 #include <vector>
 class ServerBoard
 {
  public:
-  ServerBoard(const BoardSettings& _settings = BoardSettings());
+  explicit ServerBoard(const BoardSettings& _settings = BoardSettings());
   void constructBoard();
   bool drop(size_t column, const UserClient& player);
   bool pop(size_t column, const UserClient& player);

@@ -150,7 +150,7 @@ void ClientBoard::update(float dt)
     counter_sprite.update(dt);
   }
   opacity_timer += dt;
-  cursor.getSprite()->opacity(sin(3 * opacity_timer) / 8 + 0.25F);
+  cursor.getSprite()->opacity(sinf(3 * opacity_timer) / 8 + 0.25F);
 }
 void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
 {
@@ -186,8 +186,8 @@ void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
 
 void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
 {
-  size_t _height = 0;
-  size_t _width  = 7;
+  size_t this_height = 0;
+  size_t this_width  = 7;
   counters.clear();
   board_sprites.clear();
   counter_sprites.clear();
@@ -196,20 +196,20 @@ void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
     if (c >= '0' && c <= '9')
     {
       counters.emplace_back(std::stoi(std::string(1, c)));
-      _height++;
+      this_height++;
     }
   }
-  for (size_t i = 0; i < message.size(); ++i)
+  for (size_t i = 1; i < message.size(); ++i)
   {
     if (message[i] == ',')
     {
-      _width = i;
+      this_width = i;
       break;
     }
   }
-  _height /= _width;
-  width  = static_cast<uint16_t>(_width);
-  height = static_cast<uint16_t>(_height);
+  this_height /= this_width;
+  width  = static_cast<uint16_t>(this_width);
+  height = static_cast<uint16_t>(this_height);
   for (uint16_t y = 0; y < height; y++)
   {
     for (uint16_t x = 0; x < width; x++)
