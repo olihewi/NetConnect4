@@ -27,7 +27,7 @@ namespace
   }
 } // namespace
 
-GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER) {}
+GCNetServer::GCNetServer() : GameComponent(ID::NETWORK_SERVER), ai_player(9) {}
 
 GCNetServer::~GCNetServer()
 {
@@ -130,6 +130,12 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         board.drop(static_cast<size_t>(std::stoi(message_contents)), client);
         board.turn = board.turn % clients.size() + 1;
         relay(command_id, client, message_contents, {});
+        if (board.checkVictory() != 0)
+        {
+          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
+          board.constructBoard();
+          break;
+        }
         if (clients.size() < 2)
         {
           board.turn++;
@@ -138,11 +144,6 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
             aiTurn();
           });
           ai_thread.detach();
-        }
-        if (board.checkVictory() != 0)
-        {
-          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
-          board.constructBoard();
         }
         break;
       case NetUtil::POP_OUT_COUNTER:
@@ -153,6 +154,12 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         board.pop(static_cast<size_t>(std::stoi(message_contents)), client);
         board.turn = board.turn % clients.size() + 1;
         relay(command_id, client, message_contents, {});
+        if (board.checkVictory() != 0)
+        {
+          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
+          board.constructBoard();
+          break;
+        }
         if (clients.size() < 2)
         {
           board.turn++;
@@ -161,11 +168,6 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
             aiTurn();
           });
           ai_thread.detach();
-        }
-        if (board.checkVictory() != 0)
-        {
-          relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
-          board.constructBoard();
         }
         break;
       case NetUtil::SET_BOARD_WIDTH:
@@ -266,14 +268,15 @@ void GCNetServer::onConnection(UserClient& client)
 }
 UserClient& GCNetServer::getPlayer(size_t player_id)
 {
-  for (auto& player : clients)
+  auto player =
+    std::find_if(clients.begin(), clients.end(), [&player_id](const UserClient& _client) {
+      return _client.user_id == player_id;
+    });
+  if (player != clients.end())
   {
-    if (player.user_id == player_id)
-    {
-      return player;
-    }
+    return *player;
   }
-  return clients.emplace_back(UserClient(0));
+  return ai_player;
 }
 void GCNetServer::aiTurn()
 {
@@ -281,6 +284,11 @@ void GCNetServer::aiTurn()
   board.drop(static_cast<size_t>(ai_move), UserClient(9));
   relay(NetUtil::DROP_COUNTER, UserClient(9), std::to_string(ai_move), {});
   board.turn--;
+  if (board.checkVictory() != 0)
+  {
+    relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
+    board.constructBoard();
+  }
 }
 
 int GCNetServer::aiScore()
