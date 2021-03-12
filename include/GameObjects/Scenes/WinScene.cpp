@@ -11,7 +11,7 @@ WinScene::WinScene(
   ASGE::Renderer* renderer, std::function<void(Scene::SceneID)> _scene_callback,
   GCNetClient& _client) :
   scene_callback(std::move(_scene_callback)),
-  client(_client), background(renderer, "/data/images/background4.png", ASGE::Point2D(0, 0))
+  client(_client), background(renderer, "data/images/background4.png", ASGE::Point2D(0, 0))
 {
   auto window_width  = static_cast<float>(ASGE::SETTINGS.window_width);
   auto window_height = static_cast<float>(ASGE::SETTINGS.window_height);
@@ -31,7 +31,7 @@ WinScene::WinScene(
   lobby_button = UIButton(
     renderer,
     UIButton::FANCY,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 160),
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 14),
     300,
     70,
     "RETURN TO LOBBY",
@@ -39,7 +39,7 @@ WinScene::WinScene(
   title_button = UIButton(
     renderer,
     UIButton::FANCY,
-    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 14),
+    ASGE::Point2D(window_width / 2 - 150, window_height / 2 + 160),
     300,
     70,
     "TITLE SCREEN",

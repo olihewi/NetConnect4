@@ -3,8 +3,8 @@
 //
 
 #include "ClientBoard.h"
+#include <cmath>
 #include <iostream>
-#include <math.h>
 ClientBoard::ClientBoard(
   ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float /*board_scale*/,
   GCNetClient& _client, bool _pop_out) :
@@ -59,13 +59,13 @@ void ClientBoard::render(ASGE::Renderer* renderer)
     return;
   }
   /// Range-based for loops cannot be used due to multithreading...
-  for (size_t i = 0; i < board_sprites.size(); i++)
+  for (auto& board_sprite : board_sprites)
   {
-    board_sprites[i].render(renderer);
+    board_sprite.render(renderer);
   }
-  for (size_t i = 0; i < counter_sprites.size(); i++)
+  for (auto& counter_sprite : counter_sprites)
   {
-    counter_sprites[i].render(renderer);
+    counter_sprite.render(renderer);
   }
   cursor.render(renderer);
 }
@@ -104,13 +104,14 @@ void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, 
   int drop_index = dropCounter(static_cast<size_t>(input), origin.user_id);
   if (drop_index != -1)
   {
-    is_it_my_turn = false;
-    counter_sprites.emplace_back(CounterSprite(
+    is_it_my_turn       = false;
+    auto counter_sprite = CounterSprite(
       renderer,
       origin.colour,
       ASGE::Point2D(board_sprites[static_cast<size_t>(drop_index)].getPosition().x, -128),
       board_sprites[static_cast<size_t>(drop_index)].getPosition().y,
-      static_cast<size_t>(drop_index)));
+      static_cast<size_t>(drop_index));
+    counter_sprites.emplace_back(std::move(counter_sprite));
   }
 }
 void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origin, int input)
@@ -144,9 +145,9 @@ void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origi
 
 void ClientBoard::update(float dt)
 {
-  for (size_t i = 0; i < counter_sprites.size(); i++)
+  for (auto& counter_sprite : counter_sprites)
   {
-    counter_sprites[i].update(dt);
+    counter_sprite.update(dt);
   }
   opacity_timer += dt;
   cursor.getSprite()->opacity(sin(3 * opacity_timer) / 8 + 0.25F);

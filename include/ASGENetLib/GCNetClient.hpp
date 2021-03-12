@@ -41,6 +41,7 @@ class GCNetClient : public GameComponent
   std::atomic<bool> connected = false;
   std::function<void(const char*)> net_callback;
   std::vector<UserClient> players{};
+  UserClient ai_player;
 };
 
 #endif // NETGAME_GCNETCLIENT_HPP

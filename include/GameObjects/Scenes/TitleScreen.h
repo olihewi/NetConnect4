@@ -23,7 +23,6 @@ class TitleScreen : public Scene
   void render(ASGE::Renderer* renderer) override;
 
   void onConnectButton();
-  void update(float dt) override;
 
  private:
   std::function<void(Scene::SceneID)> scene_callback;
@@ -34,7 +33,6 @@ class TitleScreen : public Scene
   UITextBox username;
   UIButton connect;
   UIButton exit_game;
-  std::vector<SpriteComponent> falling_counters;
 };
 
 #endif // ASGENETGAME_TITLESCREEN_H

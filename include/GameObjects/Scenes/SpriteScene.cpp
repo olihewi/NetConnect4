@@ -21,6 +21,7 @@ SpriteScene::SpriteScene(ASGE::Renderer* renderer)
   sprites.emplace_back(SpriteComponent(renderer, "data/images/chips/red.png", ASGE::Point2D()));
   sprites.emplace_back(SpriteComponent(renderer, "data/images/chips/white.png", ASGE::Point2D()));
   sprites.emplace_back(SpriteComponent(renderer, "data/images/chips/yellow.png", ASGE::Point2D()));
+  sprites.emplace_back(SpriteComponent(renderer, "data/images/chips/grey.png", ASGE::Point2D()));
   sprites.emplace_back(
     SpriteComponent(renderer, "data/images/ui/chat_background.png", ASGE::Point2D()));
   sprites.emplace_back(SpriteComponent(renderer, "data/images/ui/chatbox.png", ASGE::Point2D()));

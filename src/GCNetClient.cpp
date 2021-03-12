@@ -110,21 +110,24 @@ void GCNetClient::processMessage(kissnet::buffer<4096> buffer)
     net_callback(message.c_str());
   }
 }
-GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT) {}
+GCNetClient::GCNetClient() : GameComponent(ID::NETWORK_CLIENT), ai_player(9)
+{
+  ai_player.colour = UserClient::GREY;
+}
 void GCNetClient::setCallback(std::function<void(const char*)> _callback)
 {
   net_callback = std::move(_callback);
 }
 UserClient& GCNetClient::getPlayer(size_t index)
 {
-  for (auto& player : players)
+  auto player = std::find_if(players.begin(), players.end(), [&index](const UserClient& _client) {
+    return _client.user_id == index;
+  });
+  if (player != players.end())
   {
-    if (player.user_id == index)
-    {
-      return player;
-    }
+    return *player;
   }
-  return players.emplace_back(UserClient(index));
+  return ai_player;
 }
 
 void GCNetClient::disconnect()

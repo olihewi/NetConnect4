@@ -19,7 +19,8 @@ class UserClient
     PURPLE,
     PINK,
     BLACK,
-    WHITE
+    WHITE,
+    GREY /// AI ONLY!
   };
   bool operator==(const UserClient& rhs) const { return rhs.socket == socket; }
   explicit UserClient(size_t this_id) : user_id(this_id) {}
@@ -52,6 +53,8 @@ class UserClient
         return "black";
       case WHITE:
         return "white";
+      case GREY:
+        return "grey";
     }
   }
   kissnet::tcp_socket socket;

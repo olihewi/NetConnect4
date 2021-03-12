@@ -7,6 +7,7 @@
 #include <GameComponents/SpriteComponent.hpp>
 #include <GameObjects/GameObject.h>
 #include <Utilities/UserClient.h>
+#include <mutex>
 class CounterSprite : public GameObject
 {
  public:
