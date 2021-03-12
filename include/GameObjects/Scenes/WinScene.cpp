@@ -18,7 +18,7 @@ WinScene::WinScene(
   auto& bg_sprite    = background.getSprite();
   bg_sprite->width(window_width);
   bg_sprite->height(window_height);
-  bg_sprite->setGlobalZOrder(-1);
+  bg_sprite->setGlobalZOrder(-2);
   replay_button = UIButton(
     renderer,
     UIButton::FANCY,
