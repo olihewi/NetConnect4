@@ -30,6 +30,7 @@ class UIButton : public GameObject
   void render(ASGE::Renderer* renderer) override;
   void changeColour(ASGE::Renderer* renderer, ButtonColour colour);
   bool isInside(ASGE::Point2D position);
+  void setText(std::string string);
 
  private:
   std::array<SpriteComponent, 9> background;

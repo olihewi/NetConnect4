@@ -39,25 +39,26 @@ void GameScene::netInput(
     std::string message_string = origin.username + " > " + message;
     chat_window.addMessage(renderer, message_string);
   }
-  if (command_id == NetUtil::DROP_COUNTER)
+  else if (command_id == NetUtil::DROP_COUNTER)
   {
     board.inputDrop(renderer, origin, std::stoi(message));
   }
-  if (command_id == NetUtil::POP_OUT_COUNTER)
+  else if (command_id == NetUtil::POP_OUT_COUNTER)
   {
     board.inputPop(renderer, origin, std::stoi(message));
   }
-  if (command_id == NetUtil::IT_IS_YOUR_TURN_NOW)
+  else if (command_id == NetUtil::WON_GAME)
   {
-    board.is_it_my_turn = true;
-  }
-  if (command_id == NetUtil::WON_GAME)
-  {
+    chat_window.addMessage(renderer, origin.username + " has won!");
     scene_callback(Scene::SceneID::WIN_GAME);
   }
-  if (command_id == NetUtil::FILL_ENTIRE_BOARD)
+  else if (command_id == NetUtil::FILL_ENTIRE_BOARD)
   {
     board.fillBoard(renderer, message);
+  }
+  else if (command_id == NetUtil::SET_BOARD_POP_OUT)
+  {
+    board.pop_out = message[0] == '1';
   }
 }
 

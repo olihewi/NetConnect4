@@ -25,13 +25,13 @@ class ClientBoard : public GameObject
 
   std::atomic<bool> is_it_my_turn  = true;
   std::atomic<bool> is_initialized = false;
+  bool pop_out;
 
  private:
   GCNetClient& client;
 
   uint16_t width;
   uint16_t height;
-  bool pop_out;
   std::vector<size_t> counters;
   std::vector<SpriteComponent> board_sprites;
   std::vector<CounterSprite> counter_sprites;

@@ -40,6 +40,8 @@ class LobbyScene : public Scene
   UITextBox game_rules_box;
   TextComponent game_rules;
   std::array<SpriteComponent, 9> colour_selects;
+
+  bool pop_out = true;
 };
 
 #endif // ASGENETGAME_LOBBYSCENE_H

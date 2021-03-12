@@ -8,8 +8,8 @@
 ClientBoard::ClientBoard(
   ASGE::Renderer* renderer, uint16_t board_width, uint16_t board_height, float /*board_scale*/,
   GCNetClient& _client, bool _pop_out) :
-  client(_client),
-  width(board_width), height(board_height), pop_out(_pop_out),
+  pop_out(_pop_out),
+  client(_client), width(board_width), height(board_height),
   cursor(renderer, "data/images/chips/white.png", ASGE::Point2D(0, 0))
 {
   client.send(NetUtil::READY_UP, "1");
@@ -113,6 +113,10 @@ void ClientBoard::inputDrop(ASGE::Renderer* renderer, const UserClient& origin, 
       static_cast<size_t>(drop_index));
     counter_sprites.emplace_back(std::move(counter_sprite));
   }
+  if (origin.user_id != client.getThisPlayer().user_id)
+  {
+    is_it_my_turn = true;
+  }
 }
 void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origin, int input)
 {
@@ -140,6 +144,10 @@ void ClientBoard::inputPop(ASGE::Renderer* /*renderer*/, const UserClient& origi
         counter_sprites[i].grid_pos += width;
       }
     }
+  }
+  if (origin.user_id != client.getThisPlayer().user_id)
+  {
+    is_it_my_turn = true;
   }
 }
 
@@ -186,6 +194,7 @@ void ClientBoard::mouseInput(const ASGE::MoveEvent* mouse)
 
 void ClientBoard::fillBoard(ASGE::Renderer* renderer, std::string message)
 {
+  cursor.getSprite()->loadTexture(UserClient::getCounterFilepath(client.getThisPlayer().colour));
   size_t this_height = 0;
   size_t this_width  = 7;
   counters.clear();

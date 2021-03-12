@@ -180,6 +180,8 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         break;
       case NetUtil::SET_BOARD_POP_OUT:
         board.settings.pop_out = message_contents[0] == '1';
+        std::cout << "Pop-Out gamemode " << (board.settings.pop_out ? "enabled" : "disabled")
+                  << std::endl;
         relay(command_id, client, message_contents, {});
         break;
       case NetUtil::SET_BOARD_NUM_TO_WIN:
@@ -187,17 +189,17 @@ void GCNetServer::processMessage(UserClient& client, kissnet::buffer<4096>& buff
         relay(command_id, client, message_contents, {});
         break;
       case NetUtil::READY_UP:
-        if (board.isEmpty())
+        if (board.isEmpty() || clients.size() < 2)
         {
           board.constructBoard();
         }
+        send(client.socket, NetUtil::SET_BOARD_POP_OUT, client, board.settings.pop_out ? "1" : "0");
         send(client.socket, NetUtil::FILL_ENTIRE_BOARD, client, board.getBoardString());
         break;
       case NetUtil::START_GAME:
       case NetUtil::DISCONNECTED:
       case NetUtil::FILL_ENTIRE_BOARD:
       case NetUtil::ASSIGN_PLAYER_ID:
-      case NetUtil::IT_IS_YOUR_TURN_NOW:
       case NetUtil::WON_GAME:
       case NetUtil::MAX_COMMAND_ID:
         // default:
@@ -289,6 +291,7 @@ void GCNetServer::aiTurn()
     relay(NetUtil::WON_GAME, getPlayer(board.checkVictory()), "1", {});
     board.constructBoard();
   }
+  std::cout << "AI player has played." << std::endl;
 }
 
 int GCNetServer::aiScore()
@@ -305,7 +308,6 @@ int GCNetServer::aiScore()
     auto victory = board.checkVictory();
     if (victory == 9)
     {
-      std::cout << "playing winning move" << std::endl;
       return static_cast<int>(x); /// If this is a winning move, play it!
     }
     auto board_copy2    = board.getBoard();
@@ -319,7 +321,6 @@ int GCNetServer::aiScore()
       }
       if (board.checkVictory() != 0)
       {
-        std::cout << "avoiding a losing move: " << x << std::endl;
         is_losing_move = true;
       }
     }

@@ -20,7 +20,7 @@ LobbyScene::LobbyScene(
     renderer, UIButton::BLUE, ASGE::Point2D(675, 690), 400, 75, "DISCONNECT",
     [this]() { onDisconnectButton(); }),
   popout_button(
-    renderer, UIButton::GREEN, ASGE::Point2D(675, 590), 400, 75, "POP OUT GAMEMODE", []() {}),
+    renderer, UIButton::YELLOW, ASGE::Point2D(675, 590), 400, 75, "Pop-Out Enabled", []() {}),
   game_rules(
     renderer,
     "RULES OF CONNECT FOUR \n \n EACH PLAYER HAS A TURN WHERE THEY ARE ABLE TO DROP A CHIP INTO "
@@ -81,7 +81,7 @@ bool LobbyScene::clickInput(const ASGE::ClickEvent* clickEvent, ASGE::Renderer* 
     if (popout_button.isInside(ASGE::Point2D(
           static_cast<float>(clickEvent->xpos), static_cast<float>(clickEvent->ypos))))
     {
-      popout_button.changeColour(renderer, UIButton::RED);
+      client.send(NetUtil::SET_BOARD_POP_OUT, pop_out ? "0" : "1");
     }
   }
 
@@ -111,6 +111,12 @@ void LobbyScene::netInput(
   else if (command_id == NetUtil::DISCONNECTED)
   {
     chat_window.addMessage(renderer, origin.username + " has disconnected.");
+  }
+  else if (command_id == NetUtil::SET_BOARD_POP_OUT)
+  {
+    pop_out = (message[0] == '1');
+    popout_button.setText(pop_out ? "Pop-Out Enabled" : "Pop-Out Disabled");
+    popout_button.changeColour(renderer, pop_out ? UIButton::YELLOW : UIButton::BLUE);
   }
 }
 void LobbyScene::onReadyButton()

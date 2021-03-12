@@ -140,3 +140,7 @@ bool UIButton::isInside(ASGE::Point2D position)
   }
   return false;
 }
+void UIButton::setText(std::string string)
+{
+  text.getText().setString(string);
+}
